@@ -2,7 +2,10 @@ package impl;
 
 
 
+import jaxb.schema.generated.CTEPositioning;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,11 +21,45 @@ public class Roter {
     private int currentMapSize=0;
     private int windowLocation=0;
     private int notchLocation;
-    public Roter(int latterSize)
+    private int rotorID;
+    public Roter(int latterSize,int notchLocation,int rotorNum)
     {
+        this.rotorID=rotorNum;
        this.latterSize=latterSize;
+       this.notchLocation=notchLocation;
         initArray();
     }
+
+    public int getRotorID() {
+        return rotorID;
+    }
+
+    public void setRightSide(List<CTEPositioning> positioningList)
+    {
+        for(int i=0;i<positioningList.size();i++)
+        {
+            char letter=positioningList.get(i).getRight().charAt(0);
+
+            if(latter2IndexRightSide.containsKey(letter))
+                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " + letter + " is already mapped. Please check that each character mapped only once.");
+            latter2IndexRightSide.put(letter,i);
+            index2latterRightSide[i]=letter;
+        }
+    }
+
+    public void setLeftSide(List<CTEPositioning> positioningList)
+    {
+        for(int i=0;i<positioningList.size();i++)
+        {
+            char letter=positioningList.get(i).getLeft().charAt(0);
+            if(latter2IndexLeftSide.containsKey(letter))
+                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " +letter + " is already mapped. Please check that each character mapped only once.");
+            latter2IndexLeftSide.put(letter,i);
+            index2latterLeftSide[i]=letter;
+        }
+    }
+
+
     private void initArray()
     {
         index2latterRightSide=new char[latterSize];

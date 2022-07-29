@@ -21,7 +21,7 @@ public class UserInterface {
         isFirstOptionSelected=false;
     }
 
-    public void startMenu() {
+    public void startMenu(){
         printMenu();
         int option = getOptionAndValidate();
 
@@ -37,7 +37,7 @@ public class UserInterface {
                    // break;
                 }
                 case 3: {
-                    machineConfByUser();
+                   machineConfByUser();
                     break;
                 }
                 case 4: {
@@ -65,7 +65,7 @@ public class UserInterface {
     }
 
     private void printMenu() {
-        System.out.printf("Please choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT);
+        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT);
         String[] MenuOptions =
                 {   "1. Load machine data file.",
                         "2. Show machine data.",
@@ -122,47 +122,76 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter full XML file path: ");
         String filePath = scanner.nextLine();
-        boolean isPathValid = mEngine.LoadXMLFile(filePath);
+        try {
+            mEngine.LoadXMLFile(filePath);
 
-        while(!isPathValid)
-        {
-            System.out.println("Please Enter a valid XML file path: ");
-            filePath = scanner.nextLine();
-            isPathValid = mEngine.LoadXMLFile(filePath);
+        }catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return;
         }
-
         System.out.println("The file path loaded successfully.\n");
         return;
     }
 
     private void machineConfByUser() // case 3
     {
+        boolean res=false;
         Scanner scanner = new Scanner(System.in);
         String line;
         int numberOfRotors=0;
         System.out.println("Please enter the number of Rotors:");
-        try {
-             numberOfRotors = Integer.parseInt(scanner.nextLine());
-        }catch (Exception ex)
-        {
-            System.out.printf("Please enter a valid number");
+
+        while(!res){
+            try {
+                numberOfRotors=  mEngine.checkIfNumberOfRotorsValid(scanner.nextLine());
+                res=true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
+
+        res=false;
         System.out.printf("Please enter %d Rotors with commas between them (for example: 43,27,5):\n",numberOfRotors);
-        String allRotors=scanner.nextLine();
-        System.out.println("Please enter the initial positions of the rotors without white spaces between them\nfor example: ABC " +
+        while(!res) {
+            try {
+                mEngine.checkIfRotorsValid(scanner.nextLine(), numberOfRotors);
+                res = true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        System.out.println("Please enter the initial positions (in UPPER CASE) of the rotors without white spaces between them.\nfor example: ABC " +
                 "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )");
-        String rotorsPositions=scanner.nextLine();
-        // mEngine.checkValidationAndSaveData(numberOfRotors,allRotors,rotorsPositions);
+        res=false;
+        while(!res) {
+            try {
+                mEngine.checkIfPositionsValid(scanner.nextLine(), numberOfRotors);
+                res = true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         System.out.println("Please select reflector number:\n1. I\n2. II\n3. III\n4. IV\n5. V");
-        String reflectorNum=scanner.nextLine();
-        //mEngine.CheckAndSaveReflectorNumber(reflectorNum);
+        res=false;
+        while(!res) {
+            try {
+                mEngine.checkIfReflectorNumValid(scanner.nextLine());
+                res = true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+
         System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
         String plugBoard=scanner.nextLine();
         int plugboardNum= Integer.parseInt(plugBoard);
-        if(plugboardNum==1)
-        {
+        if(plugboardNum==1) {
             System.out.println("Please enter pairs(without white space) for plugBoard with commas between them for example: AC,BG (A and C connected in the plugBoard, B and G connected in the plugBoard)");
-            String plugBoardPairs=scanner.nextLine();
+            String plugBoardPairs = scanner.nextLine();
             //mEngine.CheckAndSavePlugBoardPairs(plugBoardPairs);
         }
     }
