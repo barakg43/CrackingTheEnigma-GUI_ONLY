@@ -15,7 +15,7 @@ import java.util.*;
 
 public class MenuEngine {
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
-    private enigmaMachine enigmaMachine;
+    private final enigmaMachine enigmaMachine;
     private MachineDataDTO1 MachineData;
     private SelectedDataDTO1 SelectedData;
     private List<String>  plugBoardPairs;
@@ -23,7 +23,7 @@ public class MenuEngine {
 
     private char[] selectedPositions;
     private Reflector selectedReflector=null;
-    private RotorOutputData rotorOutput;
+
 
     public MenuEngine()
     {
@@ -47,7 +47,7 @@ public class MenuEngine {
             throw new RuntimeException("The file you entered isn't exists.");
 
         try {
-            InputStream inputStream = new FileInputStream(new File(filePath));
+            InputStream inputStream = new FileInputStream(filePath);
             JAXBContext jc = JAXBContext.newInstance(JAXB_XML_PACKAGE_NAME);
             Unmarshaller u = jc.createUnmarshaller();
             CTEEnigma eng = (CTEEnigma) u.unmarshal(inputStream);
@@ -60,29 +60,28 @@ public class MenuEngine {
         }
     }
 
-    public void checkIfRotorsValid(String rotors) throws Exception {
-        List<String> ArrayString = Arrays.asList(rotors.split(","));
+    public void checkIfRotorsValid(String rotors)  {
+        List<String> arrayString = Arrays.asList(rotors.split(","));
         selectedRotors=new Rotor[enigmaMachine.getRotorsInUse()];
         for (int i = 0; i <enigmaMachine.getRotorsInUse() ; i++) {
             selectedRotors[i]=null;
         }
         int i=0;
         int rotorNum;
-        if(ArrayString.size()!=enigmaMachine.getRotorsInUse())
-            throw new Exception("You need to enter "+ enigmaMachine.getRotorsInUse()+ " rotors with comma between them.");
+        if(arrayString.size()!=enigmaMachine.getRotorsInUse())
+            throw new RuntimeException("You need to enter "+ enigmaMachine.getRotorsInUse()+ " rotors with comma between them.");
 
-        for (String st : ArrayString) {
+        for (int j = arrayString.size()-1; j >=0 ; j--) {
                 try {
-                    rotorNum = Integer.parseInt(st);
+                    rotorNum = Integer.parseInt(arrayString.get(j));
                 } catch (Exception ex) {
-                    throw new Exception("The number you entered isn't integer. Please enter an integer number: ");
+                    throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
                 }
                 if(rotorNum > enigmaMachine.getNumberOfRotors() ||rotorNum < 1)
-                    throw new Exception("There is no such rotors, please select again valid rotors");
+                    throw new RuntimeException("There is no such rotors, please select again valid rotors");
                 if(findRotor(rotorNum,selectedRotors)!=null)
-                    throw new Exception("You select the same rotor twice, please select again valid rotors\"");
-                selectedRotors[i]= enigmaMachine.getAllRotorsArray()[rotorNum-1];
-                 i++;
+                    throw new RuntimeException("You select the same rotor twice, please select again valid rotors\"");
+                selectedRotors[i++]= enigmaMachine.getAllRotorsArray()[rotorNum-1];
                 }
 
         enigmaMachine.setSelectedRotors(selectedRotors);
@@ -91,14 +90,15 @@ public class MenuEngine {
     {
         return enigmaMachine.getKeyboard().checkValidInput(data);
     }
-    public void checkIfPositionsValid(String positions) throws Exception {
+    public void checkIfPositionsValid(String positions)  {
+        positions=positions.toUpperCase();
         char[] positionsList = new char[enigmaMachine.getRotorsInUse()];
         int i=0;
         if(positions.length()!=enigmaMachine.getRotorsInUse())
-            throw new Exception("You need to give position for each rotor.");
+            throw new RuntimeException("You need to give position for each rotor.");
         for (char ch : positions.toCharArray()) {
             if(enigmaMachine.getAlphabet().indexOf(ch)==-1)
-                throw new Exception("This position is not exist in the machine. Please enter valid positions:");
+                throw new RuntimeException("This position is not exist in the machine. Please enter valid positions:");
             positionsList[i]=ch;
             i++;
         }
@@ -110,28 +110,25 @@ public class MenuEngine {
         //enigmaMachine.setSelectedPositions(positionsList);
     }
 public String chipperData(String dataInput) {
-
     int currentRow;
-    boolean advanceNextRotor = true;
     StringBuilder output = new StringBuilder();
-    RotorOutputData rotorOutput;
 
     for (int i = 0; i < dataInput.length(); i++) {
+        boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
+        //the row input after moving in plug board
         currentRow = enigmaMachine.getKeyboard().getMappedOutput(dataInput.charAt(i));
+        //move input flow from right rotor to left rotors
         for (Rotor selectedRotor : selectedRotors) {
-            rotorOutput = selectedRotor.getOutputMapIndex(currentRow, false, advanceNextRotor);
-            currentRow = rotorOutput.getOutputIndex();
-            advanceNextRotor = rotorOutput.isAdvanceNextRotor();
-
+            advanceNextRotor = selectedRotor.forwardWindowPosition(advanceNextRotor);
+            currentRow = selectedRotor.getOutputMapIndex(currentRow, false);
         }
         currentRow = selectedReflector.getMappedOutput(currentRow);
-
+//        System.out.format("Reflct:%d->%d\n", rotorOutput.getOutputIndex(),currentRow);
+        //input flow go back from left rotor to right rotor after reflector
         for (int j = selectedRotors.length - 1; j >= 0; j--) {
-            rotorOutput = selectedRotors[j].getOutputMapIndex(currentRow, true, false);
-            currentRow = rotorOutput.getOutputIndex();
-            advanceNextRotor = rotorOutput.isAdvanceNextRotor();
-
+            currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
         }
+//        System.out.println("=====");
         output.append(enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow));
     }
     System.out.println("output:" + output);
@@ -146,40 +143,40 @@ public String chipperData(String dataInput) {
         }
     }
 
-    public void checkIfReflectorNumValid(String ReflectorNum) throws Exception {
+    public void checkIfReflectorNumValid(String ReflectorNum) {
         int refNum;
         try {
             refNum = Integer.parseInt(ReflectorNum);
         } catch (Exception ex) {
-            throw new Exception("The number you entered isn't integer. Please enter an integer number: ");
+            throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
         }
         if(!reflectorId.isExist(refNum) || refNum> MachineData.getNumberOfReflectors() )
-            throw new Exception("Please choose one of the options 1-"+ enigmaMachine.getAllReflectors().length);
+            throw new RuntimeException("Please choose one of the options 1-"+ enigmaMachine.getAllReflectors().length);
 
         selectedReflector=enigmaMachine.getAllReflectors()[refNum-1];
         //enigmaMachine.setSelectedReflector(selectedReflector);
     }
 
-    public void CheckPlugBoardPairs(String pairs) throws Exception {
+    public void CheckPlugBoardPairs(String pairs)  {
         plugBoardPairs = Arrays.asList(pairs.split(","));
-        Map<Character, Character> plugBoard = new HashMap<>();
+
         for (String str : plugBoardPairs) {
             if(enigmaMachine.getAlphabet().indexOf(str.charAt(0))==-1 || enigmaMachine.getAlphabet().indexOf(str.charAt(1))==-1)
-                throw new Exception("Pair: "+ str + " doesn't exist in the machine alphabet.");
+                throw new RuntimeException("Pair: "+ str + " doesn't exist in the machine alphabet.");
             enigmaMachine.getPlugBoard().addMappedInputOutput(str.charAt(0), str.charAt(1));
         }
 
     }
 
-    public int checkPlugBoardNum(String plugBoardNum) throws Exception {
+    public int checkPlugBoardNum(String plugBoardNum)  {
         int plugboardNum;
         try {
             plugboardNum = Integer.parseInt(plugBoardNum);
         }catch (Exception ex) {
-            throw new Exception("The number you entered isn't integer. Please enter an integer number: ");
+            throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
         }
         if(plugboardNum>2|| plugboardNum<1)
-            throw  new Exception("Please choose 1 or 2.");
+            throw new RuntimeException("Please choose 1 or 2.");
 
         return plugboardNum;
     }
@@ -194,15 +191,6 @@ public String chipperData(String dataInput) {
         return null;
     }
 
-    private Reflector findReflector(int reflectorNum)
-    {
-        Reflector[] reflector=enigmaMachine.getAllReflectors();
-        for (Reflector ref:reflector) {
-            if(ref.getReflectorId().ordinal()==reflectorNum-1)
-                return ref;
-        }
-        return null;
-    }
 
     private void createSelectedDataObj()
     {
@@ -221,7 +209,7 @@ public String chipperData(String dataInput) {
         return selectedRotorsID;
     }
 
-    private void copyAllData(CTEEnigma eng) throws Exception {
+    private void copyAllData(CTEEnigma eng)  {
         String alphabet=eng.getCTEMachine().getABC().replaceAll("\n","");
         alphabet=alphabet.replaceAll("\t","");
 

@@ -1,18 +1,21 @@
 package UI;
 
+import EnigmaMachine.Mapper;
 import menuEngine.MenuEngine;
+import impl.*;
 
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
-   private static MenuEngine menuEngine;
-    private static UserInterface ui;
-
     public static void main(String[] args) {
-        menuEngine = new MenuEngine();
-        ui=new UserInterface(menuEngine);
+        MenuEngine menuEngine = new MenuEngine();
+        UserInterface ui = new UserInterface(menuEngine);
+       //1 testChipper();
         ui.startMenu();
     }
+
 
 
 }

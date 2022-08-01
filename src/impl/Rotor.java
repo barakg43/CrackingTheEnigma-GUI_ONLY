@@ -1,15 +1,11 @@
 package impl;
 
 
-
-import jaxb.*;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
-public class Rotor {
+public class Rotor{
 
     //right side of the rotor
     private Map<Character,Integer> latter2IndexRightSide=null;
@@ -34,40 +30,12 @@ public class Rotor {
     public Rotor(int latterSize, int notch, int id) {
         this(latterSize, notch, id, false);
     }
-    public int getNotchLocation() {
-        return notchPosition;
-    }
 
     public int getRotorID() {
         return rotorID;
     }
 
-    public void setRightSide(List<CTEPositioning> positioningList)
-    {
-        for(int i=0;i<positioningList.size();i++)
-        {
-            char letter=positioningList.get(i).getRight().charAt(0);
-            if(latter2IndexRightSide.containsKey(letter))
-                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " + letter + " is already mapped. Please check that each character mapped only once.");
-            latter2IndexRightSide.put(letter,i);
-            index2latterRightSide[i]=letter;
-        }
-    }
-
-    public void setLeftSide(List<CTEPositioning> positioningList)
-    {
-        for(int i=0;i<positioningList.size();i++)
-        {
-            char letter=positioningList.get(i).getLeft().charAt(0);
-
-            if(latter2IndexLeftSide.containsKey(letter))
-                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " +letter + " is already mapped. Please check that each character mapped only once.");
-            latter2IndexLeftSide.put(letter,i);
-            index2latterLeftSide[i]=letter;
-        }
-    }
-
- public void setInitialWindowPosition(char latter) {
+    public void setInitialWindowPosition(char latter) {
         initialWindowPosition = latter2IndexRightSide.get(latter);
         resetWindowPositionToInitialPosition();
 
@@ -112,26 +80,29 @@ private void initRotorArrays() {
         return (value % latterSize + latterSize) % latterSize;
 
     }
-
-    private void forwardWindowPosition(boolean previousNotchRotorArriveWindow) {
+    /**
+     * advance the window if window position arrive notch position [(window position)==(notch position)] previous rotor
+     * @param previousNotchRotorArriveWindow true make the rotor advance the window position
+     * @return boolean if you need to advance next rotor from right
+     */
+    public boolean forwardWindowPosition(boolean previousNotchRotorArriveWindow) {
         if (previousNotchRotorArriveWindow) {
             windowPosition++;
             windowPosition = windowPosition % latterSize;
         }
         if (debugMode)
             System.out.format("Rotor ID:%d,window position:%d,notch position:%d\n", this.rotorID, windowPosition, notchPosition);
+
+        return  notchPosition == windowPosition;
     }
     /**
      * map input line to output line on rotor table
      * @param inputRowRotorTable the input line number of the rotor table
      * @param isInputFromLeft the input to rotor is from right(false) or from left(true)
-     * @param previousNotchRotorArriveWindow true make the rotor advance the window position
-     * @return RotorOutputData object that contain data after
+     * @return output row from rotor table that determined by input letter in table
      */
-    public RotorOutputData getOutputMapIndex(int inputRowRotorTable, boolean isInputFromLeft, boolean previousNotchRotorArriveWindow) {
+    public Integer getOutputMapIndex(int inputRowRotorTable, boolean isInputFromLeft) {
         char inputLatter;
-        forwardWindowPosition(previousNotchRotorArriveWindow);
-        boolean advanceNextRotor = (notchPosition == windowPosition);
         int relativeIndex = calcIndexRotorTable(inputRowRotorTable, false);
         int otherSideRelativIndex;
         if (debugMode)
@@ -145,7 +116,7 @@ private void initRotorArrays() {
         }
         if (debugMode)
             System.out.format("Rotor ID:%d,input latter:%c,input flow:%d -> %d\n", this.rotorID, inputLatter, inputRowRotorTable, otherSideRelativIndex);
-        return new RotorOutputData(otherSideRelativIndex, advanceNextRotor);
+        return otherSideRelativIndex;
     }
 
     public boolean checkIfAllLatterMapped() {
