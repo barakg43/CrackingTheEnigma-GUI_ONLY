@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Roter {
+public class Rotor {
 
     //right side of the rotor
     private Map<Character,Integer> latter2IndexRightSide=null;
@@ -19,21 +19,23 @@ public class Roter {
     private char[] index2latterLeftSide=null;
     private final int latterSize;
     private int currentMapSize=0;
-    private int windowLocation=0;
-    private int notchLocation;
+    private int windowPosition=0;
+    private int notchPosition;
     private int rotorID;
-       public Roter(int latterSize, int notch, int id, boolean debugMode) {
+    private int initialWindowPosition;
+    private final boolean debugMode;
+       public Rotor(int latterSize, int notch, int id, boolean debugMode) {
         this.latterSize = latterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
         this.debugMode = debugMode;
         initRotorArrays();
     }
-    public Roter(int latterSize, int notch, int id) {
+    public Rotor(int latterSize, int notch, int id) {
         this(latterSize, notch, id, false);
     }
     public int getNotchLocation() {
-        return notchLocation;
+        return notchPosition;
     }
 
     public int getRotorID() {

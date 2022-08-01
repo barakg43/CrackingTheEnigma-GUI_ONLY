@@ -8,7 +8,7 @@ public class UserInterface {
 
     private final static int EXIT = 8;
     private final static int START_OPTION = 1;
-
+    private final Scanner scanner;
     private final MenuEngine mEngine;
     private MachineDataDTO machineData;
     private SelectedDataDTO selectedData;
@@ -25,6 +25,7 @@ public class UserInterface {
         mEngine=menuEngine;
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
+        scanner=new Scanner(System.in);
     }
 
     public void startMenu(){
@@ -54,6 +55,18 @@ public class UserInterface {
                   //  break;
                 }
                 case 5: {
+                    System.out.println("Please enter data that you want to chipper:");
+                    String inputData=scanner.nextLine();
+                    while (mEngine.checkIfDataValid(inputData))
+                    {
+                        System.out.println("not valid input,please enter data again");
+                        inputData=scanner.nextLine();
+                    }
+
+                   // mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
+                    //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
+
+                    mEngine.chipperData(inputData);
                     // some method
                    // break;
                 }
@@ -94,7 +107,6 @@ public class UserInterface {
 
     private int getOptionAndValidate()
     {
-        Scanner scanner = new Scanner(System.in);
         String line= scanner.nextLine();
         int optionNum ;
         while(line.length()!=1)
