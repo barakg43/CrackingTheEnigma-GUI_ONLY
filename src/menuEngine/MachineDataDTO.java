@@ -6,7 +6,7 @@ public class MachineDataDTO {
     private final int NumberOfRotorsInUse;
     private final int[] RotorsId;
     private final int[] NotchNums;
-
+//test
 
 
     public MachineDataDTO(int numberOfReflectors,int numOfRotorsInUse,int[] rotorsIdArray,int[] notchArray) {
