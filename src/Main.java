@@ -1,8 +1,8 @@
 import EnigmaMachine.Mapper;
 import impl.Plugboard;
 import impl.Reflector;
-import EnigmaMachine.Roter;
-import EnigmaMachine.RotorOutputData;
+import impl.Rotor;
+import impl.RotorOutputData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,20 +16,20 @@ public class Main {
 //				<CTE-Positioning left="D" right="C"/>
 //				<CTE-Positioning left="E" right="B"/>
 //				<CTE-Positioning left="F" right="A"/>
-        Roter roter1=new Roter(6,4,1);
-        roter1.addMapLatterToRotor('F','A');
-        roter1.addMapLatterToRotor('E','B');
-        roter1.addMapLatterToRotor('D','C');
-        roter1.addMapLatterToRotor('C','D');
-        roter1.addMapLatterToRotor('B','E');
-        roter1.addMapLatterToRotor('A','F');
-        Roter roter2=new Roter(6,1,2);
-        roter2.addMapLatterToRotor('E','A');
-        roter2.addMapLatterToRotor('B','B');
-        roter2.addMapLatterToRotor('D','C');
-        roter2.addMapLatterToRotor('F','D');
-        roter2.addMapLatterToRotor('C','E');
-        roter2.addMapLatterToRotor('A','F');
+        Rotor rotor1=new Rotor(6,4,1);
+        rotor1.addMapLatterToRotor('F','A');
+        rotor1.addMapLatterToRotor('E','B');
+        rotor1.addMapLatterToRotor('D','C');
+        rotor1.addMapLatterToRotor('C','D');
+        rotor1.addMapLatterToRotor('B','E');
+        rotor1.addMapLatterToRotor('A','F');
+        Rotor rotor2=new Rotor(6,1,2);
+        rotor2.addMapLatterToRotor('E','A');
+        rotor2.addMapLatterToRotor('B','B');
+        rotor2.addMapLatterToRotor('D','C');
+        rotor2.addMapLatterToRotor('F','D');
+        rotor2.addMapLatterToRotor('C','E');
+        rotor2.addMapLatterToRotor('A','F');
 
         //test the example in the word   <F|A><I><CC><2,1>
         char[] latter={'A','B','C','D','E','F'};
@@ -39,25 +39,25 @@ public class Main {
         }
         String input="AABBCCDDEEFF";
         StringBuilder output= new StringBuilder();
-        Reflector reflector1=new Reflector(6);
-        Mapper<Character> plugborad=new Plugboard();
+        Reflector reflector1=new Reflector(6, "I");
+        Mapper<Character, Character> plugborad=new Plugboard();
         plugborad.addMappedInputOutput('F','A');
         reflector1.addMappedInputOutput(1,4);
         reflector1.addMappedInputOutput(2,5);
         reflector1.addMappedInputOutput(3,6);
-        roter1.setInitialWindowPosition('C');
-        roter2.setInitialWindowPosition('C');
-       // roter1.printRotorTableDebugModeOnly();
-        //roter2.printRotorTableDebugModeOnly();
+        rotor1.setInitialWindowPosition('C');
+        rotor2.setInitialWindowPosition('C');
+       // rotor1.printRotorTableDebugModeOnly();
+        //rotor2.printRotorTableDebugModeOnly();
         int refOut;
         char afterBoard;
             for (int i = 0; i < input.length(); i++) {
-            afterBoard=plugborad.getMappedOutput(input.charAt(i));
-            RotorOutputData r1=roter1.getOutputMapIndex(latterToIndex.get(afterBoard),false,true);
-            RotorOutputData r2=roter2.getOutputMapIndex(r1.getOutputIndex(),false,r1.isAdvanceNextRotor());
+            afterBoard=(char)plugborad.getMappedOutput(input.charAt(i));
+            RotorOutputData r1=rotor1.getOutputMapIndex(latterToIndex.get(afterBoard),false,true);
+            RotorOutputData r2=rotor2.getOutputMapIndex(r1.getOutputIndex(),false,r1.isAdvanceNextRotor());
             refOut=reflector1.getMappedOutput(r2.getOutputIndex());
-            r2=roter2.getOutputMapIndex(refOut,true,false);
-            r1=roter1.getOutputMapIndex(r2.getOutputIndex(),true,false);
+            r2=rotor2.getOutputMapIndex(refOut,true,false);
+            r1=rotor1.getOutputMapIndex(r2.getOutputIndex(),true,false);
 
             output.append(plugborad.getMappedOutput(latter[r1.getOutputIndex()]));
            // System.out.println("latter is:"+latter[r2.getOutputIndex()]);
