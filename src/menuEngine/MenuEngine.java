@@ -2,8 +2,7 @@ package menuEngine;
 
 import EnigmaMachine.enigmaMachine;
 import impl.*;
-import jaxb.schema.generated.CTEEnigma;
-import jaxb.schema.generated.CTERotor;
+import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,22 +14,26 @@ import java.io.InputStream;
 import java.util.*;
 
 public class MenuEngine {
-    private final static String JAXB_XML_PACKAGE_NAME = "jaxb.schema.generated";
+    private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private enigmaMachine enigmaMachine;
-    private MachineDataDTO MachineData;
-    private SelectedDataDTO SelectedData;
+    private MachineDataDTO1 MachineData;
+    private SelectedDataDTO1 SelectedData;
     private List<String>  plugBoardPairs;
     private Rotor[] selectedRotors;
+
+    private char[] selectedPositions;
     private Reflector selectedReflector=null;
+    private RotorOutputData rotorOutput;
+
     public MenuEngine()
     {
         enigmaMachine=new enigmaMachine();
     }
-    public MachineDataDTO getMachineData() {
+    public MachineDataDTO1 getMachineData() {
         return MachineData;
     }
 
-    public SelectedDataDTO getSelectedData() {
+    public SelectedDataDTO1 getSelectedData() {
         createSelectedDataObj();
         return SelectedData;
     }
@@ -60,6 +63,9 @@ public class MenuEngine {
     public void checkIfRotorsValid(String rotors) throws Exception {
         List<String> ArrayString = Arrays.asList(rotors.split(","));
         selectedRotors=new Rotor[enigmaMachine.getRotorsInUse()];
+        for (int i = 0; i <enigmaMachine.getRotorsInUse() ; i++) {
+            selectedRotors[i]=null;
+        }
         int i=0;
         int rotorNum;
         if(ArrayString.size()!=enigmaMachine.getRotorsInUse())
@@ -75,7 +81,7 @@ public class MenuEngine {
                     throw new Exception("There is no such rotors, please select again valid rotors");
                 if(findRotor(rotorNum,selectedRotors)!=null)
                     throw new Exception("You select the same rotor twice, please select again valid rotors\"");
-                selectedRotors[i]=findRotor(rotorNum,enigmaMachine.getAllRotorsArray());
+                selectedRotors[i]= enigmaMachine.getAllRotorsArray()[rotorNum-1];
                  i++;
                 }
 
@@ -96,7 +102,12 @@ public class MenuEngine {
             positionsList[i]=ch;
             i++;
         }
-        enigmaMachine.setSelectedPositions(positionsList);
+        selectedPositions=positionsList;
+        for(int j=0;j<selectedRotors.length;j++)
+        {
+            selectedRotors[j].setInitialWindowPosition(selectedPositions[j]);
+        }
+        //enigmaMachine.setSelectedPositions(positionsList);
     }
 public String chipperData(String dataInput) {
 
@@ -104,6 +115,7 @@ public String chipperData(String dataInput) {
     boolean advanceNextRotor = true;
     StringBuilder output = new StringBuilder();
     RotorOutputData rotorOutput;
+
     for (int i = 0; i < dataInput.length(); i++) {
         currentRow = enigmaMachine.getKeyboard().getMappedOutput(dataInput.charAt(i));
         for (Rotor selectedRotor : selectedRotors) {
@@ -121,11 +133,18 @@ public String chipperData(String dataInput) {
 
         }
         output.append(enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow));
-        System.out.println("output:" + output);
-
     }
+    System.out.println("output:" + output);
     return output.toString();
 }
+
+    public void resetCodePosition()
+    {
+        for (Rotor selectedRotor : selectedRotors) {
+            selectedRotor.resetWindowPositionToInitialPosition();
+
+        }
+    }
 
     public void checkIfReflectorNumValid(String ReflectorNum) throws Exception {
         int refNum;
@@ -137,7 +156,7 @@ public String chipperData(String dataInput) {
         if(!reflectorId.isExist(refNum) || refNum> MachineData.getNumberOfReflectors() )
             throw new Exception("Please choose one of the options 1-"+ enigmaMachine.getAllReflectors().length);
 
-        selectedReflector=findReflector(refNum);
+        selectedReflector=enigmaMachine.getAllReflectors()[refNum-1];
         //enigmaMachine.setSelectedReflector(selectedReflector);
     }
 
@@ -148,7 +167,6 @@ public String chipperData(String dataInput) {
             if(enigmaMachine.getAlphabet().indexOf(str.charAt(0))==-1 || enigmaMachine.getAlphabet().indexOf(str.charAt(1))==-1)
                 throw new Exception("Pair: "+ str + " doesn't exist in the machine alphabet.");
             enigmaMachine.getPlugBoard().addMappedInputOutput(str.charAt(0), str.charAt(1));
-
         }
 
     }
@@ -169,11 +187,11 @@ public String chipperData(String dataInput) {
 
     private Rotor findRotor(int rotorNum, Rotor[] allRotors)
     {
-      //  Roter[] allRotors= enigmaMachine.getAllRotorsArray();
-
-        return allRotors[rotorNum-1];
-
-
+        for (Rotor rotor:allRotors) {
+            if(rotor!=null && rotor.getRotorID()==rotorNum)
+                return rotor;
+        }
+        return null;
     }
 
     private Reflector findReflector(int reflectorNum)
@@ -189,7 +207,7 @@ public String chipperData(String dataInput) {
     private void createSelectedDataObj()
     {
         int[] rotorsID=copySelectedRotorsID(enigmaMachine.getSelectedRotors());
-        SelectedData=new SelectedDataDTO(enigmaMachine.getSelectedPositions(),enigmaMachine.getSelectedReflector().getReflectorId().name(),
+        SelectedData=new SelectedDataDTO1(enigmaMachine.getSelectedPositions(),selectedReflector.getReflectorId().name(),
                rotorsID,plugBoardPairs);
     }
 
@@ -209,7 +227,7 @@ public String chipperData(String dataInput) {
 
         if(alphabet.length()%2!=0)
             throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
-        enigmaMachine.setAlphabet(eng.getCTEMachine().getABC(),new Plugboard());//TODO:
+        enigmaMachine.setAlphabet(eng.getCTEMachine().getABC());//TODO:
                                                                                 //change to real plugboard
         if(eng.getCTEMachine().getRotorsCount()<2)
             throw new RuntimeException("The number of rotors need to be bigger or equal to 2.\nPlease correct this.");
@@ -221,7 +239,7 @@ public String chipperData(String dataInput) {
 
         int[] rotorsArrayId=copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
         int[] notchArray=copyNotchArray(eng.getCTEMachine().getCTERotors().getCTERotor());
-        MachineData=new MachineDataDTO(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
+        MachineData=new MachineDataDTO1(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
                 eng.getCTEMachine().getRotorsCount(),rotorsArrayId,notchArray);
     }
 

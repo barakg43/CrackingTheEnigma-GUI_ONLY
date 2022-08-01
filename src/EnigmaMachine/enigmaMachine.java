@@ -1,7 +1,7 @@
 package EnigmaMachine;
 
 import impl.*;
-import jaxb.schema.generated.*;
+import jaxb.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,9 +28,8 @@ public class enigmaMachine {
     private char[] selectedPositions;
 
 
-    public void enigmaMachine() {
+    public enigmaMachine() {
         plugBoardPairs=new Plugboard();
-
     }
 
     public void setRotorsInUse(int rotorsInuse) {
@@ -60,9 +59,11 @@ public class enigmaMachine {
         return AllRotorsArray;
     }
 
-    public void setAlphabet(String alphabet,Plugboard plugboard) {
-        alphabet.replaceAll(" ","");
-        keyboard=new Keyboard(alphabet,plugboard);
+    public void setAlphabet(String alphabet) {
+        alphabet=alphabet.replaceAll(" ","");
+        alphabet=alphabet.replaceAll("\n","");
+        alphabet=alphabet.replaceAll("\t","");
+        keyboard=new Keyboard(alphabet,plugBoardPairs);
         this.alphabet=alphabet;
     }
 

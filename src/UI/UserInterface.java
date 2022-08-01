@@ -1,8 +1,11 @@
 package UI;
 
+//import menuEngine.*;
 import impl.reflectorId;
-import java.util.*;
 import menuEngine.*;
+
+import java.util.List;
+import java.util.Scanner;
 
 public class UserInterface {
 
@@ -10,8 +13,8 @@ public class UserInterface {
     private final static int START_OPTION = 1;
     private final Scanner scanner;
     private final MenuEngine mEngine;
-    private MachineDataDTO machineData;
-    private SelectedDataDTO selectedData;
+    private MachineDataDTO1 machineData;
+    private SelectedDataDTO1 selectedData;
 
     private boolean currentCode;
     private boolean isFirstOptionSelected;
@@ -57,7 +60,7 @@ public class UserInterface {
                 case 5: {
                     System.out.println("Please enter data that you want to chipper:");
                     String inputData=scanner.nextLine();
-                    while (mEngine.checkIfDataValid(inputData))
+                    while (!mEngine.checkIfDataValid(inputData))
                     {
                         System.out.println("not valid input,please enter data again");
                         inputData=scanner.nextLine();
@@ -67,12 +70,13 @@ public class UserInterface {
                     //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
 
                     mEngine.chipperData(inputData);
-                    // some method
-                   // break;
+                    break;
                 }
                 case 6: {
-                    // some method
-                    //break;
+                    System.out.println("you selected to reset the rotors. ");
+                    mEngine.resetCodePosition();
+                    System.out.println("The reset successfully");
+                    break;
                 }
                 case 7: {
                     // some method
@@ -146,8 +150,8 @@ public class UserInterface {
         while(!res){
             try {
                 System.out.println("Please enter full XML file path: ");
-                String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile(xmlPath);
+               // String xmlPath= scanner.nextLine();
+                mEngine.LoadXMLFile("C:/Users/nikol/Desktop/java/CrackingTheEnigma/src/Resources/ex1-sanity-small.xml");
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {

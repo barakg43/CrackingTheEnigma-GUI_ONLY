@@ -1,8 +1,5 @@
 package impl;
 
-import com.sun.deploy.util.StringUtils;
-import javafx.print.PrinterJob;
-
 public enum reflectorId {
     I,II,III,IV,V;
 

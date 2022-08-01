@@ -35,8 +35,6 @@ public class Reflector implements Mapper<Integer,Integer> {
 
     public void addMappedInputOutput(Integer input, Integer output)
     {
-        input--;
-        output--;
 
         if(input.equals(output))
             throw new RuntimeException("cant mapped input to himself!");

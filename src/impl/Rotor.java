@@ -2,7 +2,7 @@ package impl;
 
 
 
-import jaxb.schema.generated.CTEPositioning;
+import jaxb.*;
 
 import java.util.HashMap;
 import java.util.List;
