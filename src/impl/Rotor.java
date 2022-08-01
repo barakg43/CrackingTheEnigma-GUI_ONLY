@@ -1,39 +1,79 @@
-package EnigmaMachine;
+package impl;
 
 
+
+import jaxb.schema.generated.CTEPositioning;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-public class Roter {
-    private final boolean debugMode;
+public class Rotor {
+
     //right side of the rotor
-    private Map<Character, Integer> latter2IndexRightSide = null;
-    private char[] index2latterRightSide = null;
+    private Map<Character,Integer> latter2IndexRightSide=null;
+    private char[] index2latterRightSide=null;
     //left side of the rotor
-    private Map<Character, Integer> latter2IndexLeftSide = null;
-    private char[] index2latterLeftSide = null;
+    private Map<Character,Integer> latter2IndexLeftSide=null;
+    private char[] index2latterLeftSide=null;
     private final int latterSize;
-    private int currentMapSize = 0;
-    private int windowPosition = 0;
-    private int initialWindowPosition;
+    private int currentMapSize=0;
+    private int windowPosition=0;
     private final int notchPosition;
     private final int rotorID;
-
-    public Roter(int latterSize, int notch, int id, boolean debugMode) {
+    private int initialWindowPosition;
+    private final boolean debugMode;
+       public Rotor(int latterSize, int notch, int id, boolean debugMode) {
         this.latterSize = latterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
         this.debugMode = debugMode;
         initRotorArrays();
     }
-
-    public Roter(int latterSize, int notch, int id) {
+    public Rotor(int latterSize, int notch, int id) {
         this(latterSize, notch, id, false);
     }
+    public int getNotchLocation() {
+        return notchPosition;
+    }
 
-    private void initRotorArrays() {
+    public int getRotorID() {
+        return rotorID;
+    }
+
+    public void setRightSide(List<CTEPositioning> positioningList)
+    {
+        for(int i=0;i<positioningList.size();i++)
+        {
+            char letter=positioningList.get(i).getRight().charAt(0);
+            if(latter2IndexRightSide.containsKey(letter))
+                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " + letter + " is already mapped. Please check that each character mapped only once.");
+            latter2IndexRightSide.put(letter,i);
+            index2latterRightSide[i]=letter;
+        }
+    }
+
+    public void setLeftSide(List<CTEPositioning> positioningList)
+    {
+        for(int i=0;i<positioningList.size();i++)
+        {
+            char letter=positioningList.get(i).getLeft().charAt(0);
+
+            if(latter2IndexLeftSide.containsKey(letter))
+                throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " +letter + " is already mapped. Please check that each character mapped only once.");
+            latter2IndexLeftSide.put(letter,i);
+            index2latterLeftSide[i]=letter;
+        }
+    }
+
+ public void setInitialWindowPosition(char latter) {
+        initialWindowPosition = latter2IndexRightSide.get(latter);
+        resetWindowPositionToInitialPosition();
+
+    }
+
+private void initRotorArrays() {
         index2latterRightSide = new char[latterSize];
         index2latterLeftSide = new char[latterSize];
         latter2IndexLeftSide = new HashMap<>(latterSize);
@@ -42,17 +82,6 @@ public class Roter {
             index2latterLeftSide[i] = index2latterRightSide[i] = 0;
         }
     }
-
-    public int getRotorID() {
-        return rotorID;
-    }
-
-    public void setInitialWindowPosition(char latter) {
-        initialWindowPosition = latter2IndexRightSide.get(latter);
-        resetWindowPositionToInitialPosition();
-
-    }
-
     public void resetWindowPositionToInitialPosition() {
         windowPosition = initialWindowPosition;
     }
@@ -73,7 +102,7 @@ public class Roter {
     }
 
 
-    int calcIndexofRotorTable(int index, boolean isRelativIndex) {
+    int calcIndexRotorTable(int index, boolean isRelativIndex) {
         int value;
         if (isRelativIndex)
             value = index - windowPosition;
@@ -103,16 +132,16 @@ public class Roter {
         char inputLatter;
         forwardWindowPosition(previousNotchRotorArriveWindow);
         boolean advanceNextRotor = (notchPosition == windowPosition);
-        int relativeIndex = calcIndexofRotorTable(inputRowRotorTable, false);
+        int relativeIndex = calcIndexRotorTable(inputRowRotorTable, false);
         int otherSideRelativIndex;
         if (debugMode)
             System.out.format("Rotor ID:%d,latter:%c\n", this.rotorID, index2latterRightSide[relativeIndex]);
         if (isInputFromLeft) {
             inputLatter = index2latterLeftSide[relativeIndex];//translate the input index to latter in left side
-            otherSideRelativIndex = calcIndexofRotorTable(latter2IndexRightSide.get(inputLatter), true);
+            otherSideRelativIndex = calcIndexRotorTable(latter2IndexRightSide.get(inputLatter), true);
         } else {
             inputLatter = index2latterRightSide[relativeIndex];//translate the input index to latter in right side
-            otherSideRelativIndex = calcIndexofRotorTable(latter2IndexLeftSide.get(inputLatter), true);
+            otherSideRelativIndex = calcIndexRotorTable(latter2IndexLeftSide.get(inputLatter), true);
         }
         if (debugMode)
             System.out.format("Rotor ID:%d,input latter:%c,input flow:%d -> %d\n", this.rotorID, inputLatter, inputRowRotorTable, otherSideRelativIndex);
@@ -134,4 +163,5 @@ public class Roter {
             }
         }
     }
+
 }
