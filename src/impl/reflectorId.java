@@ -8,10 +8,11 @@ public enum reflectorId {
 
     public static Boolean isExist(int number) {
         for(reflectorId  item : reflectorId.values()) {
-            if(number==item.ordinal()) {
+            if(number-1==item.ordinal()) {
                 return true;
             }
         }
         return false;
     }
+
 }

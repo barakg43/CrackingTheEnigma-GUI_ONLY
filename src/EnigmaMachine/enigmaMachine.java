@@ -4,7 +4,9 @@ import impl.*;
 import jaxb.schema.generated.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class enigmaMachine {
 
@@ -12,31 +14,44 @@ public class enigmaMachine {
     private Reflector[] AllReflectorsArray;
     private Roter[] AllRotorsArray;
     private int numberOfRotors;
-
+    private int numOfRotorsInUse;
     private String alphabet;
+    private Map<Character, Character> plugBoardPairs;
 
 
 
 
     //selected by user
     private Reflector selectedReflector;
-
     private Roter[] selectedRotors;
     private char[] selectedPositions;
 
 
+    public void enigmaMachine() {
+        plugBoardPairs=new HashMap<>();
+        for(int i=0;i<alphabet.length();i++)
+        {
+            plugBoardPairs.put(alphabet.charAt(i),alphabet.charAt(i));
+        }
+    }
 
-    public Reflector[] getAllReflectors()
-    {
+    public void setRotorsInUse(int rotorsInuse) {
+        numOfRotorsInUse=rotorsInuse;
+    }
+    public int getRotorsInUse() {
+        return numOfRotorsInUse;
+    }
+    public Reflector[] getAllReflectors() {
         return AllReflectorsArray;
     }
 
     public int getNumberOfRotors() {
         return numberOfRotors;
     }
-
     public void setSelectedPositions(char[] selectedPositions) {
-        this.selectedPositions = selectedPositions;
+        this.selectedPositions = selectedPositions;}
+    public char[] getSelectedPositions() {
+        return selectedPositions;
     }
 
     public Roter[] getAllRotorsArray(){
@@ -51,14 +66,23 @@ public class enigmaMachine {
     public String getAlphabet() {
         return alphabet;
     }
-    public void setSelectedReflector(Reflector selectedRef)
-    {
+    public void setSelectedReflector(Reflector selectedRef) {
         selectedReflector=selectedRef;
     }
 
-    public Reflector getSelectedReflector()
-    {
+    public void setPlugBoard(Map<Character, Character> PlugBoardPairs) {
+        plugBoardPairs=PlugBoardPairs;
+    }
+
+    public Map<Character, Character> getPlugBoard(){
+        return plugBoardPairs;
+    }
+
+    public Reflector getSelectedReflector() {
         return selectedReflector;
+    }
+    public Roter[] getSelectedRotors() {
+        return selectedRotors;
     }
 
     public void setSelectedRotors(Roter[] selectedRotorsArray) {
@@ -76,6 +100,7 @@ public class enigmaMachine {
             AllRotorsArray[rotor.getId()-1]=new Roter(alphabet.length(),rotor.getNotch(),rotor.getId()); // check about latterSize
             AllRotorsArray[rotor.getId()-1].setRightSide(rotor.getCTEPositioning());
             AllRotorsArray[rotor.getId()-1].setLeftSide(rotor.getCTEPositioning());
+
         }
     }
 
@@ -88,7 +113,7 @@ public class enigmaMachine {
             if( AllReflectorsArray[reflectorId]!=null)
                 throw new Exception("There are 2 reflectors with same id.\nplease correct this.");
 
-            AllReflectorsArray[reflectorId]= new Reflector(reflector.getCTEReflect().size()*2);
+            AllReflectorsArray[reflectorId]= new Reflector(reflector.getCTEReflect().size()*2,reflector.getId());
             AllReflectorsArray[reflectorId].setReflectorArray(reflector.getCTEReflect(),reflector.getId());
         }
     }

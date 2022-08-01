@@ -30,6 +30,10 @@ public class Roter {
         initArray();
     }
 
+    public int getNotchLocation() {
+        return notchLocation;
+    }
+
     public int getRotorID() {
         return rotorID;
     }
@@ -39,7 +43,6 @@ public class Roter {
         for(int i=0;i<positioningList.size();i++)
         {
             char letter=positioningList.get(i).getRight().charAt(0);
-
             if(latter2IndexRightSide.containsKey(letter))
                 throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " + letter + " is already mapped. Please check that each character mapped only once.");
             latter2IndexRightSide.put(letter,i);
@@ -52,6 +55,7 @@ public class Roter {
         for(int i=0;i<positioningList.size();i++)
         {
             char letter=positioningList.get(i).getLeft().charAt(0);
+
             if(latter2IndexLeftSide.containsKey(letter))
                 throw new RuntimeException("In rotor No '"+rotorID+ "' the letter " +letter + " is already mapped. Please check that each character mapped only once.");
             latter2IndexLeftSide.put(letter,i);

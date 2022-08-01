@@ -1,24 +1,30 @@
 package UI;
 
-import javafx.util.Pair;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Scanner;
-import menuEngine.MenuEngine;
+import impl.reflectorId;
+import java.util.*;
+import menuEngine.*;
 
 public class UserInterface {
 
     private final static int EXIT = 8;
     private final static int START_OPTION = 1;
 
-    private MenuEngine mEngine;
+    private final MenuEngine mEngine;
+    private MachineDataDTO machineData;
+    private SelectedDataDTO selectedData;
+
+    private boolean currentCode;
     private boolean isFirstOptionSelected;
+    private boolean withPlugBoardPairs;
+
+
 
     public UserInterface(MenuEngine menuEngine)
     {
-
+        currentCode=false;
         mEngine=menuEngine;
         isFirstOptionSelected=false;
+        withPlugBoardPairs=false;
     }
 
     public void startMenu(){
@@ -28,16 +34,19 @@ public class UserInterface {
         while(option!=EXIT) {
             switch (option) {
                 case 1: {
+                    currentCode=false;
+                    withPlugBoardPairs=false;
                     loadMachineDataFile();
                     break;
                 }
                 case 2:{
-                    //  printMachineData();
-                    // break;
-                   // break;
+                      printMachineData();
+                     break;
                 }
                 case 3: {
-                   machineConfByUser();
+                    withPlugBoardPairs=false;
+                    currentCode=false;
+                    machineConfByUser();
                     break;
                 }
                 case 4: {
@@ -59,6 +68,7 @@ public class UserInterface {
             }
             printMenu();
             option = getOptionAndValidate();
+
         }
         System.out.println("You selected to exit. Goodbye! ");
 
@@ -104,9 +114,9 @@ public class UserInterface {
         if(optionNum ==1)
             isFirstOptionSelected=true;
 
-        while(isFirstOptionSelected==false)
+        while(!isFirstOptionSelected)
         {
-            System.out.println("You need first select the first option. ");
+            System.out.println("You need first select the first option.");
             optionNum=scanner.nextInt();
             if(optionNum ==1)
                 isFirstOptionSelected=true;
@@ -120,41 +130,100 @@ public class UserInterface {
     private void loadMachineDataFile()  //case 1
     {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter full XML file path: ");
-        String filePath = scanner.nextLine();
-        try {
-            mEngine.LoadXMLFile(filePath);
-
-        }catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            return;
-        }
-        System.out.println("The file path loaded successfully.\n");
-        return;
-    }
-
-    private void machineConfByUser() // case 3
-    {
         boolean res=false;
-        Scanner scanner = new Scanner(System.in);
-        String line;
-        int numberOfRotors=0;
-        System.out.println("Please enter the number of Rotors:");
-
         while(!res){
             try {
-                numberOfRotors=  mEngine.checkIfNumberOfRotorsValid(scanner.nextLine());
+                System.out.println("Please enter full XML file path: ");
+                String xmlPath= scanner.nextLine();
+                mEngine.LoadXMLFile(xmlPath);
+                machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        res=false;
-        System.out.printf("Please enter %d Rotors with commas between them (for example: 43,27,5):\n",numberOfRotors);
+        System.out.println("The file path loaded successfully.");
+    }
+
+    private void printMachineData()  //case 2
+    {
+        System.out.println("\nMachine details:");
+
+        int[] rotorsArray=machineData.getRotorsId();
+        int[] notchArray=machineData.getNotchNums();
+
+        System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
+        System.out.println("Position of notch in each rotor:");
+        for(int i=0;i<machineData.getRotorsId().length;i++)
+        {
+            System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
+        }
+        System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
+        System.out.println("The amount of messages that have passed through the machine so far:"); //TODO
+
+        if(currentCode) {
+            int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
+            char[] selectedPositions= selectedData.getSelectedPositions();
+
+            System.out.println("Current machine code:");
+            System.out.print("<");
+            for(int i=0;i<selectedRotorsArray.length-1;i++)
+            {
+                System.out.printf("%d,",selectedRotorsArray[i]);
+            }
+            System.out.printf("%d",selectedRotorsArray[selectedRotorsArray.length-1]);
+            System.out.print(">");
+
+            System.out.print("<");
+            for (char selectedPosition : selectedPositions) {
+                System.out.printf("%c", selectedPosition);
+            }
+            System.out.print(">");
+
+            System.out.print("<");
+            System.out.printf("%s",selectedData.getSelectedReflectorID());
+            System.out.print(">");
+
+            List<String> pairs=selectedData.getPlugBoardPairs();
+
+            if(withPlugBoardPairs)
+            {
+                System.out.print("<");
+                for(int i=0;i<pairs.size()-1;i++)
+                {
+                    System.out.printf("%c|%c,",pairs.get(i).charAt(0),pairs.get(i).charAt(1));
+                }
+
+                System.out.printf("%c|%c",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1));
+                System.out.println(">");
+            }
+            else{
+                System.out.println("\n");
+            }
+        }
+
+    }
+
+    private void machineConfByUser() // case 3
+    {
+        currentCode=true;
+        rotorsConfig();
+        reflectorConfig();
+        PlugBoardConfig();
+        selectedData = mEngine.getSelectedData();
+
+        System.out.println("The data was successfully received.");
+    }
+
+    private void rotorsConfig()
+    {
+        boolean res=false;
+        Scanner scanner = new Scanner(System.in);
+        System.out.printf("Please enter %d Rotors with commas between them (for example: 43,27,5):\n",machineData.getNumberOfRotorsInUse());
         while(!res) {
             try {
-                mEngine.checkIfRotorsValid(scanner.nextLine(), numberOfRotors);
+                mEngine.checkIfRotorsValid(scanner.nextLine());
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -166,15 +235,24 @@ public class UserInterface {
         res=false;
         while(!res) {
             try {
-                mEngine.checkIfPositionsValid(scanner.nextLine(), numberOfRotors);
+                mEngine.checkIfPositionsValid(scanner.nextLine());
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        System.out.println("Please select reflector number:\n1. I\n2. II\n3. III\n4. IV\n5. V");
-        res=false;
+    }
+    private void reflectorConfig()
+    {
+        boolean res=false;
+        Scanner scanner = new Scanner(System.in);
+        int numOfReflectors= machineData.getNumberOfReflectors();
+        System.out.println("Please select reflector number: ");
+        for(int i=0;i<numOfReflectors;i++)
+        {
+            System.out.printf("%d. %s\n",i+1, reflectorId.values()[i]);
+        }
         while(!res) {
             try {
                 mEngine.checkIfReflectorNumValid(scanner.nextLine());
@@ -183,16 +261,40 @@ public class UserInterface {
                 System.out.println(e.getMessage());
             }
         }
+    }
 
-
-
+    private void PlugBoardConfig()
+    {
+        Scanner scanner = new Scanner(System.in);
+        boolean res=false;
         System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
-        String plugBoard=scanner.nextLine();
-        int plugboardNum= Integer.parseInt(plugBoard);
-        if(plugboardNum==1) {
-            System.out.println("Please enter pairs(without white space) for plugBoard with commas between them for example: AC,BG (A and C connected in the plugBoard, B and G connected in the plugBoard)");
-            String plugBoardPairs = scanner.nextLine();
-            //mEngine.CheckAndSavePlugBoardPairs(plugBoardPairs);
+        int plugboardNum=2;
+        while(!res) {
+            try {
+                plugboardNum = mEngine.checkPlugBoardNum( scanner.nextLine());
+                res=true;
+            }catch (Exception e) {
+                System.out.println("Please choose 1 or 2.");
+            }
         }
+
+        if(plugboardNum==1) {
+            withPlugBoardPairs=true;
+            System.out.println("Please enter pairs(without white space) for plugBoard with commas between them for example: AC,BG (A and C connected in the plugBoard, B and G connected in the plugBoard)");
+            res = false;
+            while (!res) {
+                try {
+                    String plugBoardPairs = scanner.nextLine();
+                    mEngine.CheckPlugBoardPairs(plugBoardPairs);
+                    res = true;
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        else{
+            System.out.println("you choose without plugBoard pairs.");
+        }
+
     }
 }

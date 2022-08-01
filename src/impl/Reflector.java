@@ -9,13 +9,14 @@ import java.util.List;
 
 public class Reflector {
 
-    private final static reflectorId reflectorIdNum = null;
+    private final reflectorId reflectorIdNum ;
     private final int[] mappedReflectorsArray;
     private final int lattersSize;
-    public Reflector(int lattersSize)
+    public Reflector(int lattersSize,String refID)
     {
         mappedReflectorsArray=new int[lattersSize];
         this.lattersSize=lattersSize;
+        reflectorIdNum = reflectorId.valueOf(refID);
     }
     public reflectorId getReflectorId()
     {
