@@ -1,4 +1,4 @@
-package EnigmaMachine;
+package impl;
 
 public class RotorOutputData {
         private final int outputIndex;

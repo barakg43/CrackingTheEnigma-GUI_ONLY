@@ -1,9 +1,7 @@
 package menuEngine;
 
 import EnigmaMachine.enigmaMachine;
-import impl.Reflector;
-import impl.Roter;
-import impl.reflectorId;
+import impl.*;
 import jaxb.schema.generated.CTEEnigma;
 import jaxb.schema.generated.CTERotor;
 
@@ -22,7 +20,8 @@ public class MenuEngine {
     private MachineDataDTO MachineData;
     private SelectedDataDTO SelectedData;
     private List<String>  plugBoardPairs;
-
+    private Rotor[] selectedRotors;
+    private Reflector selectedReflector=null;
     public MenuEngine()
     {
         enigmaMachine=new enigmaMachine();
@@ -60,7 +59,7 @@ public class MenuEngine {
 
     public void checkIfRotorsValid(String rotors) throws Exception {
         List<String> ArrayString = Arrays.asList(rotors.split(","));
-        Roter[] selectedRotors=new Roter[enigmaMachine.getRotorsInUse()];
+        selectedRotors=new Rotor[enigmaMachine.getRotorsInUse()];
         int i=0;
         int rotorNum;
         if(ArrayString.size()!=enigmaMachine.getRotorsInUse())
@@ -82,7 +81,10 @@ public class MenuEngine {
 
         enigmaMachine.setSelectedRotors(selectedRotors);
     }
-
+    public boolean checkIfDataValid(String data)
+    {
+        return enigmaMachine.getKeyboard().checkValidInput(data);
+    }
     public void checkIfPositionsValid(String positions) throws Exception {
         char[] positionsList = new char[enigmaMachine.getRotorsInUse()];
         int i=0;
@@ -96,6 +98,34 @@ public class MenuEngine {
         }
         enigmaMachine.setSelectedPositions(positionsList);
     }
+public String chipperData(String dataInput) {
+
+    int currentRow;
+    boolean advanceNextRotor = true;
+    StringBuilder output = new StringBuilder();
+    RotorOutputData rotorOutput;
+    for (int i = 0; i < dataInput.length(); i++) {
+        currentRow = enigmaMachine.getKeyboard().getMappedOutput(dataInput.charAt(i));
+        for (Rotor selectedRotor : selectedRotors) {
+            rotorOutput = selectedRotor.getOutputMapIndex(currentRow, false, advanceNextRotor);
+            currentRow = rotorOutput.getOutputIndex();
+            advanceNextRotor = rotorOutput.isAdvanceNextRotor();
+
+        }
+        currentRow = selectedReflector.getMappedOutput(currentRow);
+
+        for (int j = selectedRotors.length - 1; j >= 0; j--) {
+            rotorOutput = selectedRotors[j].getOutputMapIndex(currentRow, true, false);
+            currentRow = rotorOutput.getOutputIndex();
+            advanceNextRotor = rotorOutput.isAdvanceNextRotor();
+
+        }
+        output.append(enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow));
+        System.out.println("output:" + output);
+
+    }
+    return output.toString();
+}
 
     public void checkIfReflectorNumValid(String ReflectorNum) throws Exception {
         int refNum;
@@ -107,8 +137,8 @@ public class MenuEngine {
         if(!reflectorId.isExist(refNum) || refNum> MachineData.getNumberOfReflectors() )
             throw new Exception("Please choose one of the options 1-"+ enigmaMachine.getAllReflectors().length);
 
-        Reflector reflector=findReflector(refNum);
-        enigmaMachine.setSelectedReflector(reflector);
+        selectedReflector=findReflector(refNum);
+        //enigmaMachine.setSelectedReflector(selectedReflector);
     }
 
     public void CheckPlugBoardPairs(String pairs) throws Exception {
@@ -117,15 +147,10 @@ public class MenuEngine {
         for (String str : plugBoardPairs) {
             if(enigmaMachine.getAlphabet().indexOf(str.charAt(0))==-1 || enigmaMachine.getAlphabet().indexOf(str.charAt(1))==-1)
                 throw new Exception("Pair: "+ str + " doesn't exist in the machine alphabet.");
-            if (plugBoard.containsKey(str.charAt(0)))
-                throw new Exception("You use the same character '" + str.charAt(0) + "' in more than one mapping pair. Please check this.");
-            if (str.charAt(0) == str.charAt(1))
-                throw new Exception("You map character '" + str.charAt(0) + "' to itself. Please change this mapping.");
-            plugBoard.put(str.charAt(0), str.charAt(1));
-            plugBoard.put(str.charAt(1), str.charAt(0));
+            enigmaMachine.getPlugBoard().addMappedInputOutput(str.charAt(0), str.charAt(1));
 
         }
-        enigmaMachine.setPlugBoard(plugBoard);
+
     }
 
     public int checkPlugBoardNum(String plugBoardNum) throws Exception {
@@ -142,14 +167,13 @@ public class MenuEngine {
     }
 
 
-    private Roter findRotor(int rotorNum,Roter[] allRotors)
+    private Rotor findRotor(int rotorNum, Rotor[] allRotors)
     {
       //  Roter[] allRotors= enigmaMachine.getAllRotorsArray();
-        for (Roter rotor:allRotors) {
-            if(rotor!=null && rotor.getRotorID()==rotorNum)
-                return rotor;
-        }
-        return null;
+
+        return allRotors[rotorNum-1];
+
+
     }
 
     private Reflector findReflector(int reflectorNum)
@@ -169,7 +193,7 @@ public class MenuEngine {
                rotorsID,plugBoardPairs);
     }
 
-    private int[] copySelectedRotorsID(Roter[] selectedRotors)
+    private int[] copySelectedRotorsID(Rotor[] selectedRotors)
     {
         int[] selectedRotorsID=new int[selectedRotors.length];
         for(int i=0;i<selectedRotorsID.length;i++)
@@ -182,9 +206,11 @@ public class MenuEngine {
     private void copyAllData(CTEEnigma eng) throws Exception {
         String alphabet=eng.getCTEMachine().getABC().replaceAll("\n","");
         alphabet=alphabet.replaceAll("\t","");
+
         if(alphabet.length()%2!=0)
             throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
-        enigmaMachine.setAlphabet(eng.getCTEMachine().getABC());
+        enigmaMachine.setAlphabet(eng.getCTEMachine().getABC(),new Plugboard());//TODO:
+                                                                                //change to real plugboard
         if(eng.getCTEMachine().getRotorsCount()<2)
             throw new RuntimeException("The number of rotors need to be bigger or equal to 2.\nPlease correct this.");
         if(eng.getCTEMachine().getRotorsCount()>eng.getCTEMachine().getCTERotors().getCTERotor().size())
@@ -222,6 +248,8 @@ public class MenuEngine {
     /*public int checkIfNumberOfRotorsValid(String numOfRotors) throws Exception {
         int numberOfRotors;
         try {
+
+
             numberOfRotors = Integer.parseInt(numOfRotors);
         }catch (Exception ex) {
             throw new Exception("The number you entered isn't integer. Please enter an integer number: ");
