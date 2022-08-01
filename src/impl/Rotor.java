@@ -20,8 +20,8 @@ public class Rotor {
     private final int latterSize;
     private int currentMapSize=0;
     private int windowPosition=0;
-    private int notchPosition;
-    private int rotorID;
+    private final int notchPosition;
+    private final int rotorID;
     private int initialWindowPosition;
     private final boolean debugMode;
        public Rotor(int latterSize, int notch, int id, boolean debugMode) {
@@ -102,7 +102,7 @@ private void initRotorArrays() {
     }
 
 
-    int calcIndexofRotorTable(int index, boolean isRelativIndex) {
+    int calcIndexRotorTable(int index, boolean isRelativIndex) {
         int value;
         if (isRelativIndex)
             value = index - windowPosition;
@@ -132,16 +132,16 @@ private void initRotorArrays() {
         char inputLatter;
         forwardWindowPosition(previousNotchRotorArriveWindow);
         boolean advanceNextRotor = (notchPosition == windowPosition);
-        int relativeIndex = calcIndexofRotorTable(inputRowRotorTable, false);
+        int relativeIndex = calcIndexRotorTable(inputRowRotorTable, false);
         int otherSideRelativIndex;
         if (debugMode)
             System.out.format("Rotor ID:%d,latter:%c\n", this.rotorID, index2latterRightSide[relativeIndex]);
         if (isInputFromLeft) {
             inputLatter = index2latterLeftSide[relativeIndex];//translate the input index to latter in left side
-            otherSideRelativIndex = calcIndexofRotorTable(latter2IndexRightSide.get(inputLatter), true);
+            otherSideRelativIndex = calcIndexRotorTable(latter2IndexRightSide.get(inputLatter), true);
         } else {
             inputLatter = index2latterRightSide[relativeIndex];//translate the input index to latter in right side
-            otherSideRelativIndex = calcIndexofRotorTable(latter2IndexLeftSide.get(inputLatter), true);
+            otherSideRelativIndex = calcIndexRotorTable(latter2IndexLeftSide.get(inputLatter), true);
         }
         if (debugMode)
             System.out.format("Rotor ID:%d,input latter:%c,input flow:%d -> %d\n", this.rotorID, inputLatter, inputRowRotorTable, otherSideRelativIndex);
