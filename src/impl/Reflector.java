@@ -1,73 +1,51 @@
 package impl;
 
-import jaxb.schema.generated.CTEReflect;
+import EnigmaMachine.Mapper;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class Reflector {
-
+public class Reflector implements Mapper<Integer,Integer> {
     private final reflectorId reflectorIdNum ;
     private final int[] mappedReflectorsArray;
-    private final int lattersSize;
-    public Reflector(int lattersSize,String refID)
+    private final int lettersSize;
+    private final int NOT_INIT=-1;
+    public Reflector(int lettersSize,String refID)
     {
-        mappedReflectorsArray=new int[lattersSize];
-        this.lattersSize=lattersSize;
+        mappedReflectorsArray=new int[lettersSize];
+        this.lettersSize=lettersSize;
         reflectorIdNum = reflectorId.valueOf(refID);
+        initArray();
+    }
+    private void  initArray()
+    {
+        for (int i = 0; i < lettersSize; i++) {
+            mappedReflectorsArray[i]=NOT_INIT;
+        }
     }
     public reflectorId getReflectorId()
     {
         return reflectorIdNum;
     }
 
-    public int[] getMappedReflectorsArray() {
-        return mappedReflectorsArray;
-    }
-
-    public void setReflectorArray(List<CTEReflect> reflectorsArray, String reflectorNumber)
-    {
-        int i;
-        List<Integer> inputlist=new ArrayList<>();
-        List<Integer> outputlist=new ArrayList<>();
-        int inputNumber,outputNumber;
-        for(i=0;i<reflectorsArray.size();i++) {
-             inputNumber=reflectorsArray.get(i).getInput()-1;
-             outputNumber=reflectorsArray.get(i).getOutput()-1;
-
-            if(inputNumber==outputNumber)
-                throw new RuntimeException("In reflector No '"+ reflectorNumber +"'  there is reflect that mapped to itself.\nplease check that every reflect mapped to a different reflect.");
-            if(outputlist.contains(outputNumber))
-                throw new RuntimeException("In reflector No '"+ reflectorNumber +"' the output "  + (outputNumber+1) +" appears more than once.");
-            if(inputlist.contains(inputNumber))
-                throw new RuntimeException("In reflector No '"+ reflectorNumber +"' the input "  + (inputNumber+1) +" appears more than once.");
-
-            inputlist.add(inputNumber);
-            outputlist.add(outputNumber);
-            mappedReflectorsArray[inputNumber]= outputNumber;
-        }
-        for(i=0;i<reflectorsArray.size();i++) {
-             inputNumber=reflectorsArray.get(i).getInput()-1;
-             outputNumber=reflectorsArray.get(i).getOutput()-1;
-            mappedReflectorsArray[outputNumber]= inputNumber;
-        }
-    }
-
-    public int getOtherSideOfReflector(int input)
-    {
-        if(input>=lattersSize||input<0)
+    @Override
+    public Integer getMappedOutput(Integer input) {
+        if(input>= lettersSize ||input<0)
             throw new RuntimeException("invalid input,out of bound reflector id");
 
         return mappedReflectorsArray[input];
     }
-    public void addMappedReflection(int input,int output)
+
+    public void addMappedInputOutput(Integer input, Integer output)
     {
-        if(input==output)
+        input--;
+        output--;
+
+        if(input.equals(output))
             throw new RuntimeException("cant mapped input to himself!");
-        if(input<0||input>lattersSize||output<0||output>lattersSize)
+        if(input<0||input> lettersSize ||output<0||output> lettersSize)
             throw new RuntimeException("invalid input mapped reflection-out of bounds");
+        if(mappedReflectorsArray[output]!=NOT_INIT)
+                throw new RuntimeException("In reflector No '"+ reflectorIdNum +"' the output "  + (output+1) +" appears more than once.");
+        if(mappedReflectorsArray[input]!=NOT_INIT)
+            throw new RuntimeException("In reflector No '"+ reflectorIdNum +"' the input "  + (input+1) +" appears more than once.");
 
         mappedReflectorsArray[input]=output;
         mappedReflectorsArray[output]=input;

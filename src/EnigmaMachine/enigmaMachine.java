@@ -12,27 +12,25 @@ public class enigmaMachine {
 
     // from file
     private Reflector[] AllReflectorsArray;
-    private Roter[] AllRotorsArray;
+    private Rotor[] AllRotorsArray;
     private int numberOfRotors;
     private int numOfRotorsInUse;
     private String alphabet;
-    private Map<Character, Character> plugBoardPairs;
+    private Plugboard plugBoardPairs;
 
+    private Keyboard keyboard;
 
 
 
     //selected by user
     private Reflector selectedReflector;
-    private Roter[] selectedRotors;
+    private Rotor[] selectedRotors;
     private char[] selectedPositions;
 
 
     public void enigmaMachine() {
-        plugBoardPairs=new HashMap<>();
-        for(int i=0;i<alphabet.length();i++)
-        {
-            plugBoardPairs.put(alphabet.charAt(i),alphabet.charAt(i));
-        }
+        plugBoardPairs=new Plugboard();
+
     }
 
     public void setRotorsInUse(int rotorsInuse) {
@@ -45,6 +43,10 @@ public class enigmaMachine {
         return AllReflectorsArray;
     }
 
+    public Plugboard getPlugBoard() {
+        return plugBoardPairs;
+    }
+
     public int getNumberOfRotors() {
         return numberOfRotors;
     }
@@ -54,13 +56,18 @@ public class enigmaMachine {
         return selectedPositions;
     }
 
-    public Roter[] getAllRotorsArray(){
+    public Rotor[] getAllRotorsArray(){
         return AllRotorsArray;
     }
 
-    public void setAlphabet(String Alphabet) {
-        Alphabet.replaceAll(" ","");
-        alphabet=Alphabet;
+    public void setAlphabet(String alphabet,Plugboard plugboard) {
+        alphabet.replaceAll(" ","");
+        keyboard=new Keyboard(alphabet,plugboard);
+        this.alphabet=alphabet;
+    }
+
+    public Keyboard getKeyboard() {
+        return keyboard;
     }
 
     public String getAlphabet() {
@@ -70,51 +77,58 @@ public class enigmaMachine {
         selectedReflector=selectedRef;
     }
 
-    public void setPlugBoard(Map<Character, Character> PlugBoardPairs) {
-        plugBoardPairs=PlugBoardPairs;
-    }
 
-    public Map<Character, Character> getPlugBoard(){
-        return plugBoardPairs;
-    }
+
+
 
     public Reflector getSelectedReflector() {
         return selectedReflector;
     }
-    public Roter[] getSelectedRotors() {
+    public Rotor[] getSelectedRotors() {
         return selectedRotors;
     }
 
-    public void setSelectedRotors(Roter[] selectedRotorsArray) {
+    public void setSelectedRotors(Rotor[] selectedRotorsArray) {
         selectedRotors=selectedRotorsArray;
     }
 
     public void setRotors(List<CTERotor> RotorsArray) throws Exception {
         numberOfRotors=RotorsArray.size();
-        AllRotorsArray = new Roter[RotorsArray.size()];
+        AllRotorsArray = new Rotor[RotorsArray.size()];
         for (CTERotor rotor: RotorsArray) {
             if(AllRotorsArray[rotor.getId()-1]!=null)
                 throw new Exception("There are 2 rotors with same id.\nplease correct this.");
             if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() < 0)
                 throw new Exception("Notch number of rotor: "+rotor.getId()+  " need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
-            AllRotorsArray[rotor.getId()-1]=new Roter(alphabet.length(),rotor.getNotch(),rotor.getId()); // check about latterSize
-            AllRotorsArray[rotor.getId()-1].setRightSide(rotor.getCTEPositioning());
-            AllRotorsArray[rotor.getId()-1].setLeftSide(rotor.getCTEPositioning());
+            AllRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId()); // check about latterSize
+            setRotorTable(rotor.getCTEPositioning(), AllRotorsArray[rotor.getId()-1]);
+
 
         }
+    }
+
+    private void setRotorTable(List<CTEPositioning> ctePos,Rotor rotor) {
+        for(CTEPositioning pos:ctePos)
+            rotor.addMapLatterToRotor(pos.getLeft().charAt(0),pos.getRight().charAt(0));
     }
 
     public void setReflectors(List<CTEReflector> ReflectorsArray) throws Exception {
         AllReflectorsArray=new Reflector[ReflectorsArray.size()];
         for(CTEReflector reflector : ReflectorsArray){
-
             int reflectorId=(impl.reflectorId.valueOf(reflector.getId()).ordinal());
-
             if( AllReflectorsArray[reflectorId]!=null)
                 throw new Exception("There are 2 reflectors with same id.\nplease correct this.");
 
             AllReflectorsArray[reflectorId]= new Reflector(reflector.getCTEReflect().size()*2,reflector.getId());
-            AllReflectorsArray[reflectorId].setReflectorArray(reflector.getCTEReflect(),reflector.getId());
+           setReflectorArray(reflector.getCTEReflect(), AllReflectorsArray[reflectorId]);
         }
     }
-}
+        public void setReflectorArray(List<CTEReflect> reflectorsArray, Reflector reflector)
+        {
+           for(CTEReflect ref:reflectorsArray) {
+                reflector.addMappedInputOutput(ref.getInput()-1,ref.getOutput()-1);
+            }
+
+        }
+    }
+
