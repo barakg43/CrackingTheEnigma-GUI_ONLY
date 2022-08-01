@@ -1,5 +1,6 @@
 package EnigmaMachine;
 
-public interface Mapper {
-    public int getMapForIndex(int index);
+public interface Mapper<T> {
+     T getMappedOutput(T input);
+     void addMappedInputOutput(T input,T output);
 }
