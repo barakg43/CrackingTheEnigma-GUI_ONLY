@@ -44,8 +44,8 @@ public class UserInterface {
                     break;
                 }
                 case 2:{
-                      printMachineData();
-                     break;
+                    printMachineData();
+                    break;
                 }
                 case 3: {
                     withPlugBoardPairs=false;
@@ -55,20 +55,20 @@ public class UserInterface {
                 }
                 case 4: {
                     // some method
-                  //  break;
+                    //  break;
                 }
                 case 5: {
                     System.out.println("Please enter data that you want to chipper:");
-                    String inputData=scanner.nextLine();
-                    while (!mEngine.checkIfDataValid(inputData))
-                    {
-                        System.out.println("not valid input,please enter data again");
-                        inputData=scanner.nextLine();
-                    }
+//                    String inputData=scanner.nextLine();
+//                    while (!mEngine.checkIfDataValid(inputData))
+//                    {
+//                        System.out.println("not valid input,please enter data again");
+//                        inputData = scanner.nextLine();
+//                    }
 
-                   // mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
+                    // mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
                     //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-
+                    String inputData="FEDCBAABCDEF";
                     mEngine.chipperData(inputData);
                     break;
                 }
@@ -80,7 +80,7 @@ public class UserInterface {
                 }
                 case 7: {
                     // some method
-                   // break;
+                    // break;
                 }
             }
             printMenu();
@@ -145,13 +145,13 @@ public class UserInterface {
 
     private void loadMachineDataFile()  //case 1
     {
-        Scanner scanner = new Scanner(System.in);
+
         boolean res=false;
         while(!res){
             try {
                 System.out.println("Please enter full XML file path: ");
-               // String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile("C:/Users/nikol/Desktop/java/CrackingTheEnigma/src/Resources/ex1-sanity-small.xml");
+                // String xmlPath= scanner.nextLine();
+                mEngine.LoadXMLFile("C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1/ex1-sanity-small.xml");
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
@@ -235,7 +235,6 @@ public class UserInterface {
     private void rotorsConfig()
     {
         boolean res=false;
-        Scanner scanner = new Scanner(System.in);
         System.out.printf("Please enter %d Rotors with commas between them (for example: 43,27,5):\n",machineData.getNumberOfRotorsInUse());
         while(!res) {
             try {
@@ -246,7 +245,7 @@ public class UserInterface {
             }
         }
 
-        System.out.println("Please enter the initial positions (in UPPER CASE) of the rotors without white spaces between them.\nfor example: ABC " +
+        System.out.println("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
                 "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )");
         res=false;
         while(!res) {
@@ -262,7 +261,6 @@ public class UserInterface {
     private void reflectorConfig()
     {
         boolean res=false;
-        Scanner scanner = new Scanner(System.in);
         int numOfReflectors= machineData.getNumberOfReflectors();
         System.out.println("Please select reflector number: ");
         for(int i=0;i<numOfReflectors;i++)
@@ -281,7 +279,6 @@ public class UserInterface {
 
     private void PlugBoardConfig()
     {
-        Scanner scanner = new Scanner(System.in);
         boolean res=false;
         System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
         int plugboardNum=2;
