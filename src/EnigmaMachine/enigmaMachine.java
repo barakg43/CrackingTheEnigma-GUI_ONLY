@@ -104,7 +104,6 @@ public class enigmaMachine {
             AllRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId());
             setRotorTable(rotor.getCTEPositioning(), AllRotorsArray[rotor.getId()-1]);
 
-
         }
     }
 
