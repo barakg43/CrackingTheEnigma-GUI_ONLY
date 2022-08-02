@@ -1,26 +1,33 @@
 package UI;
-
-//import menuEngine.*;
 import impl.reflectorId;
 import menuEngine.*;
+
 
 import java.util.List;
 import java.util.Scanner;
 
+import static UI.UserInterface.OPTIONS.*;
+
 public class UserInterface {
 
-    private final static int EXIT = 8;
     private final static int START_OPTION = 1;
     private final Scanner scanner;
     private final MenuEngine mEngine;
     private MachineDataDTO1 machineData;
     private SelectedDataDTO1 selectedData;
-
+    protected enum  OPTIONS{  LOAD_XML,
+                            SHOW_SPECS,
+                            CHSE_CNFG,
+                            AUTO_CONFG,
+                            CIPER_DATA,
+                            RST_CODE,
+                            STATS,
+                            EXIT}
     private boolean currentCode;
     private boolean isFirstOptionSelected;
     private boolean withPlugBoardPairs;
 
-
+    private int cipheredInputs;
 
     public UserInterface(MenuEngine menuEngine)
     {
@@ -29,56 +36,61 @@ public class UserInterface {
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
+        cipheredInputs=0;
+        selectedData=new SelectedDataDTO1();
+
     }
 
     public void startMenu(){
         printMenu();
         int option = getOptionAndValidate();
 
-        while(option!=EXIT) {
-            switch (option) {
-                case 1: {
+        while(option!=EXIT.ordinal()) {
+            switch (OPTIONS.values()[option-1]) {
+                case LOAD_XML: {
                     currentCode=false;
                     withPlugBoardPairs=false;
                     loadMachineDataFile();
                     break;
                 }
-                case 2:{
+                case SHOW_SPECS:{
                     printMachineData();
                     break;
                 }
-                case 3: {
+                case CHSE_CNFG: {
                     withPlugBoardPairs=false;
                     currentCode=false;
+                    mEngine.resetSelected();
                     machineConfByUser();
                     break;
                 }
-                case 4: {
-                    // some method
-                    //  break;
-                }
-                case 5: {
-                    System.out.println("Please enter data that you want to chipper:");
-//                    String inputData=scanner.nextLine();
-//                    while (!mEngine.checkIfDataValid(inputData))
-//                    {
-//                        System.out.println("not valid input,please enter data again");
-//                        inputData = scanner.nextLine();
-//                    }
-
-                    // mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
-                    //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-                    String inputData="FEDCBAABCDEF";
-                    mEngine.chipperData(inputData);
+                case AUTO_CONFG: {
+                    withPlugBoardPairs=false;
+                    currentCode=false;
+                    mEngine.resetSelected();
+                    machineConfAutomatically();
                     break;
                 }
-                case 6: {
+                case CIPER_DATA: {
+                    if(selectedData.getSelectedRotorsID()==null)
+                    {
+                        System.out.format("you dont select any machine configuration.\n " +
+                                "please select the %d or %d from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
+                    }
+                    else{
+                        getInputAndChipper();
+                        cipheredInputs++;
+                    }
+                    break;
+                }
+
+                case RST_CODE: {
                     System.out.println("you selected to reset the rotors. ");
                     mEngine.resetCodePosition();
                     System.out.println("The reset successfully");
                     break;
                 }
-                case 7: {
+                case STATS: {
                     // some method
                     // break;
                 }
@@ -92,16 +104,16 @@ public class UserInterface {
     }
 
     private void printMenu() {
-        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT);
+        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT.ordinal());
         String[] MenuOptions =
-                {   "1. Load machine data file.",
-                        "2. Show machine data.",
-                        "3. Initialize machine configuration by yourself.",
-                        "4. Initialize machine configuration automatically.",
-                        "5. Enter Input for the machine.",
-                        "6. Reset machine.",
-                        "7. History and statistics of the machine.",
-                        "8. Exit"
+                {       "# 1. Load machine data file.",
+                        "# 2. Show machine data.",
+                        "# 3. Initialize machine configuration by yourself.",
+                        "# 4. Initialize machine configuration automatically.",
+                        "# 5. Enter Input for the machine.",
+                        "# 6. Reset machine.",
+                        "# 7. History and statistics of the machine.",
+                        "# 8. Exit"
                 };
 
         for (String option : MenuOptions){
@@ -121,7 +133,7 @@ public class UserInterface {
         }
         optionNum=Integer.parseInt(line);
 
-        while(optionNum<START_OPTION || optionNum>EXIT )
+        while(optionNum<START_OPTION || optionNum>EXIT.ordinal() )
         {
             System.out.println("You have selected an incorrect option.");
             printMenu();
@@ -137,7 +149,7 @@ public class UserInterface {
             if(optionNum ==1)
                 isFirstOptionSelected=true;
         }
-        if(optionNum!=EXIT)
+        if(optionNum!=EXIT.ordinal())
             System.out.println("Your selection was chosen successfully.");
 
         return optionNum;
@@ -151,7 +163,7 @@ public class UserInterface {
             try {
                 System.out.println("Please enter full XML file path: ");
                 // String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile("C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1/ex1-sanity-small.xml");
+                mEngine.LoadXMLFile("C:\\ComputerScience\\Java\\EXCISES\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-paper-enigma.xml");
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
@@ -176,49 +188,54 @@ public class UserInterface {
             System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
         }
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
-        System.out.println("The amount of messages that have passed through the machine so far:"); //TODO
+        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" , cipheredInputs);
 
         if(currentCode) {
-            int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
-            char[] selectedPositions= selectedData.getSelectedPositions();
-
             System.out.println("Current machine code:");
-            System.out.print("<");
-            for(int i=0;i<selectedRotorsArray.length-1;i++)
-            {
-                System.out.printf("%d,",selectedRotorsArray[i]);
-            }
-            System.out.printf("%d",selectedRotorsArray[selectedRotorsArray.length-1]);
-            System.out.print(">");
-
-            System.out.print("<");
-            for (char selectedPosition : selectedPositions) {
-                System.out.printf("%c", selectedPosition);
-            }
-            System.out.print(">");
-
-            System.out.print("<");
-            System.out.printf("%s",selectedData.getSelectedReflectorID());
-            System.out.print(">");
-
-            List<String> pairs=selectedData.getPlugBoardPairs();
-
-            if(withPlugBoardPairs)
-            {
-                System.out.print("<");
-                for(int i=0;i<pairs.size()-1;i++)
-                {
-                    System.out.printf("%c|%c,",pairs.get(i).charAt(0),pairs.get(i).charAt(1));
-                }
-
-                System.out.printf("%c|%c",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1));
-                System.out.println(">");
-            }
-            else{
-                System.out.println("\n");
-            }
+            printCurrentCode();
         }
 
+    }
+
+    private void printCurrentCode()
+    {
+        int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
+        char[] selectedPositions= selectedData.getSelectedPositions();
+
+        System.out.print("<");
+        for(int i=selectedRotorsArray.length-1;i>=0;i--)
+        {
+            System.out.printf("%d,",selectedRotorsArray[i]);
+        }
+
+        System.out.print(">");
+
+        System.out.print("<");
+        for(int i=selectedPositions.length-1;i>=0;i--) {
+            System.out.printf("%c", selectedPositions[i]);
+        }
+        System.out.print(">");
+
+
+        System.out.printf("<%s>",selectedData.getSelectedReflectorID());
+
+
+        List<String> pairs=selectedData.getPlugBoardPairs();
+
+        if(withPlugBoardPairs)
+        {
+            System.out.print("<");
+            for (int i = 0; i < pairs.size()-1; i++) {
+
+                System.out.printf("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1));
+            }
+
+            System.out.printf("%c|%c>\n",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1));
+
+        }
+        else{
+            System.out.println("\n");
+        }
     }
 
     private void machineConfByUser() // case 3
@@ -309,5 +326,32 @@ public class UserInterface {
             System.out.println("you choose without plugBoard pairs.");
         }
 
+    }
+
+    private void machineConfAutomatically()
+    {
+        currentCode=true;
+        System.out.println("You choose to get machine code automatically. ");
+        mEngine.getCodeAutomatically();
+        withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
+        selectedData = mEngine.getSelectedData();
+        System.out.println("The automatically selected code is:");
+        printCurrentCode();
+    }
+
+    private void getInputAndChipper()
+    {
+        System.out.println("Please enter data that you want to chipper:");
+//                    String inputData=scanner.nextLine();
+//                    while (!mEngine.checkIfDataValid(inputData))
+//                    {
+//                        System.out.println("not valid input,please enter data again");
+//                        inputData = scanner.nextLine();
+//                    }
+
+        //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
+        //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
+        String inputData="WOWCANTBELIEVEITACTUALLYWORKS";
+        mEngine.chipperData(inputData);
     }
 }

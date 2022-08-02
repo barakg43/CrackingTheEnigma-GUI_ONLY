@@ -16,7 +16,13 @@ public class SelectedDataDTO1 {
         this.selectedRotorsID = selectedRotorsID;
         this.plugBoardPairs=plugBoardPairs;
     }
-
+    public SelectedDataDTO1()
+    {
+        this.selectedPositions=null;
+        this.selectedReflectorID="";
+        this.selectedRotorsID=null;
+        this.plugBoardPairs=null;
+    }
     public String getSelectedReflectorID() {
         return selectedReflectorID;
     }
