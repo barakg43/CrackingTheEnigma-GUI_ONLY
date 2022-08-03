@@ -1,6 +1,6 @@
 package menuEngine;
 
-public class MachineDataDTO1 {
+public class MachineDataDTO {
 
     private final int numberOfReflectors;
     private final int numberOfRotorsInUse;
@@ -8,7 +8,7 @@ public class MachineDataDTO1 {
     private final int[] notchNums;
 
 
-    public MachineDataDTO1(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
+    public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
         this.numberOfReflectors = numberOfReflectors;
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;

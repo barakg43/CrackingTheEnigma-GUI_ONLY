@@ -1,9 +1,11 @@
 package UI;
+import impl.StatisticRecord;
 import impl.reflectorId;
 import menuEngine.*;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static UI.UserInterface.OPTIONS.*;
@@ -13,8 +15,8 @@ public class UserInterface {
     private final static int START_OPTION = 1;
     private final Scanner scanner;
     private final MenuEngine mEngine;
-    private MachineDataDTO1 machineData;
-    private SelectedDataDTO1 selectedData;
+    private MachineDataDTO machineData;
+    private SelectedDataDTO selectedData;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
                             CHSE_CNFG,
@@ -37,7 +39,7 @@ public class UserInterface {
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
         cipheredInputs=0;
-        selectedData=new SelectedDataDTO1();
+
 
     }
 
@@ -45,7 +47,7 @@ public class UserInterface {
         printMenu();
         int option = getOptionAndValidate();
 
-        while(option!=EXIT.ordinal()) {
+        while(option-1!=EXIT.ordinal()) {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
                     currentCode=false;
@@ -72,13 +74,13 @@ public class UserInterface {
                     break;
                 }
                 case CIPER_DATA: {
-                    if(selectedData.getSelectedRotorsID()==null)
+                    if(mEngine.getSelectedData().getSelectedRotorsID()==null)
                     {
-                        System.out.format("you dont select any machine configuration.\n " +
-                                "please select the %d or %d from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
+                        System.out.format("machine configuration not set yet.\n" +
+                                "please select the %d or %d option from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
                     }
                     else{
-                        getInputAndChipper();
+                        getInputAndCipher();
                         cipheredInputs++;
                     }
                     break;
@@ -91,8 +93,8 @@ public class UserInterface {
                     break;
                 }
                 case STATS: {
-                    // some method
-                    // break;
+                    printHistoricalStaticsData();
+                     break;
                 }
             }
             printMenu();
@@ -104,7 +106,7 @@ public class UserInterface {
     }
 
     private void printMenu() {
-        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT.ordinal());
+        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT.ordinal()+1);
         String[] MenuOptions =
                 {       "# 1. Load machine data file.",
                         "# 2. Show machine data.",
@@ -144,7 +146,7 @@ public class UserInterface {
 
         while(!isFirstOptionSelected)
         {
-            System.out.println("You need first select the first option.");
+            System.out.println("You need first load the machine from file.");
             optionNum=scanner.nextInt();
             if(optionNum ==1)
                 isFirstOptionSelected=true;
@@ -197,45 +199,23 @@ public class UserInterface {
 
     }
 
+    private void printHistoricalStaticsData()
+    {
+        Map<String, List<StatisticRecord>> statisticsList=mEngine.getStatisticDataDTO().getStatisticsData();
+        String formatStatistics = "  #. <%s> --> <%s> (%d)\n";
+
+        for(String code:statisticsList.keySet())
+        {
+            System.out.println(code);
+            for(StatisticRecord stat: statisticsList.get(code))
+            {
+                System.out.format(formatStatistics,stat.getInput(),stat.getOutput(),stat.getProcessingTime());
+            }
+        }
+    }
     private void printCurrentCode()
     {
-        int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
-        char[] selectedPositions= selectedData.getSelectedPositions();
-
-        System.out.print("<");
-        for(int i=selectedRotorsArray.length-1;i>=0;i--)
-        {
-            System.out.printf("%d,",selectedRotorsArray[i]);
-        }
-
-        System.out.print(">");
-
-        System.out.print("<");
-        for(int i=selectedPositions.length-1;i>=0;i--) {
-            System.out.printf("%c", selectedPositions[i]);
-        }
-        System.out.print(">");
-
-
-        System.out.printf("<%s>",selectedData.getSelectedReflectorID());
-
-
-        List<String> pairs=selectedData.getPlugBoardPairs();
-
-        if(withPlugBoardPairs)
-        {
-            System.out.print("<");
-            for (int i = 0; i < pairs.size()-1; i++) {
-
-                System.out.printf("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1));
-            }
-
-            System.out.printf("%c|%c>\n",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1));
-
-        }
-        else{
-            System.out.println("\n");
-        }
+        System.out.println(mEngine.getCodeFormat());
     }
 
     private void machineConfByUser() // case 3
@@ -339,7 +319,7 @@ public class UserInterface {
         printCurrentCode();
     }
 
-    private void getInputAndChipper()
+    private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
 //                    String inputData=scanner.nextLine();
@@ -352,6 +332,6 @@ public class UserInterface {
         //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
         //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
         String inputData="WOWCANTBELIEVEITACTUALLYWORKS";
-        mEngine.chipperData(inputData);
+        System.out.println("output:"+mEngine.cipherData(inputData));
     }
 }
