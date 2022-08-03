@@ -2,7 +2,7 @@ package menuEngine;
 
 import java.util.List;
 
-public class SelectedDataDTO {
+public class SelectedConfigurationDTO {
 
     private final char[] selectedPositions;
     private final String selectedReflectorID;
@@ -10,13 +10,13 @@ public class SelectedDataDTO {
 
     private final List<String> plugBoardPairs;
 
-    public SelectedDataDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID, List<String> plugBoardPairs) {
+    public SelectedConfigurationDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID, List<String> plugBoardPairs) {
         this.selectedPositions = selectedPositions;
         this.selectedReflectorID = selectedReflectorID;
         this.selectedRotorsID = selectedRotorsID;
         this.plugBoardPairs=plugBoardPairs;
     }
-    public SelectedDataDTO()
+    public SelectedConfigurationDTO()
     {
         this.selectedPositions=null;
         this.selectedReflectorID="";

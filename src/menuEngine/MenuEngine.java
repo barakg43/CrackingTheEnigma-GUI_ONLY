@@ -18,7 +18,7 @@ public class MenuEngine {
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private final enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
-    private SelectedDataDTO selectedData;
+    private SelectedConfigurationDTO selectedConfigurationDTO;
     private List<String> plugBoardPairs;
     private Rotor[] selectedRotors;
     private StatisticsData statisticsData;
@@ -31,16 +31,16 @@ public class MenuEngine {
     public MenuEngine() {
         enigmaMachine = new enigmaMachine();
         statisticsData=new StatisticsData();
-        selectedData=new SelectedDataDTO();
+        selectedConfigurationDTO =new SelectedConfigurationDTO();
     }
 
     public MachineDataDTO getMachineData() {
         return machineData;
     }
 
-    public SelectedDataDTO getSelectedData() {
+    public SelectedConfigurationDTO getSelectedData() {
         createSelectedDataObj(false);
-        return selectedData;
+        return selectedConfigurationDTO;
     }
 
     public void LoadXMLFile(String filePath) {
@@ -155,8 +155,8 @@ public class MenuEngine {
 
 
 
-            int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
-            char[] selectedPositions= selectedData.getSelectedPositions();
+            int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
+            char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
             if(selectedRotorsArray==null)//if user only start the program and not select any configuration
                 return "";
 
@@ -171,11 +171,11 @@ public class MenuEngine {
             for(int i=selectedPositions.length-1;i>=0;i--) {
                 codeFormat.append(selectedPositions[i]);
             }
-            codeFormat.append(String.format("<%s>",selectedData.getSelectedReflectorID()));
+            codeFormat.append(String.format("<%s>", selectedConfigurationDTO.getSelectedReflectorID()));
 
             if(withPlugBoardPairs)
             {
-                List<String> pairs=selectedData.getPlugBoardPairs();
+                List<String> pairs= selectedConfigurationDTO.getPlugBoardPairs();
                 codeFormat.append('<');
                 for (int i = 0; i < pairs.size()-1; i++)
                     codeFormat.append(String.format("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1)));
@@ -343,10 +343,10 @@ public class MenuEngine {
         {
             if (!alreadyExists) {
                 int[] rotorsID = copySelectedRotorsID(selectedRotors);
-                selectedData = new SelectedDataDTO(selectedPositions, selectedReflector.getReflectorId().name(),
+                selectedConfigurationDTO = new SelectedConfigurationDTO(selectedPositions, selectedReflector.getReflectorId().name(),
                         rotorsID, plugBoardPairs);
             } else {
-                selectedData = new SelectedDataDTO();
+                selectedConfigurationDTO = new SelectedConfigurationDTO();
             }
 
         }

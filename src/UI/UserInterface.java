@@ -16,7 +16,7 @@ public class UserInterface {
     private final Scanner scanner;
     private final MenuEngine mEngine;
     private MachineDataDTO machineData;
-    private SelectedDataDTO selectedData;
+    private SelectedConfigurationDTO selectedData;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
                             CHSE_CNFG,
