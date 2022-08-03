@@ -17,11 +17,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MenuEngine {
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private final enigmaMachine enigmaMachine;
-    private MachineDataDTO1 MachineData;
-    private SelectedDataDTO1 SelectedData;
+    private MachineDataDTO machineData;
+    private SelectedDataDTO selectedData;
     private List<String> plugBoardPairs;
     private Rotor[] selectedRotors;
-
+    private StatisticsData statisticsData;
     private char[] selectedPositions;
     private Reflector selectedReflector = null;
 
@@ -30,15 +30,17 @@ public class MenuEngine {
 
     public MenuEngine() {
         enigmaMachine = new enigmaMachine();
+        statisticsData=new StatisticsData();
+        selectedData=new SelectedDataDTO();
     }
 
-    public MachineDataDTO1 getMachineData() {
-        return MachineData;
+    public MachineDataDTO getMachineData() {
+        return machineData;
     }
 
-    public SelectedDataDTO1 getSelectedData() {
+    public SelectedDataDTO getSelectedData() {
         createSelectedDataObj(false);
-        return SelectedData;
+        return selectedData;
     }
 
     public void LoadXMLFile(String filePath) {
@@ -92,7 +94,10 @@ public class MenuEngine {
     public boolean checkIfDataValid(String data) {
         return enigmaMachine.getKeyboard().checkValidInput(data);
     }
-
+    public StatisticsDataDTO getStatisticDataDTO()
+    {
+        return statisticsData.getStatisticsDataDTO();
+    }
     public void checkIfPositionsValid(String positions) {
         positions = positions.toUpperCase();
         char[] positionsList = new char[enigmaMachine.getRotorsInUse()];
@@ -112,8 +117,9 @@ public class MenuEngine {
         enigmaMachine.setSelectedPositions(positionsList);
     }
 
-    public String chipperData(String dataInput) {
+    public String cipherData(String dataInput) {
         int currentRow;
+        long startTime=System.nanoTime();
         StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < dataInput.length(); i++) {
@@ -134,7 +140,9 @@ public class MenuEngine {
 //        System.out.println("=====");
             output.append(enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow));
         }
-        System.out.println("output:" + output);
+        //System.out.println("output:" + output);
+        long endTime=System.nanoTime();
+        statisticsData.addCipheredDataToStats(getCodeFormat(),dataInput, output.toString(), endTime-startTime);
         return output.toString();
     }
 
@@ -143,7 +151,40 @@ public class MenuEngine {
             selectedRotor.resetWindowPositionToInitialPosition();
         }
     }
+    public String getCodeFormat(){
 
+
+
+            int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
+            char[] selectedPositions= selectedData.getSelectedPositions();
+            if(selectedRotorsArray==null)//if user only start the program and not select any configuration
+                return "";
+
+            StringBuilder codeFormat=new StringBuilder();
+            codeFormat.append('<');
+            for(int i=selectedRotorsArray.length-1;i>0;i--)
+            {
+                codeFormat.append(selectedRotorsArray[i]).append(",");
+            }
+            codeFormat.append(selectedRotorsArray[0]).append("><");
+
+            for(int i=selectedPositions.length-1;i>=0;i--) {
+                codeFormat.append(selectedPositions[i]);
+            }
+            codeFormat.append(String.format("<%s>",selectedData.getSelectedReflectorID()));
+
+            if(withPlugBoardPairs)
+            {
+                List<String> pairs=selectedData.getPlugBoardPairs();
+                codeFormat.append('<');
+                for (int i = 0; i < pairs.size()-1; i++)
+                    codeFormat.append(String.format("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1)));
+
+                codeFormat.append(String.format("%c|%c>",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1)));
+
+            }
+            return codeFormat.toString();
+    }
     public void resetSelected() {
         selectedRotors = null;
         selectedPositions = null;
@@ -159,7 +200,7 @@ public class MenuEngine {
         } catch (Exception ex) {
             throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
         }
-        if (!reflectorId.isExist(refNum) || refNum > MachineData.getNumberOfReflectors())
+        if (!reflectorId.isExist(refNum) || refNum > machineData.getNumberOfReflectors())
             throw new RuntimeException("Please choose one of the options 1-" + enigmaMachine.getAllReflectors().length);
 
         selectedReflector = enigmaMachine.getAllReflectors()[refNum - 1];
@@ -217,7 +258,7 @@ public class MenuEngine {
     private void getReflector() {
         int reflectorNum;
         reflectorNum = getRandomReflector(enigmaMachine.getAllReflectors()).getReflectorId().ordinal() + 1;
-        while (!reflectorId.isExist(reflectorNum) || reflectorNum > MachineData.getNumberOfReflectors()) {
+        while (!reflectorId.isExist(reflectorNum) || reflectorNum > machineData.getNumberOfReflectors()) {
             reflectorNum = getRandomReflector(enigmaMachine.getAllReflectors()).getReflectorId().ordinal() + 1;
         }
 
@@ -302,16 +343,15 @@ public class MenuEngine {
         {
             if (!alreadyExists) {
                 int[] rotorsID = copySelectedRotorsID(selectedRotors);
-                SelectedData = new SelectedDataDTO1(selectedPositions, selectedReflector.getReflectorId().name(),
+                selectedData = new SelectedDataDTO(selectedPositions, selectedReflector.getReflectorId().name(),
                         rotorsID, plugBoardPairs);
             } else {
-                SelectedData = new SelectedDataDTO1(null, null,
-                        null, null);
+                selectedData = new SelectedDataDTO();
             }
 
         }
 
-        private int[] copySelectedRotorsID (Rotor[]selectedRotors)
+        private int[] copySelectedRotorsID (Rotor[] selectedRotors)
         {
             int[] selectedRotorsID = new int[selectedRotors.length];
             for (int i = selectedRotorsID.length-1; i >= 0 ; i--) {
@@ -326,8 +366,7 @@ public class MenuEngine {
 
             if (alphabet.length() % 2 != 0)
                 throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
-            enigmaMachine.setAlphabet(eng.getCTEMachine().getABC());//TODO:
-            //change to real plugboard
+            enigmaMachine.setAlphabet(eng.getCTEMachine().getABC());
             if (eng.getCTEMachine().getRotorsCount() < 2)
                 throw new RuntimeException("The number of rotors need to be bigger or equal to 2.\nPlease correct this.");
             if (eng.getCTEMachine().getRotorsCount() > eng.getCTEMachine().getCTERotors().getCTERotor().size())
@@ -338,7 +377,7 @@ public class MenuEngine {
 
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] notchArray = copyNotchArray(eng.getCTEMachine().getCTERotors().getCTERotor());
-            MachineData = new MachineDataDTO1(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
+            machineData = new MachineDataDTO(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
                     eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray);
         }
 
