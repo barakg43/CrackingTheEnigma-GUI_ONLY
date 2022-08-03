@@ -74,7 +74,7 @@ public class UserInterface {
                     break;
                 }
                 case CIPER_DATA: {
-                    if(mEngine.getSelectedData().getSelectedRotorsID()==null)
+                    if(selectedData.getSelectedRotorsID()==null)
                     {
                         System.out.format("machine configuration not set yet.\n" +
                                 "please select the %d or %d option from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
