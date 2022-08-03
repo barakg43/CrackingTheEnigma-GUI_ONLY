@@ -1,6 +1,5 @@
 package impl;
 import EnigmaMachine.Mapper;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,4 +25,15 @@ public class Plugboard implements Mapper<Character,Character>
         plugMap.put(input,output);
         plugMap.put(output,input);
     }
+
+    public  Map<Character,Character> getPlugBoardPairs() {
+        return plugMap;
+    }
+    public void resetPlugBoardPairs()
+    {
+        plugMap=new HashMap<>();
+    }
+
+
+
 }

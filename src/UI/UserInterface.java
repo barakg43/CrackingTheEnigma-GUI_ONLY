@@ -1,23 +1,35 @@
 package UI;
-
+import impl.StatisticRecord;
 import impl.reflectorId;
-import java.util.*;
 import menuEngine.*;
+
+
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import static UI.UserInterface.OPTIONS.*;
 
 public class UserInterface {
 
-    private final static int EXIT = 8;
     private final static int START_OPTION = 1;
     private final Scanner scanner;
     private final MenuEngine mEngine;
     private MachineDataDTO machineData;
     private SelectedDataDTO selectedData;
-
+    protected enum  OPTIONS{  LOAD_XML,
+                            SHOW_SPECS,
+                            CHSE_CNFG,
+                            AUTO_CONFG,
+                            CIPER_DATA,
+                            RST_CODE,
+                            STATS,
+                            EXIT}
     private boolean currentCode;
     private boolean isFirstOptionSelected;
     private boolean withPlugBoardPairs;
 
-
+    private int cipheredInputs;
 
     public UserInterface(MenuEngine menuEngine)
     {
@@ -26,57 +38,63 @@ public class UserInterface {
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
+        cipheredInputs=0;
+
+
     }
 
     public void startMenu(){
         printMenu();
         int option = getOptionAndValidate();
 
-        while(option!=EXIT) {
-            switch (option) {
-                case 1: {
+        while(option-1!=EXIT.ordinal()) {
+            switch (OPTIONS.values()[option-1]) {
+                case LOAD_XML: {
                     currentCode=false;
                     withPlugBoardPairs=false;
                     loadMachineDataFile();
                     break;
                 }
-                case 2:{
-                      printMachineData();
-                     break;
+                case SHOW_SPECS:{
+                    printMachineData();
+                    break;
                 }
-                case 3: {
+                case CHSE_CNFG: {
                     withPlugBoardPairs=false;
                     currentCode=false;
+                    mEngine.resetSelected();
                     machineConfByUser();
                     break;
                 }
-                case 4: {
-                    // some method
-                  //  break;
+                case AUTO_CONFG: {
+                    withPlugBoardPairs=false;
+                    currentCode=false;
+                    mEngine.resetSelected();
+                    machineConfAutomatically();
+                    break;
                 }
-                case 5: {
-                    System.out.println("Please enter data that you want to chipper:");
-                    String inputData=scanner.nextLine();
-                    while (mEngine.checkIfDataValid(inputData))
+                case CIPER_DATA: {
+                    if(mEngine.getSelectedData().getSelectedRotorsID()==null)
                     {
-                        System.out.println("not valid input,please enter data again");
-                        inputData=scanner.nextLine();
+                        System.out.format("machine configuration not set yet.\n" +
+                                "please select the %d or %d option from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
                     }
-
-                   // mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
-                    //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-
-                    mEngine.chipperData(inputData);
-                    // some method
-                   // break;
+                    else{
+                        getInputAndCipher();
+                        cipheredInputs++;
+                    }
+                    break;
                 }
-                case 6: {
-                    // some method
-                    //break;
+
+                case RST_CODE: {
+                    System.out.println("you selected to reset the rotors. ");
+                    mEngine.resetCodePosition();
+                    System.out.println("The reset successfully");
+                    break;
                 }
-                case 7: {
-                    // some method
-                   // break;
+                case STATS: {
+                    printHistoricalStaticsData();
+                     break;
                 }
             }
             printMenu();
@@ -88,16 +106,16 @@ public class UserInterface {
     }
 
     private void printMenu() {
-        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT);
+        System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT.ordinal()+1);
         String[] MenuOptions =
-                {   "1. Load machine data file.",
-                        "2. Show machine data.",
-                        "3. Initialize machine configuration by yourself.",
-                        "4. Initialize machine configuration automatically.",
-                        "5. Enter Input for the machine.",
-                        "6. Reset machine.",
-                        "7. History and statistics of the machine.",
-                        "8. Exit"
+                {       "# 1. Load machine data file.",
+                        "# 2. Show machine data.",
+                        "# 3. Initialize machine configuration by yourself.",
+                        "# 4. Initialize machine configuration automatically.",
+                        "# 5. Enter Input for the machine.",
+                        "# 6. Reset machine.",
+                        "# 7. History and statistics of the machine.",
+                        "# 8. Exit"
                 };
 
         for (String option : MenuOptions){
@@ -117,7 +135,7 @@ public class UserInterface {
         }
         optionNum=Integer.parseInt(line);
 
-        while(optionNum<START_OPTION || optionNum>EXIT )
+        while(optionNum<START_OPTION || optionNum>EXIT.ordinal() )
         {
             System.out.println("You have selected an incorrect option.");
             printMenu();
@@ -128,12 +146,12 @@ public class UserInterface {
 
         while(!isFirstOptionSelected)
         {
-            System.out.println("You need first select the first option.");
+            System.out.println("You need first load the machine from file.");
             optionNum=scanner.nextInt();
             if(optionNum ==1)
                 isFirstOptionSelected=true;
         }
-        if(optionNum!=EXIT)
+        if(optionNum!=EXIT.ordinal())
             System.out.println("Your selection was chosen successfully.");
 
         return optionNum;
@@ -141,13 +159,13 @@ public class UserInterface {
 
     private void loadMachineDataFile()  //case 1
     {
-        Scanner scanner = new Scanner(System.in);
+
         boolean res=false;
         while(!res){
             try {
                 System.out.println("Please enter full XML file path: ");
-                String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile(xmlPath);
+                // String xmlPath= scanner.nextLine();
+                mEngine.LoadXMLFile("C:\\ComputerScience\\Java\\EXCISES\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-paper-enigma.xml");
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
@@ -172,49 +190,32 @@ public class UserInterface {
             System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
         }
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
-        System.out.println("The amount of messages that have passed through the machine so far:"); //TODO
+        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" , cipheredInputs);
 
         if(currentCode) {
-            int[] selectedRotorsArray=selectedData.getSelectedRotorsID();
-            char[] selectedPositions= selectedData.getSelectedPositions();
-
             System.out.println("Current machine code:");
-            System.out.print("<");
-            for(int i=0;i<selectedRotorsArray.length-1;i++)
-            {
-                System.out.printf("%d,",selectedRotorsArray[i]);
-            }
-            System.out.printf("%d",selectedRotorsArray[selectedRotorsArray.length-1]);
-            System.out.print(">");
-
-            System.out.print("<");
-            for (char selectedPosition : selectedPositions) {
-                System.out.printf("%c", selectedPosition);
-            }
-            System.out.print(">");
-
-            System.out.print("<");
-            System.out.printf("%s",selectedData.getSelectedReflectorID());
-            System.out.print(">");
-
-            List<String> pairs=selectedData.getPlugBoardPairs();
-
-            if(withPlugBoardPairs)
-            {
-                System.out.print("<");
-                for(int i=0;i<pairs.size()-1;i++)
-                {
-                    System.out.printf("%c|%c,",pairs.get(i).charAt(0),pairs.get(i).charAt(1));
-                }
-
-                System.out.printf("%c|%c",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1));
-                System.out.println(">");
-            }
-            else{
-                System.out.println("\n");
-            }
+            printCurrentCode();
         }
 
+    }
+
+    private void printHistoricalStaticsData()
+    {
+        Map<String, List<StatisticRecord>> statisticsList=mEngine.getStatisticDataDTO().getStatisticsData();
+        String formatStatistics = "  #. <%s> --> <%s> (%d)\n";
+
+        for(String code:statisticsList.keySet())
+        {
+            System.out.println(code);
+            for(StatisticRecord stat: statisticsList.get(code))
+            {
+                System.out.format(formatStatistics,stat.getInput(),stat.getOutput(),stat.getProcessingTime());
+            }
+        }
+    }
+    private void printCurrentCode()
+    {
+        System.out.println(mEngine.getCodeFormat());
     }
 
     private void machineConfByUser() // case 3
@@ -231,7 +232,6 @@ public class UserInterface {
     private void rotorsConfig()
     {
         boolean res=false;
-        Scanner scanner = new Scanner(System.in);
         System.out.printf("Please enter %d Rotors with commas between them (for example: 43,27,5):\n",machineData.getNumberOfRotorsInUse());
         while(!res) {
             try {
@@ -242,7 +242,7 @@ public class UserInterface {
             }
         }
 
-        System.out.println("Please enter the initial positions (in UPPER CASE) of the rotors without white spaces between them.\nfor example: ABC " +
+        System.out.println("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
                 "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )");
         res=false;
         while(!res) {
@@ -258,7 +258,6 @@ public class UserInterface {
     private void reflectorConfig()
     {
         boolean res=false;
-        Scanner scanner = new Scanner(System.in);
         int numOfReflectors= machineData.getNumberOfReflectors();
         System.out.println("Please select reflector number: ");
         for(int i=0;i<numOfReflectors;i++)
@@ -277,7 +276,6 @@ public class UserInterface {
 
     private void PlugBoardConfig()
     {
-        Scanner scanner = new Scanner(System.in);
         boolean res=false;
         System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
         int plugboardNum=2;
@@ -308,5 +306,32 @@ public class UserInterface {
             System.out.println("you choose without plugBoard pairs.");
         }
 
+    }
+
+    private void machineConfAutomatically()
+    {
+        currentCode=true;
+        System.out.println("You choose to get machine code automatically. ");
+        mEngine.getCodeAutomatically();
+        withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
+        selectedData = mEngine.getSelectedData();
+        System.out.println("The automatically selected code is:");
+        printCurrentCode();
+    }
+
+    private void getInputAndCipher()
+    {
+        System.out.println("Please enter data that you want to chipper:");
+//                    String inputData=scanner.nextLine();
+//                    while (!mEngine.checkIfDataValid(inputData))
+//                    {
+//                        System.out.println("not valid input,please enter data again");
+//                        inputData = scanner.nextLine();
+//                    }
+
+        //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
+        //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
+        String inputData="WOWCANTBELIEVEITACTUALLYWORKS";
+        System.out.println("output:"+mEngine.cipherData(inputData));
     }
 }

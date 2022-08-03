@@ -10,13 +10,19 @@ public class SelectedDataDTO {
 
     private final List<String> plugBoardPairs;
 
-    public SelectedDataDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID,List<String> plugBoardPairs) {
+    public SelectedDataDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID, List<String> plugBoardPairs) {
         this.selectedPositions = selectedPositions;
         this.selectedReflectorID = selectedReflectorID;
         this.selectedRotorsID = selectedRotorsID;
         this.plugBoardPairs=plugBoardPairs;
     }
-
+    public SelectedDataDTO()
+    {
+        this.selectedPositions=null;
+        this.selectedReflectorID="";
+        this.selectedRotorsID=null;
+        this.plugBoardPairs=null;
+    }
     public String getSelectedReflectorID() {
         return selectedReflectorID;
     }

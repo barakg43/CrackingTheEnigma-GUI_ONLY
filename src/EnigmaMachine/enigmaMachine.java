@@ -1,7 +1,7 @@
 package EnigmaMachine;
 
 import impl.*;
-import jaxb.schema.generated.*;
+import jaxb.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class enigmaMachine {
     private int numberOfRotors;
     private int numOfRotorsInUse;
     private String alphabet;
-    private Plugboard plugBoardPairs;
+    private final Plugboard plugBoardPairs;
 
     private Keyboard keyboard;
 
@@ -28,9 +28,8 @@ public class enigmaMachine {
     private char[] selectedPositions;
 
 
-    public void enigmaMachine() {
+    public enigmaMachine() {
         plugBoardPairs=new Plugboard();
-
     }
 
     public void setRotorsInUse(int rotorsInuse) {
@@ -60,9 +59,11 @@ public class enigmaMachine {
         return AllRotorsArray;
     }
 
-    public void setAlphabet(String alphabet,Plugboard plugboard) {
-        alphabet.replaceAll(" ","");
-        keyboard=new Keyboard(alphabet,plugboard);
+    public void setAlphabet(String alphabet) {
+        alphabet=alphabet.replaceAll(" ","");
+        alphabet=alphabet.replaceAll("\n","");
+        alphabet=alphabet.replaceAll("\t","");
+        keyboard=new Keyboard(alphabet,plugBoardPairs);
         this.alphabet=alphabet;
     }
 
@@ -92,17 +93,16 @@ public class enigmaMachine {
         selectedRotors=selectedRotorsArray;
     }
 
-    public void setRotors(List<CTERotor> RotorsArray) throws Exception {
+    public void setRotors(List<CTERotor> RotorsArray) {
         numberOfRotors=RotorsArray.size();
         AllRotorsArray = new Rotor[RotorsArray.size()];
         for (CTERotor rotor: RotorsArray) {
             if(AllRotorsArray[rotor.getId()-1]!=null)
-                throw new Exception("There are 2 rotors with same id.\nplease correct this.");
+                throw new RuntimeException("There are 2 rotors with same id.\nplease correct this.");
             if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() < 0)
-                throw new Exception("Notch number of rotor: "+rotor.getId()+  " need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
-            AllRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId()); // check about latterSize
+                throw new RuntimeException("Notch number of rotor: "+rotor.getId()+  " need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
+            AllRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId());
             setRotorTable(rotor.getCTEPositioning(), AllRotorsArray[rotor.getId()-1]);
-
 
         }
     }
@@ -112,12 +112,12 @@ public class enigmaMachine {
             rotor.addMapLatterToRotor(pos.getLeft().charAt(0),pos.getRight().charAt(0));
     }
 
-    public void setReflectors(List<CTEReflector> ReflectorsArray) throws Exception {
+    public void setReflectors(List<CTEReflector> ReflectorsArray) {
         AllReflectorsArray=new Reflector[ReflectorsArray.size()];
         for(CTEReflector reflector : ReflectorsArray){
             int reflectorId=(impl.reflectorId.valueOf(reflector.getId()).ordinal());
             if( AllReflectorsArray[reflectorId]!=null)
-                throw new Exception("There are 2 reflectors with same id.\nplease correct this.");
+                throw new RuntimeException("There are 2 reflectors with same id.\nplease correct this.");
 
             AllReflectorsArray[reflectorId]= new Reflector(reflector.getCTEReflect().size()*2,reflector.getId());
            setReflectorArray(reflector.getCTEReflect(), AllReflectorsArray[reflectorId]);

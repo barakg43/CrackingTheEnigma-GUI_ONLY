@@ -13,6 +13,7 @@ public class Keyboard  {
     public Keyboard(String alphabet,Plugboard plugboard) {
         this.keyboard2inputRow = new HashMap<>();
         input2keyboard=new char[alphabet.length()];
+        this.plugboard=plugboard;
         initKeyboard(alphabet);
     }
     private void initKeyboard(String alphabet)
@@ -44,7 +45,7 @@ public class Keyboard  {
 
     private void addMappedInputOutput(Character input, Integer output) {
         if(keyboard2inputRow.containsKey(input))
-            throw new RuntimeException("the "+input+ " appears more than once.");
+            throw new RuntimeException("keyboard : the "+ input.toString()+ " appears more than once.");
         keyboard2inputRow.put(input,output);
         input2keyboard[output]=input;
 
