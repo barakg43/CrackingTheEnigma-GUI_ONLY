@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MenuEngine {
+public class MenuEngine implements Engine{
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private final enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
@@ -34,15 +34,18 @@ public class MenuEngine {
         selectedConfigurationDTO =new SelectedConfigurationDTO();
     }
 
+    @Override
     public MachineDataDTO getMachineData() {
         return machineData;
     }
 
+    @Override
     public SelectedConfigurationDTO getSelectedData() {
         createSelectedDataObj(false);
         return selectedConfigurationDTO;
     }
 
+    @Override
     public void LoadXMLFile(String filePath) {
         File file = new File(filePath);
         if (!(filePath.toLowerCase().endsWith(".xml")))
@@ -64,6 +67,7 @@ public class MenuEngine {
         }
     }
 
+    @Override
     public void checkIfRotorsValid(String rotors) {
         List<String> arrayString = Arrays.asList(rotors.split(","));
         selectedRotors = new Rotor[enigmaMachine.getRotorsInUse()];
@@ -91,13 +95,18 @@ public class MenuEngine {
         enigmaMachine.setSelectedRotors(selectedRotors);
     }
 
+    @Override
     public boolean checkIfDataValid(String data) {
         return enigmaMachine.getKeyboard().checkValidInput(data);
     }
+
+    @Override
     public StatisticsDataDTO getStatisticDataDTO()
     {
         return statisticsData.getStatisticsDataDTO();
     }
+
+    @Override
     public void checkIfPositionsValid(String positions) {
         positions = positions.toUpperCase();
         char[] positionsList = new char[enigmaMachine.getRotorsInUse()];
@@ -117,6 +126,7 @@ public class MenuEngine {
         enigmaMachine.setSelectedPositions(positionsList);
     }
 
+    @Override
     public String cipherData(String dataInput) {
         int currentRow;
         long startTime=System.nanoTime();
@@ -146,11 +156,14 @@ public class MenuEngine {
         return output.toString();
     }
 
+    @Override
     public void resetCodePosition() {
         for (Rotor selectedRotor : selectedRotors) {
             selectedRotor.resetWindowPositionToInitialPosition();
         }
     }
+
+    @Override
     public String getCodeFormat(){
 
 
@@ -185,6 +198,8 @@ public class MenuEngine {
             }
             return codeFormat.toString();
     }
+
+    @Override
     public void resetSelected() {
         selectedRotors = null;
         selectedPositions = null;
@@ -193,6 +208,7 @@ public class MenuEngine {
         createSelectedDataObj(true);
     }
 
+    @Override
     public void checkIfReflectorNumValid(String ReflectorNum) {
         int refNum;
         try {
@@ -207,6 +223,7 @@ public class MenuEngine {
         //enigmaMachine.setSelectedReflector(selectedReflector);
     }
 
+    @Override
     public void CheckPlugBoardPairs(String pairs) {
         plugBoardPairs = Arrays.asList(pairs.split(","));
 
@@ -218,6 +235,7 @@ public class MenuEngine {
 
     }
 
+    @Override
     public int checkPlugBoardNum(String plugBoardNum) {
         int plugboardNum;
         try {
@@ -231,11 +249,18 @@ public class MenuEngine {
         return plugboardNum;
     }
 
+    @Override
     public void getCodeAutomatically() {
         getRotors();
         getReflector();
         getPositions();
         getPairs();
+    }
+
+    @Override
+    public boolean getWithPlugBoardPairs()
+    {
+        return withPlugBoardPairs;
     }
 
     private void getRotors() {
@@ -283,11 +308,6 @@ public class MenuEngine {
         for (int j = 0; j < selectedRotors.length; j++) {
             selectedRotors[j].setInitialWindowPosition(selectedPositions[j]);
         }
-    }
-
-    public boolean getWithPlugBoardPairs()
-    {
-        return withPlugBoardPairs;
     }
 
     private void getPairs() {

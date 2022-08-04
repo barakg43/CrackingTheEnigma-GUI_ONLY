@@ -14,7 +14,7 @@ public class UserInterface {
 
     private final static int START_OPTION = 1;
     private final Scanner scanner;
-    private final MenuEngine mEngine;
+    private final Engine mEngine;
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
     protected enum  OPTIONS{  LOAD_XML,
@@ -31,10 +31,10 @@ public class UserInterface {
 
     private int cipheredInputs;
 
-    public UserInterface(MenuEngine menuEngine)
+    public UserInterface()
     {
         currentCode=false;
-        mEngine=menuEngine;
+        mEngine=new MenuEngine();
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
@@ -135,7 +135,7 @@ public class UserInterface {
         }
         optionNum=Integer.parseInt(line);
 
-        while(optionNum<START_OPTION || optionNum>EXIT.ordinal() )
+        while(optionNum<START_OPTION || optionNum-1>EXIT.ordinal() )
         {
             System.out.println("You have selected an incorrect option.");
             printMenu();
@@ -151,7 +151,7 @@ public class UserInterface {
             if(optionNum ==1)
                 isFirstOptionSelected=true;
         }
-        if(optionNum!=EXIT.ordinal())
+        if(optionNum-1!=EXIT.ordinal())
             System.out.println("Your selection was chosen successfully.");
 
         return optionNum;
@@ -165,7 +165,7 @@ public class UserInterface {
             try {
                 System.out.println("Please enter full XML file path: ");
                 // String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile("C:\\ComputerScience\\Java\\EXCISES\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-paper-enigma.xml");
+                mEngine.LoadXMLFile("C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml");
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
@@ -202,7 +202,7 @@ public class UserInterface {
     private void printHistoricalStaticsData()
     {
         Map<String, List<StatisticRecord>> statisticsList=mEngine.getStatisticDataDTO().getStatisticsData();
-        String formatStatistics = "  #. <%s> --> <%s> (%d)\n";
+        String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)\n";
 
         for(String code:statisticsList.keySet())
         {
@@ -331,7 +331,7 @@ public class UserInterface {
 
         //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
         //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-        String inputData="WOWCANTBELIEVEITACTUALLYWORKS";
+        String inputData="AABBCCDDEEFF";
         System.out.println("output:"+mEngine.cipherData(inputData));
     }
 }
