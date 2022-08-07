@@ -7,14 +7,12 @@ import jaxb.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MenuEngine implements Engine{
+public class MenuEngine implements Engine , Serializable {
+
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private final enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
@@ -24,6 +22,7 @@ public class MenuEngine implements Engine{
     private StatisticsData statisticsData;
     private char[] selectedPositions;
     private Reflector selectedReflector = null;
+    private int cipheredInputs;
 
     boolean withPlugBoardPairs;
 
@@ -32,7 +31,9 @@ public class MenuEngine implements Engine{
         enigmaMachine = new enigmaMachine();
         statisticsData=new StatisticsData();
         selectedConfigurationDTO =new SelectedConfigurationDTO();
+        cipheredInputs=0;
     }
+
 
     @Override
     public MachineDataDTO getMachineData() {
@@ -166,8 +167,6 @@ public class MenuEngine implements Engine{
     @Override
     public String getCodeFormat(){
 
-
-
             int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
             char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
             if(selectedRotorsArray==null)//if user only start the program and not select any configuration
@@ -184,6 +183,7 @@ public class MenuEngine implements Engine{
             for(int i=selectedPositions.length-1;i>=0;i--) {
                 codeFormat.append(selectedPositions[i]);
             }
+           codeFormat.append(">");
             codeFormat.append(String.format("<%s>", selectedConfigurationDTO.getSelectedReflectorID()));
 
             if(withPlugBoardPairs)
@@ -245,6 +245,8 @@ public class MenuEngine implements Engine{
         }
         if (plugboardNum > 2 || plugboardNum < 1)
             throw new RuntimeException("Please choose 1 or 2.");
+
+        withPlugBoardPairs=plugboardNum==1;
 
         return plugboardNum;
     }
@@ -419,18 +421,27 @@ public class MenuEngine implements Engine{
             return notchNumbers;
         }
 
-    /*public int checkIfNumberOfRotorsValid(String numOfRotors) throws Exception {
-        int numberOfRotors;
-        try {
+    public int getCipheredInputs()
+    {
+        return cipheredInputs;
+    }
+    public int addCipheredInputs()
+    {
+        return cipheredInputs++;
+    }
+    @Override
+    public String toString() {
+        return "MenuEngine{" +
+                ", \nmachineData=" + machineData +
+                ", \nselectedConfigurationDTO=" + selectedConfigurationDTO +
+                ", \nplugBoardPairs=" + plugBoardPairs +
+                ", \nselectedRotors=" + Arrays.toString(selectedRotors) +
+                ", \nstatisticsData=" + statisticsData +
+                ", \nselectedPositions=" + Arrays.toString(selectedPositions) +
+                ", \nselectedReflector=" + selectedReflector +
+                ", \nwithPlugBoardPairs=" + withPlugBoardPairs +
+                ", \ncipheredInputs=" + cipheredInputs +
+                '}';
+    }
 
-
-            numberOfRotors = Integer.parseInt(numOfRotors);
-        }catch (Exception ex) {
-            throw new Exception("The number you entered isn't integer. Please enter an integer number: ");
-        }
-        if(numberOfRotors>enigmaMachine.getNumberOfRotors() || numberOfRotors<1)
-            throw  new Exception("Number of rotors need to be between 1 to "+ enigmaMachine.getNumberOfRotors() +" Please enter valid number of rotors. ");
-
-        return numberOfRotors;
-    }*/
 }

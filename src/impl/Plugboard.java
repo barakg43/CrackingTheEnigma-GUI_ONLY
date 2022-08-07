@@ -1,10 +1,12 @@
 package impl;
 import EnigmaMachine.Mapper;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Plugboard implements Mapper<Character,Character>
+public class Plugboard implements Mapper<Character,Character>, Serializable
 {
     Map<Character,Character> plugMap;
     public Plugboard() {
@@ -24,6 +26,13 @@ public class Plugboard implements Mapper<Character,Character>
             throw new RuntimeException("You map character '" + input + "' to itself. Please change this mapping.");
         plugMap.put(input,output);
         plugMap.put(output,input);
+    }
+
+    @Override
+    public String toString() {
+        return "Plugboard{" +
+                "plugMap=" + plugMap +
+                '}';
     }
 
     public  Map<Character,Character> getPlugBoardPairs() {

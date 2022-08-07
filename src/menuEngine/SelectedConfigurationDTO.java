@@ -1,8 +1,10 @@
 package menuEngine;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
-public class SelectedConfigurationDTO {
+public class SelectedConfigurationDTO implements Serializable {
 
     private final char[] selectedPositions;
     private final String selectedReflectorID;
@@ -37,5 +39,15 @@ public class SelectedConfigurationDTO {
 
     public List<String> getPlugBoardPairs() {
         return plugBoardPairs;
+    }
+
+    @Override
+    public String toString() {
+        return "SelectedConfigurationDTO{" +
+                "selectedPositions=" + Arrays.toString(selectedPositions) +
+                ", selectedReflectorID='" + selectedReflectorID + '\'' +
+                ", selectedRotorsID=" + Arrays.toString(selectedRotorsID) +
+                ", plugBoardPairs=" + plugBoardPairs +
+                '}';
     }
 }

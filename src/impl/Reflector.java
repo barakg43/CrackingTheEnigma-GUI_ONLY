@@ -2,7 +2,10 @@ package impl;
 
 import EnigmaMachine.Mapper;
 
-public class Reflector implements Mapper<Integer,Integer> {
+import java.io.Serializable;
+import java.util.Arrays;
+
+public class Reflector implements Mapper<Integer,Integer>, Serializable {
     private final reflectorId reflectorIdNum ;
     private final int[] mappedReflectorsArray;
     private final int lettersSize;
@@ -14,6 +17,16 @@ public class Reflector implements Mapper<Integer,Integer> {
         reflectorIdNum = reflectorId.valueOf(refID);
         initArray();
     }
+
+    @Override
+    public String toString() {
+        return "Reflector{" +
+                "reflectorIdNum=" + reflectorIdNum +
+                ", mappedReflectorsArray=" + Arrays.toString(mappedReflectorsArray) +
+                ", lettersSize=" + lettersSize +
+                '}';
+    }
+
     private void  initArray()
     {
         for (int i = 0; i < lettersSize; i++) {

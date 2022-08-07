@@ -4,9 +4,8 @@ import impl.reflectorId;
 import menuEngine.*;
 
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 import static UI.UserInterface.OPTIONS.*;
 
@@ -14,9 +13,11 @@ public class UserInterface {
 
     private final static int START_OPTION = 1;
     private final Scanner scanner;
-    private final Engine mEngine;
+    private Engine mEngine;
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
+    private StatisticsDataDTO historyData;
+    private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
                             CHSE_CNFG,
@@ -24,12 +25,15 @@ public class UserInterface {
                             CIPER_DATA,
                             RST_CODE,
                             STATS,
-                            EXIT}
+                            SAVE_DATA,
+                            LOAD_DATA,
+                            EXIT
+    }
     private boolean currentCode;
     private boolean isFirstOptionSelected;
     private boolean withPlugBoardPairs;
 
-    private int cipheredInputs;
+  //  private int cipheredInputs;
 
     public UserInterface()
     {
@@ -38,8 +42,8 @@ public class UserInterface {
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
-        cipheredInputs=0;
-
+      //  cipheredInputs=0;
+        selectedOptions=new HashSet<>();
 
     }
 
@@ -52,6 +56,7 @@ public class UserInterface {
                 case LOAD_XML: {
                     currentCode=false;
                     withPlugBoardPairs=false;
+                    selectedOptions.clear();
                     loadMachineDataFile();
                     break;
                 }
@@ -81,7 +86,7 @@ public class UserInterface {
                     }
                     else{
                         getInputAndCipher();
-                        cipheredInputs++;
+                        mEngine.addCipheredInputs();
                     }
                     break;
                 }
@@ -96,6 +101,14 @@ public class UserInterface {
                     printHistoricalStaticsData();
                      break;
                 }
+                case LOAD_DATA: {
+                    loadMachineData();
+                    break;
+                }
+                case SAVE_DATA: {
+                    saveMachineData();
+                    break;
+                }
             }
             printMenu();
             option = getOptionAndValidate();
@@ -108,14 +121,16 @@ public class UserInterface {
     private void printMenu() {
         System.out.printf("\nPlease choose one of the options below ( between %d to %d ):\n",START_OPTION,EXIT.ordinal()+1);
         String[] MenuOptions =
-                {       "# 1. Load machine data file.",
-                        "# 2. Show machine data.",
-                        "# 3. Initialize machine configuration by yourself.",
-                        "# 4. Initialize machine configuration automatically.",
-                        "# 5. Enter Input for the machine.",
-                        "# 6. Reset machine.",
-                        "# 7. History and statistics of the machine.",
-                        "# 8. Exit"
+                {       "# 1.  Load machine data file.",
+                        "# 2.  Show machine data.",
+                        "# 3.  Initialize machine configuration by yourself.",
+                        "# 4.  Initialize machine configuration automatically.",
+                        "# 5.  Enter Input for the machine.",
+                        "# 6.  Reset machine.",
+                        "# 7.  History and statistics of the machine.",
+                        "# 8.  Save machine data.",
+                        "# 9.  Load recent machine data.",
+                        "# 10. Exit"
                 };
 
         for (String option : MenuOptions){
@@ -127,7 +142,7 @@ public class UserInterface {
     {
         String line= scanner.nextLine();
         int optionNum ;
-        while(line.length()!=1)
+        while(line.length()>2)
         {
             System.out.println("You have selected an incorrect option.");
             printMenu();
@@ -144,16 +159,26 @@ public class UserInterface {
         if(optionNum ==1)
             isFirstOptionSelected=true;
 
-        while(!isFirstOptionSelected)
+        if(selectedOptions.contains(LOAD_DATA.ordinal()+1))
+            isFirstOptionSelected=true;
+        while(optionNum!=LOAD_DATA.ordinal()+1 && !isFirstOptionSelected)
         {
             System.out.println("You need first load the machine from file.");
-            optionNum=scanner.nextInt();
+            line=scanner.nextLine();
+            optionNum=Integer.parseInt(line);
             if(optionNum ==1)
                 isFirstOptionSelected=true;
+        }
+        while((optionNum==CIPER_DATA.ordinal()+1) && !(selectedOptions.contains(CHSE_CNFG.ordinal()+1) || selectedOptions.contains(AUTO_CONFG.ordinal()+1)))
+        {
+            System.out.println("Before ciphering data, you need to configure the machine.");
+            line=scanner.nextLine();
+            optionNum=Integer.parseInt(line);
         }
         if(optionNum-1!=EXIT.ordinal())
             System.out.println("Your selection was chosen successfully.");
 
+        selectedOptions.add(optionNum);
         return optionNum;
     }
 
@@ -163,9 +188,10 @@ public class UserInterface {
         boolean res=false;
         while(!res){
             try {
+                // "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
-                // String xmlPath= scanner.nextLine();
-                mEngine.LoadXMLFile("C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml");
+                 String xmlPath= scanner.nextLine();
+                mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 res=true;
             } catch (Exception e) {
@@ -190,7 +216,7 @@ public class UserInterface {
             System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
         }
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
-        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" , cipheredInputs);
+        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.addCipheredInputs());
 
         if(currentCode) {
             System.out.println("Current machine code:");
@@ -201,7 +227,8 @@ public class UserInterface {
 
     private void printHistoricalStaticsData()
     {
-        Map<String, List<StatisticRecord>> statisticsList=mEngine.getStatisticDataDTO().getStatisticsData();
+        historyData= mEngine.getStatisticDataDTO();
+        Map<String, List<StatisticRecord>> statisticsList=historyData.getStatisticsData();
         String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)\n";
 
         for(String code:statisticsList.keySet())
@@ -319,7 +346,56 @@ public class UserInterface {
         printCurrentCode();
     }
 
-    private void getInputAndCipher()
+    private void  saveMachineData() {
+        System.out.println("You selected to save the machine data in file.");
+        System.out.println("Please enter the full file(without extension) to save the file:");
+        String path = scanner.nextLine();
+        path+=".bat";
+        try (ObjectOutputStream out =
+                     new ObjectOutputStream(
+                             new FileOutputStream(path))) {
+            out.writeObject(mEngine);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("The data saved successfully.");
+    }
+
+    private void loadMachineData() {
+        System.out.println("You selected to load the machine data from file.");
+        System.out.println("Please enter the full file(without extension) of the file: ");
+        String path = scanner.nextLine();
+        path += ".bat";
+        File file = new File(path);
+        while (!file.exists()) {
+            System.out.println("This file doesn't exists. PLease enter valid file path:");
+            path = scanner.nextLine();
+            path += ".bat";
+            file = new File(path);
+        }
+
+        try (ObjectInputStream in =
+                     new ObjectInputStream(
+                             new FileInputStream(path))) {
+            // we know that we read array list of Persons
+            MenuEngine menuEngine =
+                    (MenuEngine) in.readObject();
+            this.mEngine = menuEngine;
+            machineData = mEngine.getMachineData();
+            selectedData = mEngine.getSelectedData();
+            historyData = mEngine.getStatisticDataDTO();
+            System.out.println("The data was loaded successfully.");
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+        private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
 //                    String inputData=scanner.nextLine();

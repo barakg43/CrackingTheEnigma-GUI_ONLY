@@ -33,4 +33,9 @@ public interface Engine {
     public void getCodeAutomatically();
 
     public boolean getWithPlugBoardPairs();
-}
+    public int getCipheredInputs();
+    public int addCipheredInputs();
+    @Override
+    public String toString();
+
+    }

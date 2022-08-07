@@ -1,11 +1,13 @@
 package impl;
 
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class Rotor{
+public class Rotor implements Serializable {
 
     //right side of the rotor
     private Map<Character,Integer> latter2IndexRightSide=null;
@@ -135,4 +137,19 @@ private void initRotorArrays() {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Rotor{" +
+                "latter2IndexRightSide=" + latter2IndexRightSide +
+                ", index2latterRightSide=" + Arrays.toString(index2latterRightSide) +
+                ", latter2IndexLeftSide=" + latter2IndexLeftSide +
+                ", index2latterLeftSide=" + Arrays.toString(index2latterLeftSide) +
+                ", latterSize=" + latterSize +
+                ", currentMapSize=" + currentMapSize +
+                ", windowPosition=" + windowPosition +
+                ", notchPosition=" + notchPosition +
+                ", rotorID=" + rotorID +
+                ", initialWindowPosition=" + initialWindowPosition +
+                '}';
+    }
 }

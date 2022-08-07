@@ -2,12 +2,13 @@ package impl;
 
 import menuEngine.StatisticsDataDTO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StatisticsData
+public class StatisticsData implements Serializable
 {
 
     private final Map<String, List<StatisticRecord>> codesToProcessData;
@@ -34,7 +35,10 @@ public class StatisticsData
         return new StatisticsDataDTO(codesToProcessData);
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "StatisticsData{" +
+                "codesToProcessData=" + codesToProcessData +
+                '}';
+    }
 }

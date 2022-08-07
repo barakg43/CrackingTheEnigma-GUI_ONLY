@@ -2,10 +2,12 @@ package impl;
 
 import EnigmaMachine.Mapper;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Keyboard  {
+public class Keyboard implements Serializable {
     private final Map<Character,Integer> keyboard2inputRow;
     private final char[] input2keyboard;
     private Plugboard plugboard;
@@ -22,6 +24,16 @@ public class Keyboard  {
             addMappedInputOutput(alphabet.charAt(i),i);
 
     }
+
+    @Override
+    public String toString() {
+        return "Keyboard{" +
+                "keyboard2inputRow=" + keyboard2inputRow +
+                ", input2keyboard=" + Arrays.toString(input2keyboard) +
+                ", plugboard=" + plugboard +
+                '}';
+    }
+
     public boolean checkValidInput(String data)
     {
 
