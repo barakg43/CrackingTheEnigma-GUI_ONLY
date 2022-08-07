@@ -347,7 +347,7 @@ public class UserInterface {
     }
 
     private void  saveMachineData() {
-        System.out.println("You selected to save the machine data in file.");
+        System.out.println("You selected to save machine data in file.");
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
         path+=".bat";
