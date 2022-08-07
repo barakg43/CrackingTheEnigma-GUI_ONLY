@@ -5,7 +5,7 @@
 			ABCDEF
 		</ABC>
 		<CTE-Rotors>
-			<CTE-Rotor id="1" notch="4">
+			<CTE-Rotor id="1" notch="0">
 				<CTE-Positioning right="A" left="F"/>
 				<CTE-Positioning right="B" left="E"/>
 				<CTE-Positioning right="C" left="D"/>
