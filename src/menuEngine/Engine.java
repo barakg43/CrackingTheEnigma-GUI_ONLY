@@ -26,7 +26,7 @@ public interface Engine {
 
     public void checkIfReflectorNumValid(String ReflectorNum);
 
-    public void CheckPlugBoardPairs(String pairs);
+    public void CheckPlugBoardPairs(String pairs) throws Exception;
 
     public int checkPlugBoardNum(String plugBoardNum);
 
@@ -37,5 +37,7 @@ public interface Engine {
     public int addCipheredInputs();
     @Override
     public String toString();
+    public void resetAllData();
 
-    }
+
+}

@@ -12,7 +12,13 @@ public class MachineDataDTO implements Serializable {
     private final int[] rotorsId;
     private final int[] notchNums;
 
-
+    public MachineDataDTO()
+    {
+        numberOfReflectors=0;
+        numberOfRotorsInUse=0;
+        rotorsId=null;
+        notchNums=null;
+    }
     public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
         this.numberOfReflectors = numberOfReflectors;
         this.numberOfRotorsInUse =numOfRotorsInUse;

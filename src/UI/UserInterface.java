@@ -57,6 +57,7 @@ public class UserInterface {
                     currentCode=false;
                     withPlugBoardPairs=false;
                     selectedOptions.clear();
+                    mEngine.resetAllData();
                     loadMachineDataFile();
                     break;
                 }
@@ -377,7 +378,6 @@ public class UserInterface {
         try (ObjectInputStream in =
                      new ObjectInputStream(
                              new FileInputStream(path))) {
-            // we know that we read array list of Persons
             MenuEngine menuEngine =
                     (MenuEngine) in.readObject();
             this.mEngine = menuEngine;

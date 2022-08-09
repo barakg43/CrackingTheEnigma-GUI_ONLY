@@ -34,6 +34,18 @@ public class MenuEngine implements Engine , Serializable {
         cipheredInputs=0;
     }
 
+    public void resetAllData()
+    {
+        machineData=new MachineDataDTO();
+        selectedConfigurationDTO=new SelectedConfigurationDTO();
+        plugBoardPairs=new ArrayList<>();
+        statisticsData=new StatisticsData();
+        selectedRotors=null;
+        selectedPositions=null;
+        selectedReflector=null;
+        cipheredInputs=0;
+    }
+
 
     @Override
     public MachineDataDTO getMachineData() {
@@ -224,8 +236,17 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
-    public void CheckPlugBoardPairs(String pairs) {
-        plugBoardPairs = Arrays.asList(pairs.split(","));
+    public void CheckPlugBoardPairs(String pairs) throws Exception {
+        //plugBoardPairs = Arrays.asList(pairs.split(","));
+
+        for (int i=0; i<pairs.length(); i+=2)
+        {
+            plugBoardPairs.add(pairs.substring(i, Math.min(pairs.length(), i + 2)));
+            if(i+2 < pairs.length() && pairs.charAt(i+2)!=',')
+                throw new Exception("You need to separate the pairs with comma.");
+
+            i++;
+        }
 
         for (String str : plugBoardPairs) {
             if (enigmaMachine.getAlphabet().indexOf(str.charAt(0)) == -1 || enigmaMachine.getAlphabet().indexOf(str.charAt(1)) == -1)

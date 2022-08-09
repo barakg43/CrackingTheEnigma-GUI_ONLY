@@ -61,7 +61,6 @@ public class enigmaMachine implements Serializable {
     }
 
     public void setAlphabet(String alphabet) {
-        alphabet=alphabet.replaceAll(" ","");
         alphabet=alphabet.replaceAll("\n","");
         alphabet=alphabet.replaceAll("\t","");
         keyboard=new Keyboard(alphabet,plugBoardPairs);
