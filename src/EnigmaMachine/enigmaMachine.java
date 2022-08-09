@@ -3,12 +3,13 @@ package EnigmaMachine;
 import impl.*;
 import jaxb.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class enigmaMachine {
+public class enigmaMachine implements Serializable {
 
     // from file
     private Reflector[] AllReflectorsArray;
@@ -60,7 +61,6 @@ public class enigmaMachine {
     }
 
     public void setAlphabet(String alphabet) {
-        alphabet=alphabet.replaceAll(" ","");
         alphabet=alphabet.replaceAll("\n","");
         alphabet=alphabet.replaceAll("\t","");
         keyboard=new Keyboard(alphabet,plugBoardPairs);
@@ -97,9 +97,11 @@ public class enigmaMachine {
         numberOfRotors=RotorsArray.size();
         AllRotorsArray = new Rotor[RotorsArray.size()];
         for (CTERotor rotor: RotorsArray) {
+            if(rotor.getId()<=0)
+                throw new RuntimeException("rotor number "+ rotor.getId() + " need to be bigger then zero." );
             if(AllRotorsArray[rotor.getId()-1]!=null)
                 throw new RuntimeException("There are 2 rotors with same id.\nplease correct this.");
-            if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() < 0)
+            if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() <= 0)
                 throw new RuntimeException("Notch number of rotor: "+rotor.getId()+  " need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
             AllRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId());
             setRotorTable(rotor.getCTEPositioning(), AllRotorsArray[rotor.getId()-1]);

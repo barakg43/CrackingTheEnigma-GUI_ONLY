@@ -9,9 +9,7 @@ import menuEngine.*;
 public class Main {
 
     public static void main(String[] args) {
-        MenuEngine menuEngine = new MenuEngine();
-        UserInterface ui = new UserInterface(menuEngine);
-       //1 testChipper();
+        UserInterface ui = new UserInterface();
         ui.startMenu();
     }
 

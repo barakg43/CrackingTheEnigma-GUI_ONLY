@@ -1,6 +1,8 @@
 package impl;
 
-public enum reflectorId {
+import java.io.Serializable;
+
+public enum reflectorId implements Serializable {
     I,II,III,IV,V;
 
     public static Boolean isExist(int number) {
@@ -11,5 +13,4 @@ public enum reflectorId {
         }
         return false;
     }
-
 }

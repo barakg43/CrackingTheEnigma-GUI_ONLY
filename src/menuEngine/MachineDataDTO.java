@@ -1,6 +1,10 @@
 package menuEngine;
 
-public class MachineDataDTO {
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+
+public class MachineDataDTO implements Serializable {
 
 
     private final int numberOfReflectors;
@@ -8,12 +12,22 @@ public class MachineDataDTO {
     private final int[] rotorsId;
     private final int[] notchNums;
 
-
+    public MachineDataDTO()
+    {
+        numberOfReflectors=0;
+        numberOfRotorsInUse=0;
+        rotorsId=null;
+        notchNums=null;
+    }
     public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
         this.numberOfReflectors = numberOfReflectors;
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
         notchNums =notchArray;
+    }
+
+    public static MachineDataDTO create(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
+        return new MachineDataDTO(numberOfReflectors,numOfRotorsInUse, rotorsIdArray, notchArray);
     }
 
     public int getNumberOfReflectors() {
@@ -31,4 +45,15 @@ public class MachineDataDTO {
     public int getNumberOfRotorsInUse() {
         return numberOfRotorsInUse;
     }
+
+    @Override
+    public String toString() {
+        return "MachineDataDTO{" +
+                "numberOfReflectors=" + numberOfReflectors +
+                ", numberOfRotorsInUse=" + numberOfRotorsInUse +
+                ", rotorsId=" + Arrays.toString(rotorsId) +
+                ", notchNums=" + Arrays.toString(notchNums) +
+                '}';
+    }
+
 }

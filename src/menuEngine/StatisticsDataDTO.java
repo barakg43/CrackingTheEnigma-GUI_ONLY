@@ -2,9 +2,10 @@ package menuEngine;
 
 import impl.StatisticRecord;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class StatisticsDataDTO {
+public class StatisticsDataDTO  implements Serializable {
 
 
     protected Map<String, List<StatisticRecord>> codesToProcessData ;
@@ -13,6 +14,13 @@ public class StatisticsDataDTO {
         this.codesToProcessData=new HashMap<>();
         this.codesToProcessData.putAll(codesToProcessData);
 
+    }
+
+    @Override
+    public String toString() {
+        return "StatisticsDataDTO{" +
+                "codesToProcessData=" + codesToProcessData +
+                '}';
     }
 
     public Map<String, List<StatisticRecord>> getStatisticsData(){

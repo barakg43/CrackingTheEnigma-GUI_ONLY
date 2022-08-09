@@ -1,6 +1,8 @@
 package impl;
 
-public class StatisticRecord {
+import java.io.Serializable;
+
+public class StatisticRecord implements Serializable {
 
     private final String input;
     private final String output;
