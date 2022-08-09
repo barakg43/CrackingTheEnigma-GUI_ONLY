@@ -143,6 +143,7 @@ public class MenuEngine implements Engine , Serializable {
     public String cipherData(String dataInput) {
         int currentRow;
         long startTime=System.nanoTime();
+        dataInput = dataInput.toUpperCase();
         StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < dataInput.length(); i++) {

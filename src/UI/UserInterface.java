@@ -407,7 +407,7 @@ public class UserInterface {
 
         //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
         //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-        String inputData="AABBCCDDEEFF";
+        String inputData="aabbccddeeff";
         System.out.println("output:"+mEngine.cipherData(inputData));
     }
 }
