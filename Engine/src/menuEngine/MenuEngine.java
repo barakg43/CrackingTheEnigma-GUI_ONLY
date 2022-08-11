@@ -258,15 +258,21 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
     public void CheckPlugBoardPairs(String pairs) throws Exception {
-        //plugBoardPairs = Arrays.asList(pairs.split(","));
 
-        for (int i=0; i<pairs.length(); i+=2)
+        plugBoardPairs=new ArrayList<>();
+        if(pairs.length()==0)
+        {
+            withPlugBoardPairs=false;
+            return;
+        }
+
+        if(pairs.length()%2!=0)
+            throw new Exception("There is a character that has no pair. Please correct this.");
+
+        withPlugBoardPairs=true;
+        for(int i=0;i<pairs.length();i+=2)
         {
             plugBoardPairs.add(pairs.substring(i, Math.min(pairs.length(), i + 2)));
-            if(i+2 < pairs.length() && pairs.charAt(i+2)!=',')
-                throw new Exception("You need to separate the pairs with comma.");
-
-            i++;
         }
 
         for (String str : plugBoardPairs) {
@@ -275,22 +281,6 @@ public class MenuEngine implements Engine , Serializable {
             enigmaMachine.getPlugBoard().addMappedInputOutput(str.charAt(0), str.charAt(1));
         }
 
-    }
-
-    @Override
-    public int checkPlugBoardNum(String plugBoardNum) {
-        int plugboardNum;
-        try {
-            plugboardNum = Integer.parseInt(plugBoardNum);
-        } catch (Exception ex) {
-            throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
-        }
-        if (plugboardNum > 2 || plugboardNum < 1)
-            throw new RuntimeException("Please choose 1 or 2.");
-
-        withPlugBoardPairs=plugboardNum==1;
-
-        return plugboardNum;
     }
 
     @Override
@@ -439,9 +429,11 @@ public class MenuEngine implements Engine , Serializable {
             enigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] notchArray = copyNotchArray(eng.getCTEMachine().getCTERotors().getCTERotor());
+            int[] notchPositions= null;  //TODO
             machineData = new MachineDataDTO(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
-                    eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray);
+                    eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray,notchPositions);
         }
+
 
         private int[] copyRotorsID (List < CTERotor > rotorsArray)
         {

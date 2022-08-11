@@ -33,8 +33,6 @@ public interface Engine {
     List<String> getReflectorIdList();
     void CheckPlugBoardPairs(String pairs) throws Exception;
 
-    int checkPlugBoardNum(String plugBoardNum);
-
     void setCodeAutomatically();
 
     boolean getWithPlugBoardPairs();

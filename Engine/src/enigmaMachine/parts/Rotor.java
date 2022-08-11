@@ -72,7 +72,7 @@ private void initRotorArrays() {
     }
 
 
-    int calcIndexRotorTable(int index, boolean isRelativIndex) {
+    public int calcIndexRotorTable(int index, boolean isRelativIndex) {
         int value;
         if (isRelativIndex)
             value = index - windowPosition;

@@ -21,7 +21,7 @@ public class UserInterface {
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
     private StatisticsDataDTO historyData;
-    private Set<Integer> selectedOptions;
+  //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
                             CHSE_CNFG,
@@ -46,8 +46,10 @@ public class UserInterface {
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
+        selectedData=null;
       //  cipheredInputs=0;
-        selectedOptions=new HashSet<>();
+        historyData=null;
+       // selectedOptions=new HashSet<>();
 
     }
 
@@ -59,10 +61,6 @@ public class UserInterface {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
                     loadMachineDataFile();
-                    currentCode=false;
-                    withPlugBoardPairs=false;
-                    selectedOptions.clear();
-                    mEngine.resetAllData();
                     break;
                 }
                 case SHOW_SPECS:{
@@ -163,48 +161,57 @@ public class UserInterface {
             printMenu();
             optionNum=scanner.nextInt();
         }
-//        if(optionNum ==1)
-//            isFirstOptionSelected=true;
-//
-//        if(selectedOptions.contains(LOAD_DATA.ordinal()+1))
-//            isFirstOptionSelected=true;
-        while(optionNum!=LOAD_XML.ordinal()+1 && !mEngine.isMachineLoaded())
+
+
+        while(optionNum!=LOAD_DATA.ordinal()+1 && optionNum!=LOAD_XML.ordinal()+1 && !mEngine.isMachineLoaded())
         {
-            System.out.println("You need first load the machine from file.");
+            System.out.println("You need first load the machine from file.\nPlease select option number 1.");
             line=scanner.nextLine();
             optionNum=Integer.parseInt(line);
         }
-//        while((optionNum==CIPER_DATA.ordinal()+1) && !(selectedOptions.contains(CHSE_CNFG.ordinal()+1) || selectedOptions.contains(AUTO_CONFG.ordinal()+1)))
-//        {
-//            System.out.println("Before ciphering data, you need to configure the machine.");
-//            line=scanner.nextLine();
-//            optionNum=Integer.parseInt(line);
-//        }
-        if(optionNum-1!=EXIT.ordinal())
+
+        while(optionNum==CIPER_DATA.ordinal()+1 && selectedData==null)
+        {
+            System.out.println("Before ciphering data, you need to configure the machine.\nPlease select option number 3 or 4");
+            line=scanner.nextLine();
+            optionNum=Integer.parseInt(line);
+        }
+
+        if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");
 
-        //selectedOptions.add(optionNum);
+
+        if(optionNum==STATS.ordinal()+1 && historyData==null)
+        {
+            System.out.println("There is no history to show yet.");
+        }
+
         return optionNum;
     }
 
     private void loadMachineDataFile()  //case 1
     {
 
-        boolean res=false;
-        while(!res){
+//        boolean res=false;
+//        while(!res){
             try {
-                // "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
+               //  "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
                  String xmlPath= scanner.nextLine();
                 mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
-                res=true;
+                System.out.println("The file path loaded successfully.");
+                currentCode=false;
+                withPlugBoardPairs=false;
+                //selectedOptions.clear();
+                mEngine.resetAllData();
+              //  res=true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
+        //}
 
-        System.out.println("The file path loaded successfully.");
+
     }
 
     private void printMachineData()  //case 2
@@ -212,7 +219,7 @@ public class UserInterface {
         System.out.println("\nMachine details:");
 
         int[] rotorsArray=machineData.getRotorsId();
-        int[] notchArray=machineData.getNotchNums();
+        int[] notchArray=machineData.getNotchPositions();
 
         System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
         System.out.println("Position of notch in each rotor:");
@@ -272,6 +279,7 @@ public class UserInterface {
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+
             }
         }
 
@@ -310,22 +318,11 @@ public class UserInterface {
 
     private void PlugBoardConfig()
     {
-        boolean res=false;
-        System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
-        int plugboardNum=2;
-        while(!res) {
-            try {
-                plugboardNum = mEngine.checkPlugBoardNum( scanner.nextLine());
-                res=true;
-            }catch (Exception e) {
-                System.out.println("Please choose 1 or 2.");
-            }
-        }
 
-        if(plugboardNum==1) {
             withPlugBoardPairs=true;
-            System.out.println("Please enter pairs(without white space) for plugBoard with commas between them for example: AC,BG (A and C connected in the plugBoard, B and G connected in the plugBoard)");
-            res = false;
+            System.out.println("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
+                    "\nIf you don't want plugBoard pair, press Enter.");
+            boolean res = false;
             while (!res) {
                 try {
                     String plugBoardPairs = scanner.nextLine();
@@ -335,10 +332,6 @@ public class UserInterface {
                     System.out.println(e.getMessage());
                 }
             }
-        }
-        else{
-            System.out.println("you choose without plugBoard pairs.");
-        }
 
     }
 
