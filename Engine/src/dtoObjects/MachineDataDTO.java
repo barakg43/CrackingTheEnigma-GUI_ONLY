@@ -11,7 +11,6 @@ public class MachineDataDTO implements Serializable {
     private final int[] rotorsId;
     private final int[] notchNums;
 
-    private final int[] notchPositions;
 
     public MachineDataDTO()
     {
@@ -19,18 +18,16 @@ public class MachineDataDTO implements Serializable {
         numberOfRotorsInUse=0;
         rotorsId=null;
         notchNums=null;
-        notchPositions=null;
     }
-    public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray,int[] notchPositions) {
+    public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
         this.numberOfReflectors = numberOfReflectors;
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
         notchNums =notchArray;
-        this.notchPositions=notchPositions;
     }
 
-    public static MachineDataDTO create(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray,int[] notchPositions) {
-        return new MachineDataDTO(numberOfReflectors,numOfRotorsInUse, rotorsIdArray, notchArray,notchPositions);
+    public static MachineDataDTO create(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
+        return new MachineDataDTO(numberOfReflectors,numOfRotorsInUse, rotorsIdArray, notchArray);
     }
 
     public int getNumberOfReflectors() {
@@ -49,8 +46,6 @@ public class MachineDataDTO implements Serializable {
         return numberOfRotorsInUse;
     }
 
-    public int[] getNotchPositions(){return notchPositions;}
-
     @Override
     public String toString() {
         return "dtoObjects.MachineDataDTO{" +
@@ -58,7 +53,6 @@ public class MachineDataDTO implements Serializable {
                 ", numberOfRotorsInUse=" + numberOfRotorsInUse +
                 ", rotorsId=" + Arrays.toString(rotorsId) +
                 ", notchNums=" + Arrays.toString(notchNums) +
-                ", notchPositions=" + Arrays.toString(notchPositions) +
                 '}';
     }
 

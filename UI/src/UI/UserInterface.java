@@ -218,19 +218,21 @@ public class UserInterface {
     {
         System.out.println("\nMachine details:");
 
-        int[] rotorsArray=machineData.getRotorsId();
-        int[] notchArray=machineData.getNotchPositions();
+
 
         System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
-        System.out.println("Position of notch in each rotor:");
-        for(int i=0;i<machineData.getRotorsId().length;i++)
-        {
-            System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
-        }
+
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.addCipheredInputs());
 
         if(currentCode) {
+            int[] notchArray=selectedData.getNotchPositions();
+            int[] rotorsArray=selectedData.getSelectedRotorsID();
+            System.out.println("Position of notch from window position in each rotor:");
+            for(int i=0;i<selectedData.getNotchPositions().length;i++)
+            {
+                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
+            }
             System.out.println("Current machine code:");
             printCurrentCode();
         }

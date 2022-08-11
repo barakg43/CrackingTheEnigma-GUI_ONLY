@@ -392,9 +392,10 @@ public class MenuEngine implements Engine , Serializable {
         private void createSelectedDataObj ( boolean alreadyExists)
         {
             if (!alreadyExists) {
+                int[] notchPositions = setNotchPositions();
                 int[] rotorsID = copySelectedRotorsID(selectedRotors);
                 selectedConfigurationDTO = new SelectedConfigurationDTO(selectedPositions, selectedReflector.getReflectorIdName(),
-                        rotorsID, plugBoardPairs);
+                        rotorsID, plugBoardPairs,notchPositions);
             } else {
                 selectedConfigurationDTO = new SelectedConfigurationDTO();
             }
@@ -429,11 +430,20 @@ public class MenuEngine implements Engine , Serializable {
             enigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] notchArray = copyNotchArray(eng.getCTEMachine().getCTERotors().getCTERotor());
-            int[] notchPositions= null;  //TODO
             machineData = new MachineDataDTO(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
-                    eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray,notchPositions);
+                    eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray);
         }
 
+
+
+        private int[] setNotchPositions()
+        {
+            int[] notchArray=new int[selectedPositions.length];
+            for (int i = 0; i < selectedPositions.length; i++) {
+                notchArray[i]=selectedRotors[i].calcIndexRotorTable(selectedRotors[i].getNotchPosition(),false);
+            }
+            return notchArray;
+        }
 
         private int[] copyRotorsID (List < CTERotor > rotorsArray)
         {

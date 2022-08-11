@@ -37,6 +37,11 @@ public class Rotor implements Serializable {
         return rotorID;
     }
 
+    public int getNotchPosition()
+    {
+        return notchPosition;
+    }
+
     public void setInitialWindowPosition(char latter) {
         initialWindowPosition = latter2IndexRightSide.get(latter);
         resetWindowPositionToInitialPosition();
