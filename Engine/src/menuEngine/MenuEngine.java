@@ -5,7 +5,7 @@ import dtoObjects.*;
 import enigmaMachine.enigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import enigmaMachine.parts.reflectorId;
+//import enigmaMachine.parts.reflectorId;
 import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
@@ -119,9 +119,16 @@ public class MenuEngine implements Engine , Serializable {
 //        enigmaMachine.setSelectedRotors(selectedRotors);
     }
 
+
+    /**
+     * *the function check if all letter in string 'data' are valid in this machine
+     * and return runtime exception if found invalid letter in input
+     * @param data - the input line of letter in enigma ABC
+     * @throws RuntimeException if data input contain invalid character
+     */
     @Override
-    public boolean checkIfDataValid(String data) {
-        return enigmaMachine.getKeyboard().checkValidInput(data);
+    public void checkIfDataValid(String data){
+       enigmaMachine.getKeyboard().checkValidInput(data);
     }
 
     @Override
@@ -152,9 +159,12 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
     public String cipherData(String dataInput) {
+
+        checkIfDataValid(dataInput);
+        dataInput = dataInput.toUpperCase();
         int currentRow;
         long startTime=System.nanoTime();
-        dataInput = dataInput.toUpperCase();
+
         StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < dataInput.length(); i++) {
@@ -178,6 +188,7 @@ public class MenuEngine implements Engine , Serializable {
         //System.out.println("output:" + output);
         long endTime=System.nanoTime();
         statisticsData.addCipheredDataToStats(getCodeFormat(),dataInput, output.toString(), endTime-startTime);
+        cipheredInputs++;
         return output.toString();
     }
     @Override
@@ -326,16 +337,11 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     private void setRandomReflector() {
-        int reflectorNum=new Random().nextInt(enigmaMachine.getReflectorsNumber())+1;
+        int reflectorNum=ThreadLocalRandom.current().nextInt(enigmaMachine.getReflectorsNumber())+1;
         selectedReflector = enigmaMachine.getReflectorById(reflectorNum);
     }
 
-//    private static Reflector setRandomReflector(Reflector[] arr) {
-//        return arr[ThreadLocalRandom.current().nextInt(arr.length)];
-//    }
-
     private void setRandomPositions() {
-        char position;
         selectedPositions = new char[selectedRotors.length];
         char[] alphabetArray = new char[enigmaMachine.getAlphabet().length()];
         for (int i = 0; i < enigmaMachine.getAlphabet().length(); i++) {
@@ -421,8 +427,8 @@ public class MenuEngine implements Engine , Serializable {
         }
 
         private void copyAllData (CTEEnigma eng){
-            String alphabet = eng.getCTEMachine().getABC().replaceAll("\n", "");
-            alphabet = alphabet.replaceAll("\t", "");
+            String alphabet = eng.getCTEMachine().getABC().trim();
+          //  alphabet = alphabet.replaceAll("\t", "");
 
             if (alphabet.length() % 2 != 0)
                 throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
@@ -464,10 +470,6 @@ public class MenuEngine implements Engine , Serializable {
     public int getCipheredInputs()
     {
         return cipheredInputs;
-    }
-    public int addCipheredInputs()
-    {
-        return cipheredInputs++;
     }
     @Override
     public String toString() {
