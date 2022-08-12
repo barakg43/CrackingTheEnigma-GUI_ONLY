@@ -37,6 +37,11 @@ public class Rotor implements Serializable {
         return rotorID;
     }
 
+    public int getNotchPosition()
+    {
+        return notchPosition;
+    }
+
     public void setInitialWindowPosition(char latter) {
         initialWindowPosition = latter2IndexRightSide.get(latter);
         resetWindowPositionToInitialPosition();
@@ -72,7 +77,7 @@ private void initRotorArrays() {
     }
 
 
-    int calcIndexRotorTable(int index, boolean isRelativIndex) {
+    public int calcIndexRotorTable(int index, boolean isRelativIndex) {
         int value;
         if (isRelativIndex)
             value = index - windowPosition;
