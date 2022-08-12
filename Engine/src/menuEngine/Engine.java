@@ -14,7 +14,7 @@ public interface Engine {
 
      void checkIfRotorsValid(String rotors);
 
-     boolean checkIfDataValid(String data);
+     void checkIfDataValid(String data);
 
     StatisticsDataDTO getStatisticDataDTO();
 
@@ -39,7 +39,6 @@ public interface Engine {
 
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
-    int addCipheredInputs();
     @Override
     String toString();
     void resetAllData();

@@ -2,9 +2,8 @@ package UI;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.SelectedConfigurationDTO;
 import dtoObjects.StatisticsDataDTO;
-import enigmaMachine.parts.Reflector;
 import menuEngine.StatisticRecord;
-import enigmaMachine.parts.reflectorId;
+//import enigmaMachine.parts.reflectorId;
 import menuEngine.*;
 
 
@@ -58,7 +57,7 @@ public class UserInterface {
         while(option-1!=EXIT.ordinal()) {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
-                    loadMachineDataFile();
+                    loadMachineConfigurationFromXmlFile();
                     currentCode=false;
                     withPlugBoardPairs=false;
                     selectedOptions.clear();
@@ -91,7 +90,7 @@ public class UserInterface {
                     }
                     else{
                         getInputAndCipher();
-                        mEngine.addCipheredInputs();
+                       
                     }
                     break;
                 }
@@ -99,21 +98,22 @@ public class UserInterface {
                 case RST_CODE: {
                     System.out.println("you selected to reset the rotors. ");
                     mEngine.resetCodePosition();
-                    System.out.println("The reset successfully");
+                    System.out.println("The code reset was made successfully");
                     break;
                 }
                 case STATS: {
                     printHistoricalStaticsData();
                      break;
                 }
-                case LOAD_DATA: {
-                    loadMachineData();
-                    break;
-                }
                 case SAVE_DATA: {
                     saveMachineData();
                     break;
                 }
+                case LOAD_DATA: {
+                    loadMachineData();
+                    break;
+                }
+
             }
             printMenu();
             option = getOptionAndValidate();
@@ -168,9 +168,10 @@ public class UserInterface {
 //
 //        if(selectedOptions.contains(LOAD_DATA.ordinal()+1))
 //            isFirstOptionSelected=true;
-        while(optionNum!=LOAD_XML.ordinal()+1 && !mEngine.isMachineLoaded())
+        while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
         {
             System.out.println("You need first load the machine from file.");
+            printMenu();
             line=scanner.nextLine();
             optionNum=Integer.parseInt(line);
         }
@@ -187,7 +188,7 @@ public class UserInterface {
         return optionNum;
     }
 
-    private void loadMachineDataFile()  //case 1
+    private void loadMachineConfigurationFromXmlFile()  //case 1
     {
 
         boolean res=false;
@@ -195,7 +196,8 @@ public class UserInterface {
             try {
                 // "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
-                 String xmlPath= scanner.nextLine();
+              String xmlPath= scanner.nextLine();
+//                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
                 mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 res=true;
@@ -221,7 +223,7 @@ public class UserInterface {
             System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
         }
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
-        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.addCipheredInputs());
+        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
         if(currentCode) {
             System.out.println("Current machine code:");
@@ -372,6 +374,7 @@ public class UserInterface {
         System.out.println("You selected to load the machine data from file.");
         System.out.println("Please enter the full file(without extension) of the file: ");
         String path = scanner.nextLine();
+        path=path.replaceAll("\"","");//for case user enter with " "
         path += ".bat";
         File file = new File(path);
         while (!file.exists()) {
@@ -400,16 +403,21 @@ public class UserInterface {
         private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
-//                    String inputData=scanner.nextLine();
-//                    while (!mEngine.checkIfDataValid(inputData))
-//                    {
-//                        System.out.println("not valid input,please enter data again");
-//                        inputData = scanner.nextLine();
-//                    }
+        String inputData;
+        boolean validInput=true;
 
-        //mEngine.checkIfReflectorNumValid(selectedData.getSelectedReflectorID());
-        //mEngine.checkIfRotorsValid(selectedData.getSelectedRotorsID());
-        String inputData="aabbccddeeff";
-        System.out.println("output:"+mEngine.cipherData(inputData));
+        do {
+            try {
+                inputData = scanner.nextLine();
+
+                System.out.println("output:" + mEngine.cipherData(inputData));
+            }
+            catch (RuntimeException e) {
+                System.out.println(e.getMessage() + "\nnot valid input,please enter data again");
+                validInput=false;
+            }
+        } while (!validInput);
+
+
     }
 }
