@@ -196,8 +196,8 @@ public class UserInterface {
             try {
                 // "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
-//              String xmlPath= scanner.nextLine();
-                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
+              String xmlPath= scanner.nextLine();
+//                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
                 mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 res=true;
