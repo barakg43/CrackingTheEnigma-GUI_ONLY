@@ -1,25 +1,26 @@
 package enigmaMachine.parts;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Keyboard implements Serializable {
     private final Map<Character,Integer> keyboard2inputRow;
     private final char[] input2keyboard;
     private final Plugboard plugboard;
+    private final String alphabetString;
 
     public Keyboard(String alphabet,Plugboard plugboard) {
+        alphabetString=alphabet.toUpperCase();
         this.keyboard2inputRow = new HashMap<>();
-        input2keyboard=new char[alphabet.length()];
+        input2keyboard=new char[alphabetString.length()];
         this.plugboard=plugboard;
-        initKeyboard(alphabet);
+        initKeyboard(alphabetString);
     }
     private void initKeyboard(String alphabet)
     {
-        for(int i=0;i<alphabet.length();i++)
-            addMappedInputOutput(alphabet.charAt(i),i);
+        for(int i=0;i<alphabet.length();i++) {
+            addMappedInputOutput(alphabet.charAt(i), i);
+        }
 
     }
 
@@ -31,25 +32,40 @@ public class Keyboard implements Serializable {
                 ", plugboard=" + plugboard +
                 '}';
     }
-
-    public boolean checkValidInput(String data)
+    /**
+     * *the function check if all letter in string 'data' are valid in this machine
+     * and return runtime exception if found invalid letter in input
+     * @param data - the input line of letter in enigma ABC
+     * @throws RuntimeException if data input contain invalid character
+     */
+    public void checkValidInput(String data)
     {
-
         for (int i = 0; i < data.length(); i++) {
-            if(!keyboard2inputRow.containsKey(data.charAt(i)))
-                return false;
-
+            if(!checkIfLetterValid(data.charAt(i)))
+                throw new RuntimeException("the latter: "+data.charAt(i)+" isn't valid letter in this enigma machine\nplease choose letter from\n"+alphabetString);
         }
-        return true;
     }
-
-    public Integer getMappedOutput(Character input) {
-        if(!keyboard2inputRow.containsKey(input))
-            throw new RuntimeException("the "+input+ " not existed in alphabet.");
+    public boolean checkIfLetterValid(Character latter)
+    {
+        return keyboard2inputRow.containsKey(latter);
+    }
+    public char getLetterInIndex(int index)
+    {
+        return input2keyboard[index];
+    }
+    /**
+     * *the function return the index of character in alphabet language over enigma machine
+     * and return runtime exception if found invalid letter in input
+     * @param input - the input character in keyboard
+     * @throws RuntimeException if character not found in ABC
+     */
+    public int getMappedOutput(char input) {
+        if(!checkIfLetterValid(input))
+            throw new RuntimeException("the latter: "+input+" isn't valid letter in this enigma machine\nplease choose letter from\n"+alphabetString);
         return keyboard2inputRow.get(plugboard.getMappedOutput(input));
     }
-    public Character getLetterFromRowNumber(Integer input) {
-        return plugboard.getMappedOutput(input2keyboard[input]);
+    public char getLetterFromRowNumber(int input) {
+        return plugboard.getMappedOutput(getLetterInIndex(input));
     }
 
 
