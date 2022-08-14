@@ -16,15 +16,13 @@ public interface Engine {
 
      boolean checkIfDataValid(String data);
 
-    StatisticsDataDTO getStatisticDataDTO();
+     StatisticsDataDTO getStatisticDataDTO();
 
     void checkIfPositionsValid(String positions);
 
     String cipherData(String dataInput);
 
     void resetCodePosition();
-
-    String getCodeFormat();
 
     void resetSelected();
 
@@ -42,6 +40,6 @@ public interface Engine {
     String toString();
     void resetAllData();
     boolean isMachineLoaded();
+    String getCodeFormat(boolean isSelectedData,boolean isHistory);
 
-
-}
+    }

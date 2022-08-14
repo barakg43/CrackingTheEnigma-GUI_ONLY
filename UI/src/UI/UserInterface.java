@@ -20,6 +20,8 @@ public class UserInterface {
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
     private StatisticsDataDTO historyData;
+
+    private boolean isDataCipered;
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
@@ -48,85 +50,88 @@ public class UserInterface {
         selectedData=null;
       //  cipheredInputs=0;
         historyData=null;
+        isDataCipered=false;
        // selectedOptions=new HashSet<>();
 
     }
 
     public void startMenu(){
         printMenu();
-        int option = getOptionAndValidate();
+        try {
+            int option = getOptionAndValidate();
 
-        while(option-1!=EXIT.ordinal()) {
-            switch (OPTIONS.values()[option-1]) {
-                case LOAD_XML: {
+            while (option - 1 != EXIT.ordinal()) {
+                switch (OPTIONS.values()[option - 1]) {
+                    case LOAD_XML: {
 
-                //    loadMachineDataFile();
+                        //    loadMachineDataFile();
 
-                    loadMachineConfigurationFromXmlFile();
-                    currentCode=false;
-                    withPlugBoardPairs=false;
-               ///     selectedOptions.clear();
-                    mEngine.resetAllData();
+                        loadMachineConfigurationFromXmlFile();
+                        currentCode = false;
+                        withPlugBoardPairs = false;
+                        ///     selectedOptions.clear();
+                        mEngine.resetAllData();
 
-                    break;
-                }
-                case SHOW_SPECS:{
-                    printMachineData();
-                    break;
-                }
-                case CHSE_CNFG: {
-                    withPlugBoardPairs=false;
-                    currentCode=false;
-                    mEngine.resetSelected();
-                    machineConfByUser();
-                    break;
-                }
-                case AUTO_CONFG: {
-                    withPlugBoardPairs=false;
-                    currentCode=false;
-                    mEngine.resetSelected();
-                    machineConfAutomatically();
-                    break;
-                }
-                case CIPER_DATA: {
-                    if(selectedData.getSelectedRotorsID()==null)
-                    {
-                        System.out.format("machine configuration not set yet.\n" +
-                                "please select the %d or %d option from menu",CHSE_CNFG.ordinal(),AUTO_CONFG.ordinal());
+                        break;
                     }
-                    else{
-                        getInputAndCipher();
-                       
+                    case SHOW_SPECS: {
+                        printMachineData();
+                        break;
                     }
-                    break;
-                }
+                    case CHSE_CNFG: {
+                        withPlugBoardPairs = false;
+                        currentCode = false;
+                        isDataCipered=false;
+                        mEngine.resetSelected();
+                        machineConfByUser();
+                        break;
+                    }
+                    case AUTO_CONFG: {
+                        withPlugBoardPairs = false;
+                        currentCode = false;
+                        isDataCipered=false;
+                        mEngine.resetSelected();
+                        machineConfAutomatically();
+                        break;
+                    }
+                    case CIPER_DATA: {
+                        if (selectedData.getSelectedRotorsID() == null) {
+                            System.out.format("machine configuration not set yet.\n" +
+                                    "please select the %d or %d option from menu", CHSE_CNFG.ordinal(), AUTO_CONFG.ordinal());
+                        } else {
+                            getInputAndCipher();
 
-                case RST_CODE: {
-                    System.out.println("you selected to reset the rotors. ");
-                    mEngine.resetCodePosition();
-                    System.out.println("The code reset was made successfully");
-                    break;
-                }
-                case STATS: {
-                    printHistoricalStaticsData();
-                     break;
-                }
-                case SAVE_DATA: {
-                    saveMachineData();
-                    break;
-                }
-                case LOAD_DATA: {
-                    loadMachineData();
-                    break;
-                }
+                        }
+                        break;
+                    }
 
+                    case RST_CODE: {
+                        System.out.println("you selected to reset the rotors. ");
+                        mEngine.resetCodePosition();
+                        System.out.println("The code reset was made successfully");
+                        break;
+                    }
+                    case STATS: {
+                        printHistoricalStaticsData();
+                        break;
+                    }
+                    case SAVE_DATA: {
+                        saveMachineData();
+                        break;
+                    }
+                    case LOAD_DATA: {
+                        loadMachineData();
+                        break;
+                    }
+
+                }
+                printMenu();
+                option = getOptionAndValidate();
             }
-            printMenu();
-            option = getOptionAndValidate();
-
-        }
         System.out.println("You selected to exit. Goodbye! ");
-
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void printMenu() {
@@ -151,17 +156,17 @@ public class UserInterface {
         }
     }
 
-    private int getOptionAndValidate()
-    {
-        String line= scanner.nextLine();
+    private int getOptionAndValidate() throws Exception {
+       String line=scanner.nextLine();
+
         int optionNum ;
-        while(line.length()>2)
+        while(line.length()>2 || line.equals("") || !Character.isDigit(line.charAt(0)))
         {
             System.out.println("You have selected an incorrect option.");
             printMenu();
             line=scanner.nextLine();
         }
-        optionNum=Integer.parseInt(line);
+        optionNum = Integer.parseInt(line);
 
         while(optionNum<START_OPTION || optionNum-1>EXIT.ordinal() )
         {
@@ -198,12 +203,14 @@ public class UserInterface {
     private void loadMachineConfigurationFromXmlFile()  //case 1
     {
 
-//        boolean res=false;
-//        while(!res){
+        boolean res=false;
+       // while(!res){
             try {
                //  "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
-              String xmlPath= scanner.nextLine();
+               String xmlPath= scanner.nextLine();
+              //
+                // if(xmlPath.contains(""))
 //                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
                 mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
@@ -212,12 +219,12 @@ public class UserInterface {
                 withPlugBoardPairs=false;
                 //selectedOptions.clear();
                 mEngine.resetAllData();
-              //  res=true;
+                res=true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                //System.out.println("Please enter full XML file path or Press Esc to go back to main menu.");
             }
-        //}
-
+       // }
 
     }
 
@@ -233,15 +240,18 @@ public class UserInterface {
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
         if(currentCode) {
-            int[] notchArray=selectedData.getNotchPositions();
-            int[] rotorsArray=selectedData.getSelectedRotorsID();
-            System.out.println("Position of notch from window position in each rotor:");
-            for(int i=0;i<selectedData.getNotchPositions().length;i++)
-            {
-                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
-            }
-            System.out.println("Current machine code:");
-            printCurrentCode();
+            //int[] notchArray=selectedData.getNotchPositions();
+           // int[] rotorsArray=selectedData.getSelectedRotorsID();
+           // System.out.println("Position of notch from window position in each rotor:");
+//            for(int i=0;i<selectedData.getNotchPositions().length;i++)
+//            {
+//                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
+//            }
+            System.out.println("Selected machine code:");
+            printCurrentCode(true);
+        }
+        if(isDataCipered) {
+            printCurrentCode(!isDataCipered);
         }
 
     }
@@ -261,9 +271,9 @@ public class UserInterface {
             }
         }
     }
-    private void printCurrentCode()
+    private void printCurrentCode(boolean selectedCode)
     {
-        System.out.println(mEngine.getCodeFormat());
+        System.out.println(mEngine.getCodeFormat(selectedCode,false));
     }
 
     private void machineConfByUser() // case 3
@@ -297,7 +307,7 @@ public class UserInterface {
         res=false;
         while(!res) {
             try {
-                mEngine.checkIfPositionsValid(scanner.nextLine());
+                mEngine.checkIfPositionsValid(scanner.nextLine().toUpperCase());
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -334,11 +344,12 @@ public class UserInterface {
             boolean res = false;
             while (!res) {
                 try {
-                    String plugBoardPairs = scanner.nextLine();
+                    String plugBoardPairs = scanner.nextLine().toUpperCase();
                     mEngine.CheckPlugBoardPairs(plugBoardPairs);
                     res = true;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
+
                 }
             }
 
@@ -352,7 +363,7 @@ public class UserInterface {
         withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
         selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
-        printCurrentCode();
+        printCurrentCode(true);
     }
 
     private void  saveMachineData() {
@@ -406,17 +417,17 @@ public class UserInterface {
         String inputData;
         boolean validInput=true;
 
-        do {
+       // do {
             try {
                 inputData = scanner.nextLine();
-
                 System.out.println("output:" + mEngine.cipherData(inputData));
+                isDataCipered=true;
             }
             catch (RuntimeException e) {
-                System.out.println(e.getMessage() + "\nnot valid input,please enter data again");
-                validInput=false;
+                System.out.println(e.getMessage());
+             //   validInput=false;
             }
-        } while (!validInput);
+      //  } while (!validInput);
 
 
     }

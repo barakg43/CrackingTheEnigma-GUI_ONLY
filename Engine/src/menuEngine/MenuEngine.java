@@ -3,9 +3,9 @@ package menuEngine;
 import dtoObjects.*;
 
 import enigmaMachine.enigmaMachine;
+import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import enigmaMachine.parts.reflectorId;
 import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
@@ -121,7 +121,8 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
     public boolean checkIfDataValid(String data) {
-        return enigmaMachine.getKeyboard().checkValidInput(data);
+       // return enigmaMachine.getKeyboard().checkValidInput(data); //  TODO : need to check this
+        return true;
     }
 
     @Override
@@ -177,7 +178,7 @@ public class MenuEngine implements Engine , Serializable {
         }
         //System.out.println("output:" + output);
         long endTime=System.nanoTime();
-        statisticsData.addCipheredDataToStats(getCodeFormat(),dataInput, output.toString(), endTime-startTime);
+        statisticsData.addCipheredDataToStats(getCodeFormat(true,true),dataInput, output.toString(), endTime-startTime);
         return output.toString();
     }
     @Override
@@ -193,20 +194,32 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
-    public String getCodeFormat(){
+    public String getCodeFormat(boolean isSelectedData,boolean isHistory){
 
             int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
             char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
+             int[] notchArray;
+
             if(selectedRotorsArray==null)//if user only start the program and not select any configuration
                 return "";
 
             StringBuilder codeFormat=new StringBuilder();
             codeFormat.append('<');
+            notchArray= isSelectedData? selectedConfigurationDTO.getNotchPositions() : setNotchPositions();
+
             for(int i=selectedRotorsArray.length-1;i>0;i--)
             {
-                codeFormat.append(selectedRotorsArray[i]).append(",");
+                codeFormat.append(selectedRotorsArray[i]);
+                if(isHistory)
+                    codeFormat.append(",");
+                else
+                    codeFormat.append("(").append(notchArray[i]).append(")").append(",");
             }
-            codeFormat.append(selectedRotorsArray[0]).append("><");
+            codeFormat.append(selectedRotorsArray[0]);
+            if(isHistory)
+                codeFormat.append(",");
+            else
+                codeFormat.append("(").append(notchArray[0]).append(")");
 
             for(int i=selectedPositions.length-1;i>=0;i--) {
                 codeFormat.append(selectedPositions[i]);
@@ -272,6 +285,8 @@ public class MenuEngine implements Engine , Serializable {
         withPlugBoardPairs=true;
         for(int i=0;i<pairs.length();i+=2)
         {
+            if(plugBoardPairs.contains(pairs.charAt(i)) || plugBoardPairs.contains(pairs.charAt(i+1)))
+                throw new Exception("letter in pair: "+pairs.charAt(i)+pairs.charAt(i+1)+ " appears more then once.");
             plugBoardPairs.add(pairs.substring(i, Math.min(pairs.length(), i + 2)));
         }
 
