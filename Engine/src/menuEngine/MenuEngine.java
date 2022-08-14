@@ -3,9 +3,9 @@ package menuEngine;
 import dtoObjects.*;
 
 import enigmaMachine.enigmaMachine;
+import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import enigmaMachine.parts.reflectorId;
 import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
@@ -121,7 +121,8 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
     public boolean checkIfDataValid(String data) {
-        return enigmaMachine.getKeyboard().checkValidInput(data);
+       // return enigmaMachine.getKeyboard().checkValidInput(data); //  TODO : need to check this
+        return true;
     }
 
     @Override
@@ -272,6 +273,8 @@ public class MenuEngine implements Engine , Serializable {
         withPlugBoardPairs=true;
         for(int i=0;i<pairs.length();i+=2)
         {
+            if(plugBoardPairs.contains(pairs.charAt(i)) || plugBoardPairs.contains(pairs.charAt(i+1)))
+                throw new Exception("letter in pair: "+pairs.charAt(i)+pairs.charAt(i+1)+ " appears more then once.");
             plugBoardPairs.add(pairs.substring(i, Math.min(pairs.length(), i + 2)));
         }
 

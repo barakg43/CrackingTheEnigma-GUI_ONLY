@@ -16,7 +16,7 @@ public interface Engine {
 
      boolean checkIfDataValid(String data);
 
-    StatisticsDataDTO getStatisticDataDTO();
+     StatisticsDataDTO getStatisticDataDTO();
 
     void checkIfPositionsValid(String positions);
 
@@ -42,6 +42,4 @@ public interface Engine {
     String toString();
     void resetAllData();
     boolean isMachineLoaded();
-
-
 }
