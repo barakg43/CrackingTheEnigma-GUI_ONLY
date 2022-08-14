@@ -77,10 +77,10 @@ public class enigmaMachine implements Serializable {
     }
 
     public void setAlphabet(String alphabet) {
-//        alphabet=alphabet.replaceAll("\n","");
-//        alphabet=alphabet.replaceAll("\t","");
-        this.alphabet=alphabet.trim().toUpperCase();
-        keyboard=new Keyboard(this.alphabet,plugBoardPairs);
+        alphabet=alphabet.replaceAll("\n","");
+        alphabet=alphabet.replaceAll("\t","");
+        keyboard=new Keyboard(alphabet,plugBoardPairs);
+        this.alphabet=alphabet;
     }
 
     public Keyboard getKeyboard() {
