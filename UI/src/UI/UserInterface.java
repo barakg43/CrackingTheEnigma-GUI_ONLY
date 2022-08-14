@@ -292,8 +292,8 @@ public class UserInterface {
             }
         }
 
-        System.out.println("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
-                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )");
+        System.out.format("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
+                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
         res=false;
         while(!res) {
             try {
@@ -330,7 +330,7 @@ public class UserInterface {
 
             withPlugBoardPairs=true;
             System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.\n the alphabet in machine is:\n%s\n",mEngine.getAlphabetString());
+                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {
