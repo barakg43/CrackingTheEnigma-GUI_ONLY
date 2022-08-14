@@ -284,6 +284,11 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
+    public String getAlphabetString() {
+        return enigmaMachine.getAlphabet();
+    }
+
+    @Override
     public void setCodeAutomatically() {
         setRandomRotors();
         setRandomReflector();

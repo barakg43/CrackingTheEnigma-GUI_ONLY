@@ -34,7 +34,7 @@ public interface Engine {
     void CheckPlugBoardPairs(String pairs) throws Exception;
 
     void setCodeAutomatically();
-
+    String getAlphabetString();
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
     int addCipheredInputs();
