@@ -11,6 +11,7 @@ public class MachineDataDTO implements Serializable {
     private final int[] rotorsId;
     private final int[] notchNums;
 
+
     public MachineDataDTO()
     {
         numberOfReflectors=0;

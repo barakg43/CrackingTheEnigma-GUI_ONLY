@@ -59,7 +59,9 @@ public class UserInterface {
         while(option-1!=EXIT.ordinal()) {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
+
                   loadMachineConfigurationFromXmlFile();
+
                     currentCode=false;
                     withPlugBoardPairs=false;
                     //selectedOptions.clear();
@@ -176,10 +178,14 @@ public class UserInterface {
 //            isFirstOptionSelected=true;
         while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
         {
-            System.out.println("You need first load the machine from file.");
+
+           System.out.println("You need first load the machine from file.\nPlease select option number 1.");
+            printMenu();
+
             line=scanner.nextLine();
             optionNum=Integer.parseInt(line);
         }
+
 
         while(optionNum==CIPER_DATA.ordinal()+1 && selectedData==null)
         {
@@ -188,6 +194,7 @@ public class UserInterface {
             line=scanner.nextLine();
             optionNum=Integer.parseInt(line);
         }
+
 
         if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");

@@ -273,7 +273,9 @@ public class MenuEngine implements Engine , Serializable {
 
 
     @Override
+
     public void checkPlugBoardPairs(String pairs){
+
 
         plugBoardPairs=new ArrayList<>();
         if(pairs.length()==0)
@@ -281,6 +283,7 @@ public class MenuEngine implements Engine , Serializable {
             withPlugBoardPairs=false;
             return;
         }
+
 
         if(pairs.length()%2!=0)
             throw new RuntimeException("There is a character that has no pair.must be even number in input string.\nPlease correct this.");
@@ -338,22 +341,6 @@ public class MenuEngine implements Engine , Serializable {
         }
     }
 
-
-    @Override
-    public int checkPlugBoardNum(String plugBoardNum) {
-        int plugboardNum;
-        try {
-            plugboardNum = Integer.parseInt(plugBoardNum);
-        } catch (Exception ex) {
-            throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
-        }
-        if (plugboardNum > 2 || plugboardNum < 1)
-            throw new RuntimeException("Please choose 1 or 2.");
-
-        withPlugBoardPairs=plugboardNum==1;
-
-        return plugboardNum;
-    }
 
     @Override
     public void setCodeAutomatically() {
@@ -506,6 +493,17 @@ public class MenuEngine implements Engine , Serializable {
             int[] notchArray = copyNotchArray(eng.getCTEMachine().getCTERotors().getCTERotor());
             machineData = new MachineDataDTO(eng.getCTEMachine().getCTEReflectors().getCTEReflector().size(),
                     eng.getCTEMachine().getRotorsCount(), rotorsArrayId, notchArray);
+        }
+
+
+
+        private int[] setNotchPositions()
+        {
+            int[] notchArray=new int[selectedPositions.length];
+            for (int i = 0; i < selectedPositions.length; i++) {
+                notchArray[i]=selectedRotors[i].calcIndexRotorTable(selectedRotors[i].getNotchPosition(),false);
+            }
+            return notchArray;
         }
 
         private int[] copyRotorsID (List < CTERotor > rotorsArray)
