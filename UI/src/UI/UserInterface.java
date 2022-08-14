@@ -20,6 +20,8 @@ public class UserInterface {
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
     private StatisticsDataDTO historyData;
+
+    private boolean isDataCipered;
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
@@ -48,6 +50,7 @@ public class UserInterface {
         selectedData=null;
       //  cipheredInputs=0;
         historyData=null;
+        isDataCipered=false;
        // selectedOptions=new HashSet<>();
 
     }
@@ -78,6 +81,7 @@ public class UserInterface {
                     case CHSE_CNFG: {
                         withPlugBoardPairs = false;
                         currentCode = false;
+                        isDataCipered=false;
                         mEngine.resetSelected();
                         machineConfByUser();
                         break;
@@ -85,6 +89,7 @@ public class UserInterface {
                     case AUTO_CONFG: {
                         withPlugBoardPairs = false;
                         currentCode = false;
+                        isDataCipered=false;
                         mEngine.resetSelected();
                         machineConfAutomatically();
                         break;
@@ -235,15 +240,18 @@ public class UserInterface {
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
         if(currentCode) {
-            int[] notchArray=selectedData.getNotchPositions();
-            int[] rotorsArray=selectedData.getSelectedRotorsID();
-            System.out.println("Position of notch from window position in each rotor:");
-            for(int i=0;i<selectedData.getNotchPositions().length;i++)
-            {
-                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
-            }
-            System.out.println("Current machine code:");
-            printCurrentCode();
+            //int[] notchArray=selectedData.getNotchPositions();
+           // int[] rotorsArray=selectedData.getSelectedRotorsID();
+           // System.out.println("Position of notch from window position in each rotor:");
+//            for(int i=0;i<selectedData.getNotchPositions().length;i++)
+//            {
+//                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
+//            }
+            System.out.println("Selected machine code:");
+            printCurrentCode(true);
+        }
+        if(isDataCipered) {
+            printCurrentCode(!isDataCipered);
         }
 
     }
@@ -263,9 +271,9 @@ public class UserInterface {
             }
         }
     }
-    private void printCurrentCode()
+    private void printCurrentCode(boolean selectedCode)
     {
-        System.out.println(mEngine.getCodeFormat());
+        System.out.println(mEngine.getCodeFormat(selectedCode,false));
     }
 
     private void machineConfByUser() // case 3
@@ -355,7 +363,7 @@ public class UserInterface {
         withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
         selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
-        printCurrentCode();
+        printCurrentCode(true);
     }
 
     private void  saveMachineData() {
@@ -413,6 +421,7 @@ public class UserInterface {
             try {
                 inputData = scanner.nextLine();
                 System.out.println("output:" + mEngine.cipherData(inputData));
+                isDataCipered=true;
             }
             catch (RuntimeException e) {
                 System.out.println(e.getMessage());

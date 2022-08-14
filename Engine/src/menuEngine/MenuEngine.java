@@ -178,7 +178,7 @@ public class MenuEngine implements Engine , Serializable {
         }
         //System.out.println("output:" + output);
         long endTime=System.nanoTime();
-        statisticsData.addCipheredDataToStats(getCodeFormat(),dataInput, output.toString(), endTime-startTime);
+        statisticsData.addCipheredDataToStats(getCodeFormat(true,true),dataInput, output.toString(), endTime-startTime);
         return output.toString();
     }
     @Override
@@ -194,20 +194,32 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
-    public String getCodeFormat(){
+    public String getCodeFormat(boolean isSelectedData,boolean isHistory){
 
             int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
             char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
+             int[] notchArray;
+
             if(selectedRotorsArray==null)//if user only start the program and not select any configuration
                 return "";
 
             StringBuilder codeFormat=new StringBuilder();
             codeFormat.append('<');
+            notchArray= isSelectedData? selectedConfigurationDTO.getNotchPositions() : setNotchPositions();
+
             for(int i=selectedRotorsArray.length-1;i>0;i--)
             {
-                codeFormat.append(selectedRotorsArray[i]).append(",");
+                codeFormat.append(selectedRotorsArray[i]);
+                if(isHistory)
+                    codeFormat.append(",");
+                else
+                    codeFormat.append("(").append(notchArray[i]).append(")").append(",");
             }
-            codeFormat.append(selectedRotorsArray[0]).append("><");
+            codeFormat.append(selectedRotorsArray[0]);
+            if(isHistory)
+                codeFormat.append(",");
+            else
+                codeFormat.append("(").append(notchArray[0]).append(")");
 
             for(int i=selectedPositions.length-1;i>=0;i--) {
                 codeFormat.append(selectedPositions[i]);

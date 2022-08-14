@@ -24,8 +24,6 @@ public interface Engine {
 
     void resetCodePosition();
 
-    String getCodeFormat();
-
     void resetSelected();
 
     void checkIfReflectorNumValid(String ReflectorNum);
@@ -42,4 +40,6 @@ public interface Engine {
     String toString();
     void resetAllData();
     boolean isMachineLoaded();
-}
+    String getCodeFormat(boolean isSelectedData,boolean isHistory);
+
+    }
