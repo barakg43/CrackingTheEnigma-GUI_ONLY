@@ -60,12 +60,12 @@ public class UserInterface {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
 
-                    loadMachineDataFile();
+                //    loadMachineDataFile();
 
                     loadMachineConfigurationFromXmlFile();
                     currentCode=false;
                     withPlugBoardPairs=false;
-                    selectedOptions.clear();
+               ///     selectedOptions.clear();
                     mEngine.resetAllData();
 
                     break;
@@ -329,8 +329,8 @@ public class UserInterface {
     {
 
             withPlugBoardPairs=true;
-            System.out.println("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.");
+            System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
+                    "\nIf you don't want plugBoard pair, press Enter.\n the alphabet in machine is:\n%s\n",mEngine.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {
