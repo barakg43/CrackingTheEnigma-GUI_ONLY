@@ -20,7 +20,7 @@ public class UserInterface {
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedData;
     private StatisticsDataDTO historyData;
-    private Set<Integer> selectedOptions;
+  //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
                             CHSE_CNFG,
@@ -45,8 +45,10 @@ public class UserInterface {
         isFirstOptionSelected=false;
         withPlugBoardPairs=false;
         scanner=new Scanner(System.in);
+        selectedData=null;
       //  cipheredInputs=0;
-        selectedOptions=new HashSet<>();
+        historyData=null;
+       // selectedOptions=new HashSet<>();
 
     }
 
@@ -57,11 +59,14 @@ public class UserInterface {
         while(option-1!=EXIT.ordinal()) {
             switch (OPTIONS.values()[option-1]) {
                 case LOAD_XML: {
-                    loadMachineConfigurationFromXmlFile();
+                  loadMachineConfigurationFromXmlFile();
                     currentCode=false;
                     withPlugBoardPairs=false;
-                    selectedOptions.clear();
+                    //selectedOptions.clear();
                     mEngine.resetAllData();
+
+                  //  loadMachineDataFile();
+
                     break;
                 }
                 case SHOW_SPECS:{
@@ -163,6 +168,7 @@ public class UserInterface {
             printMenu();
             optionNum=scanner.nextInt();
         }
+
 //        if(optionNum ==1)
 //            isFirstOptionSelected=true;
 //
@@ -171,61 +177,75 @@ public class UserInterface {
         while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
         {
             System.out.println("You need first load the machine from file.");
-            printMenu();
             line=scanner.nextLine();
             optionNum=Integer.parseInt(line);
         }
-//        while((optionNum==CIPER_DATA.ordinal()+1) && !(selectedOptions.contains(CHSE_CNFG.ordinal()+1) || selectedOptions.contains(AUTO_CONFG.ordinal()+1)))
-//        {
-//            System.out.println("Before ciphering data, you need to configure the machine.");
-//            line=scanner.nextLine();
-//            optionNum=Integer.parseInt(line);
-//        }
-        if(optionNum-1!=EXIT.ordinal())
+
+        while(optionNum==CIPER_DATA.ordinal()+1 && selectedData==null)
+        {
+            System.out.format("Before ciphering data, you need to configure the machine.\n" +
+                    "Please select option number %d or %d", CHSE_CNFG.ordinal()+1,AUTO_CONFG.ordinal()+1);
+            line=scanner.nextLine();
+            optionNum=Integer.parseInt(line);
+        }
+
+        if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");
 
-        //selectedOptions.add(optionNum);
+
+        if(optionNum==STATS.ordinal()+1 && historyData==null)
+        {
+            System.out.println("There is no history to show yet.");
+        }
+
         return optionNum;
     }
 
     private void loadMachineConfigurationFromXmlFile()  //case 1
     {
 
-        boolean res=false;
-        while(!res){
+//        boolean res=false;
+//        while(!res){
             try {
-                // "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
+               //  "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
                 System.out.println("Please enter full XML file path: ");
               String xmlPath= scanner.nextLine();
 //                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
                 mEngine.LoadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
-                res=true;
+                System.out.println("The file path loaded successfully.");
+                currentCode=false;
+                withPlugBoardPairs=false;
+                //selectedOptions.clear();
+                mEngine.resetAllData();
+              //  res=true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
+        //}
 
-        System.out.println("The file path loaded successfully.");
+
     }
 
     private void printMachineData()  //case 2
     {
         System.out.println("\nMachine details:");
 
-        int[] rotorsArray=machineData.getRotorsId();
-        int[] notchArray=machineData.getNotchNums();
+
 
         System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
-        System.out.println("Position of notch in each rotor:");
-        for(int i=0;i<machineData.getRotorsId().length;i++)
-        {
-            System.out.printf("Rotor number: %d , notch position: %d\n" , rotorsArray[i],notchArray[i]);
-        }
+
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
         if(currentCode) {
+            int[] notchArray=selectedData.getNotchPositions();
+            int[] rotorsArray=selectedData.getSelectedRotorsID();
+            System.out.println("Position of notch from window position in each rotor:");
+            for(int i=0;i<selectedData.getNotchPositions().length;i++)
+            {
+                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
+            }
             System.out.println("Current machine code:");
             printCurrentCode();
         }
@@ -274,6 +294,7 @@ public class UserInterface {
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+
             }
         }
 
@@ -312,35 +333,20 @@ public class UserInterface {
 
     private void PlugBoardConfig()
     {
-        boolean res=false;
-        System.out.println("Please select if you want PlugBoard\n1-with plugboard\n2-without plugboard");
-        int plugboardNum=2;
-        while(!res) {
-            try {
-                plugboardNum = mEngine.checkPlugBoardNum( scanner.nextLine());
-                res=true;
-            }catch (Exception e) {
-                System.out.println("Please choose 1 or 2.");
-            }
-        }
 
-        if(plugboardNum==1) {
             withPlugBoardPairs=true;
-            System.out.println("Please enter pairs(without white space) for plugBoard with commas between them for example: AC,BG (A and C connected in the plugBoard, B and G connected in the plugBoard)");
-            res = false;
+            System.out.println("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
+                    "\nIf you don't want plugBoard pair, press Enter.");
+            boolean res = false;
             while (!res) {
                 try {
                     String plugBoardPairs = scanner.nextLine();
-                    mEngine.CheckPlugBoardPairs(plugBoardPairs);
+                    mEngine.checkPlugBoardPairs(plugBoardPairs);
                     res = true;
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
-        }
-        else{
-            System.out.println("you choose without plugBoard pairs.");
-        }
 
     }
 
@@ -359,14 +365,15 @@ public class UserInterface {
         System.out.println("You selected to save machine data in file.");
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
-        path+=".bat";
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             new FileOutputStream(path))) {
-            out.writeObject(mEngine);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        path+=".bat";
+//        try (ObjectOutputStream out =
+//                     new ObjectOutputStream(
+//                             new FileOutputStream(path))) {
+//            out.writeObject(mEngine);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        mEngine.saveMachineStateToFile(path);
         System.out.println("The data saved successfully.");
     }
 
@@ -374,29 +381,34 @@ public class UserInterface {
         System.out.println("You selected to load the machine data from file.");
         System.out.println("Please enter the full file(without extension) of the file: ");
         String path = scanner.nextLine();
-        path=path.replaceAll("\"","");//for case user enter with " "
-        path += ".bat";
-        File file = new File(path);
-        while (!file.exists()) {
-            System.out.println("This file doesn't exists. PLease enter valid file path:");
-            path = scanner.nextLine();
-            path += ".bat";
-            file = new File(path);
-        }
+//        path=path.replaceAll("\"","");//for case user enter with " "
+//        path += ".bat";
+//        File file = new File(path);
+//
+//
+//
+//        while (!file.exists()) {
+//            System.out.println("This file doesn't exists. PLease enter valid file path:");
+//            path = scanner.nextLine();
+//            path += ".bat";
+//            file = new File(path);
+//        }
+//
+//        try (ObjectInputStream in =
+//                     new ObjectInputStream(
+//                             new FileInputStream(path))) {
+//            MenuEngine menuEngine =
+//                    (MenuEngine) in.readObject();
+//            this.mEngine = menuEngine;
+//            machineData = mEngine.getMachineData();
+//            selectedData = mEngine.getSelectedData();
+//            historyData = mEngine.getStatisticDataDTO();
+        try {
+        mEngine.loadMachineStateFromFile(path);
+        System.out.println("The data was loaded successfully.");
 
-        try (ObjectInputStream in =
-                     new ObjectInputStream(
-                             new FileInputStream(path))) {
-            MenuEngine menuEngine =
-                    (MenuEngine) in.readObject();
-            this.mEngine = menuEngine;
-            machineData = mEngine.getMachineData();
-            selectedData = mEngine.getSelectedData();
-            historyData = mEngine.getStatisticDataDTO();
-            System.out.println("The data was loaded successfully.");
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
     }
 
