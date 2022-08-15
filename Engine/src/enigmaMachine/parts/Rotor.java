@@ -77,9 +77,9 @@ private void initRotorArrays() {
     }
 
 
-    public int calcIndexRotorTable(int index, boolean isRelativIndex) {
+    private int calcIndexRotorTable(int index, boolean isInnerRotorTableIndex) {
         int value;
-        if (isRelativIndex)
+        if (isInnerRotorTableIndex)
             value = index - windowPosition;
         else
             value = index + windowPosition;
@@ -87,6 +87,11 @@ private void initRotorArrays() {
         return (value % latterSize + latterSize) % latterSize;
 
     }
+     public int calculateDistanceFromNotchToWindows(boolean isFromInitialWindow)
+     {
+         int distance=isFromInitialWindow?(notchPosition-initialWindowPosition):(notchPosition-windowPosition);
+         return (distance % latterSize + latterSize) % latterSize;
+     }
     /**
      * advance the window if window position arrive notch position [(window position)==(notch position)] previous rotor
      * @param previousNotchRotorArriveWindow true make the rotor advance the window position

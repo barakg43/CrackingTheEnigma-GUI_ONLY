@@ -2,11 +2,8 @@ package enigmaMachine.parts;
 
 import enigmaMachine.Mapper;
 
-import javax.lang.model.element.NestingKind;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Reflector implements Mapper<Integer,Integer>, Serializable {
     private enum ID implements Serializable {

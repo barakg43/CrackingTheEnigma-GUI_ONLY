@@ -1,14 +1,12 @@
 package UI;
-import dtoObjects.MachineDataDTO;
-import dtoObjects.SelectedConfigurationDTO;
-import dtoObjects.StatisticsDataDTO;
-import menuEngine.StatisticRecord;
-//import enigmaMachine.parts.reflectorId;
-import menuEngine.*;
 
+import dtoObjects.*;
+import menuEngine.Engine;
+import menuEngine.MenuEngine;
 
-import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import static UI.UserInterface.OPTIONS.*;
 
@@ -248,33 +246,31 @@ public class UserInterface {
 //                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
 //            }
             System.out.println("Selected machine code:");
-            printCurrentCode(true);
+            System.out.println(mEngine.getCodeFormat(true));
+            System.out.println(mEngine.getCodeFormat(false));
         }
-        if(isDataCipered) {
-            printCurrentCode(!isDataCipered);
-        }
+
 
     }
 
     private void printHistoricalStaticsData()
     {
         historyData= mEngine.getStatisticDataDTO();
-        Map<String, List<StatisticRecord>> statisticsList=historyData.getStatisticsData();
+        Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsList=historyData.getStatisticsData();
         String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)\n";
-
-        for(String code:statisticsList.keySet())
+        for(CodeFormatDTO code:statisticsList.keySet())
         {
             System.out.println(code);
-            for(StatisticRecord stat: statisticsList.get(code))
+            for(StatisticRecordDTO stat: statisticsList.get(code))
             {
                 System.out.format(formatStatistics,stat.getInput(),stat.getOutput(),stat.getProcessingTime());
             }
         }
     }
-    private void printCurrentCode(boolean selectedCode)
-    {
-        System.out.println(mEngine.getCodeFormat(selectedCode,false));
-    }
+//    private void printCurrentCode(boolean selectedCode)
+//    {
+//        System.out.println(mEngine.getCodeFormat(selectedCode,false));
+//    }
 
     private void machineConfByUser() // case 3
     {
@@ -283,7 +279,7 @@ public class UserInterface {
         reflectorConfig();
         PlugBoardConfig();
         selectedData = mEngine.getSelectedData();
-
+        System.out.println(mEngine.getCodeFormat(true));
         System.out.println("The data was successfully received.");
     }
 
@@ -363,21 +359,23 @@ public class UserInterface {
         withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
         selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
-        printCurrentCode(true);
+        System.out.println(mEngine.getCodeFormat(true));
+//        printCurrentCode(true);
     }
 
     private void  saveMachineData() {
         System.out.println("You selected to save machine data in file.");
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
-        path+=".bat";
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             new FileOutputStream(path))) {
-            out.writeObject(mEngine);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        path+=".bat";
+//        try (ObjectOutputStream out =
+//                     new ObjectOutputStream(
+//                             new FileOutputStream(path))) {
+//            out.writeObject(mEngine);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        mEngine.saveMachineStateToFile(path);
         System.out.println("The data saved successfully.");
     }
 
@@ -385,32 +383,36 @@ public class UserInterface {
         System.out.println("You selected to load the machine data from file.");
         System.out.println("Please enter the full file(without extension) of the file: ");
         String path = scanner.nextLine();
-        path=path.replaceAll("\"","");//for case user enter with " "
-        path += ".bat";
-        File file = new File(path);
-        while (!file.exists()) {
-            System.out.println("This file doesn't exists. PLease enter valid file path:");
-            path = scanner.nextLine();
-            path += ".bat";
-            file = new File(path);
-        }
-
-        try (ObjectInputStream in =
-                     new ObjectInputStream(
-                             new FileInputStream(path))) {
-            MenuEngine menuEngine =
-                    (MenuEngine) in.readObject();
-            this.mEngine = menuEngine;
-            machineData = mEngine.getMachineData();
-            selectedData = mEngine.getSelectedData();
-            historyData = mEngine.getStatisticDataDTO();
+//        path=path.replaceAll("\"","");//for case user enter with " "
+//        path += ".bat";
+//        File file = new File(path);
+//
+//
+//
+//        while (!file.exists()) {
+//            System.out.println("This file doesn't exists. PLease enter valid file path:");
+//            path = scanner.nextLine();
+//            path += ".bat";
+//            file = new File(path);
+//        }
+//
+//        try (ObjectInputStream in =
+//                     new ObjectInputStream(
+//                             new FileInputStream(path))) {
+//            MenuEngine menuEngine =
+//                    (MenuEngine) in.readObject();
+//            this.mEngine = menuEngine;
+//            machineData = mEngine.getMachineData();
+//            selectedData = mEngine.getSelectedData();
+//            historyData = mEngine.getStatisticDataDTO();
+        try {
+            mEngine=MenuEngine.loadMachineStateFromFile(path);
             System.out.println("The data was loaded successfully.");
 
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
     }
-
         private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");

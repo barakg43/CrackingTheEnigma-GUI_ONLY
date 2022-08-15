@@ -1,17 +1,18 @@
 package menuEngine;
 
 import dtoObjects.*;
-
 import enigmaMachine.enigmaMachine;
-import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import jaxb.*;
+import jaxb.CTEEnigma;
+import jaxb.CTERotor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,13 +22,13 @@ public class MenuEngine implements Engine , Serializable {
     private enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
     private SelectedConfigurationDTO selectedConfigurationDTO;
-    private List<String> plugBoardPairs;
+    private List<PlugboardPairDTO> plugBoardPairs;
     private Rotor[] selectedRotors;
     private StatisticsData statisticsData;
     private char[] selectedPositions;
     private Reflector selectedReflector = null;
     private int cipheredInputs;
-
+    private CodeFormatDTO initialCodeFormat =null;
     boolean withPlugBoardPairs;
     @Override
     public boolean isMachineLoaded()
@@ -59,6 +60,11 @@ public class MenuEngine implements Engine , Serializable {
     public MachineDataDTO getMachineData() {
 
         return machineData;
+    }
+
+    @Override
+    public String getAlphabetString() {
+        return enigmaMachine.getAlphabet();
     }
 
     @Override
@@ -119,16 +125,12 @@ public class MenuEngine implements Engine , Serializable {
 //        enigmaMachine.setSelectedRotors(selectedRotors);
     }
 
-    @Override
-    public boolean checkIfDataValid(String data) {
-       // return enigmaMachine.getKeyboard().checkValidInput(data); //  TODO : need to check this
-        return true;
-    }
+
 
     @Override
     public StatisticsDataDTO getStatisticDataDTO()
     {
-        return statisticsData.getStatisticsDataDTO();
+        return statisticsData;
     }
 
     @Override
@@ -178,7 +180,8 @@ public class MenuEngine implements Engine , Serializable {
         }
         //System.out.println("output:" + output);
         long endTime=System.nanoTime();
-        statisticsData.addCipheredDataToStats(getCodeFormat(true,true),dataInput, output.toString(), endTime-startTime);
+        statisticsData.addCipheredDataToStats(getCodeFormat(true),dataInput, output.toString(), endTime-startTime);
+        cipheredInputs++;
         return output.toString();
     }
     @Override
@@ -193,51 +196,73 @@ public class MenuEngine implements Engine , Serializable {
         }
     }
 
+
+    private CodeFormatDTO createCodeFormat(boolean isCalcDistanceFromInitWindow)
+    {
+        int rotorID;
+        int distanceToWindow;
+        char initPositionLetter;
+        RotorInfoDTO[] rotorInfoArray=new RotorInfoDTO[enigmaMachine.getRotorNumberInUse()];
+        for (int i = 0; i < rotorInfoArray.length; i++) {
+            rotorID=selectedRotors[i].getRotorID();
+            distanceToWindow=selectedRotors[i].calculateDistanceFromNotchToWindows(isCalcDistanceFromInitWindow);
+            initPositionLetter=selectedPositions[i];
+            rotorInfoArray[i]=new RotorInfoDTO(rotorID,distanceToWindow,initPositionLetter);
+
+        }
+        return new CodeFormatDTO(rotorInfoArray,selectedReflector.getReflectorIdName(),plugBoardPairs);
+
+
+    }
     @Override
-    public String getCodeFormat(boolean isSelectedData,boolean isHistory){
+    public CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow) {
+        if (isCalcDistanceFromInitWindow)
+            return initialCodeFormat;
+        else
+            return createCodeFormat(false);
 
-            int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
-            char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
-             int[] notchArray;
-
-            if(selectedRotorsArray==null)//if user only start the program and not select any configuration
-                return "";
-
-            StringBuilder codeFormat=new StringBuilder();
-            codeFormat.append('<');
-            notchArray= isSelectedData? selectedConfigurationDTO.getNotchPositions() : setNotchPositions();
-
-            for(int i=selectedRotorsArray.length-1;i>0;i--)
-            {
-                codeFormat.append(selectedRotorsArray[i]);
-                if(isHistory)
-                    codeFormat.append(",");
-                else
-                    codeFormat.append("(").append(notchArray[i]).append(")").append(",");
-            }
-            codeFormat.append(selectedRotorsArray[0]);
-            if(isHistory)
-                codeFormat.append(",");
-            else
-                codeFormat.append("(").append(notchArray[0]).append(")");
-
-            for(int i=selectedPositions.length-1;i>=0;i--) {
-                codeFormat.append(selectedPositions[i]);
-            }
-           codeFormat.append(">");
-            codeFormat.append(String.format("<%s>", selectedConfigurationDTO.getSelectedReflectorID()));
-
-            if(withPlugBoardPairs)
-            {
-                List<String> pairs= selectedConfigurationDTO.getPlugBoardPairs();
-                codeFormat.append('<');
-                for (int i = 0; i < pairs.size()-1; i++)
-                    codeFormat.append(String.format("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1)));
-
-                codeFormat.append(String.format("%c|%c>",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1)));
-
-            }
-            return codeFormat.toString();
+//            int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
+//            char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
+//            int[] notchArray;
+//
+//            if(selectedRotorsArray==null)//if user only start the program and not select any configuration
+//                return "";
+//
+//            StringBuilder codeFormat=new StringBuilder();
+//            codeFormat.append('<');
+//            notchArray= isSelectedData? selectedConfigurationDTO.getNotchPositions() : setNotchPositions();
+//
+//            for(int i=selectedRotorsArray.length-1;i>0;i--)
+//            {
+//                codeFormat.append(selectedRotorsArray[i]);
+//                if(isHistory)
+//                    codeFormat.append(",");
+//                else
+//                    codeFormat.append("(").append(notchArray[i]).append(")").append(",");
+//            }
+//            codeFormat.append(selectedRotorsArray[0]);
+//            if(isHistory)
+//                codeFormat.append(",");
+//            else
+//                codeFormat.append("(").append(notchArray[0]).append(")");
+//
+//            for(int i=selectedPositions.length-1;i>=0;i--) {
+//                codeFormat.append(selectedPositions[i]);
+//            }
+//           codeFormat.append(">");
+//            codeFormat.append(String.format("<%s>", selectedConfigurationDTO.getSelectedReflectorID()));
+//
+//            if(withPlugBoardPairs)
+//            {
+//                List<String> pairs= selectedConfigurationDTO.getPlugBoardPairs();
+//                codeFormat.append('<');
+//                for (int i = 0; i < pairs.size()-1; i++)
+//                    codeFormat.append(String.format("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1)));
+//
+//                codeFormat.append(String.format("%c|%c>",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1)));
+//
+//            }
+//            return codeFormat.toString();
     }
 
     @Override
@@ -280,27 +305,62 @@ public class MenuEngine implements Engine , Serializable {
         }
 
         if(pairs.length()%2!=0)
-            throw new Exception("There is a character that has no pair. Please correct this.");
+            throw new RuntimeException("There is a character that has no pair.must be even number in input string.\nPlease correct this.");
 
         withPlugBoardPairs=true;
+        List<String> alreadyExistLetter=new ArrayList<>();
+        Set<Character> letterSet=new HashSet<>(pairs.length());
+        for(int i=0;i<pairs.length();i++) {
+            if (enigmaMachine.getAlphabet().indexOf(pairs.charAt(i)) == -1 )
+                throw new RuntimeException("Pair: " + pairs.charAt(i) + " doesn't exist in the machine alphabet.");
+            if(letterSet.contains(pairs.charAt(i)))
+                alreadyExistLetter.add(pairs.charAt(i)+"\n");
+            else
+                letterSet.add(pairs.charAt(i));
+        }
+        if(alreadyExistLetter.size()!=0)
+            throw new Exception("the letters:\n"+alreadyExistLetter+ " appears more then once.");
+
         for(int i=0;i<pairs.length();i+=2)
         {
-            if(plugBoardPairs.contains(pairs.charAt(i)) || plugBoardPairs.contains(pairs.charAt(i+1)))
-                throw new Exception("letter in pair: "+pairs.charAt(i)+pairs.charAt(i+1)+ " appears more then once.");
-            plugBoardPairs.add(pairs.substring(i, Math.min(pairs.length(), i + 2)));
+            plugBoardPairs.add(new PlugboardPairDTO(pairs.charAt(i),pairs.charAt(i+1)));
+            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));
+
         }
 
-        for (String str : plugBoardPairs) {
-            if (enigmaMachine.getAlphabet().indexOf(str.charAt(0)) == -1 || enigmaMachine.getAlphabet().indexOf(str.charAt(1)) == -1)
-                throw new RuntimeException("Pair: " + str + " doesn't exist in the machine alphabet.");
-            enigmaMachine.getPlugBoard().addMappedInputOutput(str.charAt(0), str.charAt(1));
-        }
+
 
     }
 
     @Override
-    public String getAlphabetString() {
-        return enigmaMachine.getAlphabet();
+    public void saveMachineStateToFile(String filePathNoExtension) {
+        filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
+        filePathNoExtension+=".bat";
+        try (ObjectOutputStream out =
+                     new ObjectOutputStream(
+                             Files.newOutputStream(Paths.get(filePathNoExtension)))) {
+            out.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
+    filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
+    filePathNoExtension+=".bat";
+    File savedStateFile = new File(filePathNoExtension);
+    if(!savedStateFile.exists())
+        throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
+
+    try (ObjectInputStream in =
+                     new ObjectInputStream(
+                             Files.newInputStream(Paths.get(filePathNoExtension)))) {
+            return (MenuEngine) in.readObject();
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -309,6 +369,7 @@ public class MenuEngine implements Engine , Serializable {
         setRandomReflector();
         setRandomPositions();
         setRandomPlugboardPairs();
+        initialCodeFormat =createCodeFormat(true);
         createSelectedDataObj(true);
     }
 
@@ -336,7 +397,7 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     private void setRandomReflector() {
-        int reflectorNum=new Random().nextInt(enigmaMachine.getReflectorsNumber())+1;
+        int reflectorNum=ThreadLocalRandom.current().nextInt(enigmaMachine.getReflectorsNumber())+1;
         selectedReflector = enigmaMachine.getReflectorById(reflectorNum);
     }
 
@@ -345,7 +406,6 @@ public class MenuEngine implements Engine , Serializable {
 //    }
 
     private void setRandomPositions() {
-        char position;
         selectedPositions = new char[selectedRotors.length];
         char[] alphabetArray = new char[enigmaMachine.getAlphabet().length()];
         for (int i = 0; i < enigmaMachine.getAlphabet().length(); i++) {
@@ -382,7 +442,7 @@ public class MenuEngine implements Engine , Serializable {
                             output = charList.get(random.nextInt(charList.size()));
                         charList.remove(charList.indexOf(output));
                         enigmaMachine.getPlugBoard().addMappedInputOutput(input, output);
-                        plugBoardPairs.add(String.valueOf(input) + String.valueOf(output));
+                        plugBoardPairs.add(new PlugboardPairDTO(input,output));
                         res = true;
                     } catch (Exception ex) {
                         break;
@@ -460,7 +520,7 @@ public class MenuEngine implements Engine , Serializable {
         {
             int[] notchArray=new int[selectedPositions.length];
             for (int i = 0; i < selectedPositions.length; i++) {
-                notchArray[i]=selectedRotors[i].calcIndexRotorTable(selectedRotors[i].getNotchPosition(),false);
+                notchArray[i]=selectedRotors[i].calculateDistanceFromNotchToWindows(false);
             }
             return notchArray;
         }
@@ -486,10 +546,6 @@ public class MenuEngine implements Engine , Serializable {
     public int getCipheredInputs()
     {
         return cipheredInputs;
-    }
-    public int addCipheredInputs()
-    {
-        return cipheredInputs++;
     }
     @Override
     public String toString() {
