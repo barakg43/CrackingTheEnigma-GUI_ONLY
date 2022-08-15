@@ -41,12 +41,11 @@ public class MenuEngine implements Engine , Serializable {
         enigmaMachine = null;
         statisticsData=new StatisticsData();
         selectedConfigurationDTO =new SelectedConfigurationDTO();
-        cipheredInputs=0;
+       // cipheredInputs=0;
     }
 
     public void resetAllData()
     {
-        machineData=new MachineDataDTO();
         selectedConfigurationDTO=new SelectedConfigurationDTO();
         plugBoardPairs=new ArrayList<>();
         statisticsData=new StatisticsData();
@@ -110,12 +109,12 @@ public class MenuEngine implements Engine , Serializable {
             try {
                 rotorNum = Integer.parseInt(arrayString.get(j));
             } catch (Exception ex) {
-                throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
+                throw new RuntimeException("The number you entered isn't integer.");
             }
             if (rotorNum > enigmaMachine.getNumberOfRotors() || rotorNum < 1)
-                throw new RuntimeException("There is no such rotors, please select again valid rotors");
+                throw new RuntimeException("There is no such rotors.");
             if (findRotorByIdInSelectedRotors(rotorNum) != null)
-                throw new RuntimeException("You select the same rotor twice, please select again valid rotors\"");
+                throw new RuntimeException("You select the same rotor twice.");
             selectedRotors[i++] = enigmaMachine.getRotorById(rotorNum);
         }
 
@@ -143,7 +142,7 @@ public class MenuEngine implements Engine , Serializable {
             throw new RuntimeException("You need to give position for each rotor.");
         for (char ch : positions.toCharArray()) {
             if (enigmaMachine.getAlphabet().indexOf(ch) == -1)
-                throw new RuntimeException("This position is not exist in the machine. Please enter valid positions:");
+                throw new RuntimeException("This position is not exist in the machine.");
             positionsList[i] = ch;
             i--;
         }
@@ -220,10 +219,11 @@ public class MenuEngine implements Engine , Serializable {
             }
             codeFormat.append(selectedRotorsArray[0]);
             if(isHistory)
-                codeFormat.append(",");
+                codeFormat.append(">");
             else
-                codeFormat.append("(").append(notchArray[0]).append(")");
+                codeFormat.append("(").append(notchArray[0]).append(")").append(">");
 
+            codeFormat.append("<");
             for(int i=selectedPositions.length-1;i>=0;i--) {
                 codeFormat.append(selectedPositions[i]);
             }
@@ -263,10 +263,10 @@ public class MenuEngine implements Engine , Serializable {
         try {
             refNum = Integer.parseInt(ReflectorNum);
         } catch (Exception ex) {
-            throw new RuntimeException("The number you entered isn't integer. Please enter an integer number: ");
+            throw new RuntimeException("The number you entered isn't integer.");
         }
         if (!Reflector.isIdExist(refNum) || refNum > enigmaMachine.getReflectorsNumber())
-            throw new RuntimeException("Please choose one of the options 1-" + enigmaMachine.getReflectorsNumber());
+            throw new RuntimeException("You need to choose one of the options 1-" + enigmaMachine.getReflectorsNumber());
 
         selectedReflector = enigmaMachine.getReflectorById(refNum);
         //enigmaMachine.setSelectedReflector(selectedReflector);
@@ -289,6 +289,7 @@ public class MenuEngine implements Engine , Serializable {
 
         if(pairs.length()%2!=0)
             throw new RuntimeException("There is a character that has no pair.must be even number in input string.\nPlease correct this.");
+
 
         withPlugBoardPairs=true;
         for(int i=0;i<pairs.length();i+=2)
