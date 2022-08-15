@@ -313,8 +313,8 @@ public class MenuEngine implements Engine , Serializable {
             throw new RuntimeException(e);
         }
     }
-    @Override
-    public void  loadMachineStateFromFile(String filePathNoExtension) {
+
+    public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
     filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
     filePathNoExtension+=".bat";
     File savedStateFile = new File(filePathNoExtension);
@@ -324,17 +324,8 @@ public class MenuEngine implements Engine , Serializable {
     try (ObjectInputStream in =
                      new ObjectInputStream(
                              Files.newInputStream(Paths.get(filePathNoExtension)))) {
-            MenuEngine temp=(MenuEngine) in.readObject();
-            this.enigmaMachine = temp.enigmaMachine;
-            this.machineData=temp.machineData;
-            this.plugBoardPairs=temp.plugBoardPairs;
-            this.selectedRotors=temp.selectedRotors;
-            this.selectedReflector=temp.selectedReflector;
-            this.cipheredInputs=temp.cipheredInputs;
-            this.selectedConfigurationDTO=temp.selectedConfigurationDTO;
-            this.selectedPositions=temp.selectedPositions;
-            this.withPlugBoardPairs=temp.withPlugBoardPairs;
-            this.statisticsData=temp.statisticsData;
+            return (MenuEngine) in.readObject();
+
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);

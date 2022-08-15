@@ -35,7 +35,8 @@ public interface Engine {
     void checkPlugBoardPairs(String pairs) ;
     void  saveMachineStateToFile(String filePathNoExtension);
     int checkPlugBoardNum(String plugBoardNum);
-    void loadMachineStateFromFile(String filePathNoExtension);
+
+
 
     void setCodeAutomatically();
 

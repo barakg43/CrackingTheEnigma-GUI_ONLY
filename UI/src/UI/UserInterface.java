@@ -411,7 +411,7 @@ public class UserInterface {
 //            selectedData = mEngine.getSelectedData();
 //            historyData = mEngine.getStatisticDataDTO();
         try {
-        mEngine.loadMachineStateFromFile(path);
+        mEngine=MenuEngine.loadMachineStateFromFile(path);
         System.out.println("The data was loaded successfully.");
 
         } catch (RuntimeException e) {
