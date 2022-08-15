@@ -12,6 +12,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -69,6 +71,7 @@ public class MenuEngine implements Engine , Serializable {
     @Override
     public void LoadXMLFile(String filePath) {
         filePath=filePath.replaceAll("\"","");//for case user enter with " "
+
         File file = new File(filePath);
 
         if (!(filePath.toLowerCase().endsWith(".xml")))
@@ -269,8 +272,12 @@ public class MenuEngine implements Engine , Serializable {
         //enigmaMachine.setSelectedReflector(selectedReflector);
     }
 
+
+
     @Override
-    public void CheckPlugBoardPairs(String pairs) throws Exception {
+
+    public void checkPlugBoardPairs(String pairs){
+
 
         plugBoardPairs=new ArrayList<>();
         if(pairs.length()==0)
@@ -279,8 +286,10 @@ public class MenuEngine implements Engine , Serializable {
             return;
         }
 
+
         if(pairs.length()%2!=0)
-            throw new Exception("There is a character that has no pair.");
+            throw new RuntimeException("There is a character that has no pair.must be even number in input string.\nPlease correct this.");
+
 
         withPlugBoardPairs=true;
         for(int i=0;i<pairs.length();i+=2)
@@ -297,6 +306,42 @@ public class MenuEngine implements Engine , Serializable {
         }
 
     }
+    @Override
+    public void  saveMachineStateToFile(String filePathNoExtension) {
+        filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
+        filePathNoExtension+=".bat";
+        try (ObjectOutputStream out =
+                     new ObjectOutputStream(
+                             Files.newOutputStream(Paths.get(filePathNoExtension)))) {
+            out.writeObject(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int checkPlugBoardNum(String plugBoardNum) {
+        return 0;
+    }
+
+    public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
+    filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
+    filePathNoExtension+=".bat";
+    File savedStateFile = new File(filePathNoExtension);
+    if(!savedStateFile.exists())
+        throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
+
+    try (ObjectInputStream in =
+                     new ObjectInputStream(
+                             Files.newInputStream(Paths.get(filePathNoExtension)))) {
+            return (MenuEngine) in.readObject();
+
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public String getAlphabetString() {

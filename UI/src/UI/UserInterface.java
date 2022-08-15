@@ -72,6 +72,7 @@ public class UserInterface {
                         ///     selectedOptions.clear();
                         //mEngine.resetAllData();
                         break;
+
                     }
                     case SHOW_SPECS: {
                         printMachineData();
@@ -167,7 +168,6 @@ public class UserInterface {
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
        }
-
        while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
        {
            System.out.println("You need first load the machine from file.\nPlease select option number 1.");
@@ -183,6 +183,8 @@ public class UserInterface {
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
        }
+
+
 
         if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");
@@ -314,8 +316,8 @@ public class UserInterface {
             }
         }
 
-        System.out.println("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
-                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )");
+        System.out.format("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
+                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
         res=false;
         while(!res) {
             try {
@@ -366,7 +368,7 @@ public class UserInterface {
 
             withPlugBoardPairs=true;
             System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.\n the alphabet in machine is:\n%s\n",mEngine.getAlphabetString());
+                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {
@@ -377,6 +379,7 @@ public class UserInterface {
                         return false;
                     }
                     mEngine.CheckPlugBoardPairs(plugBoardPairs);
+
                     res = true;
                 } catch (Exception e) {
                     System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
@@ -402,14 +405,15 @@ public class UserInterface {
         System.out.println("You selected to save machine data in file.");
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
-        path+=".bat";
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             new FileOutputStream(path))) {
-            out.writeObject(mEngine);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        path+=".bat";
+//        try (ObjectOutputStream out =
+//                     new ObjectOutputStream(
+//                             new FileOutputStream(path))) {
+//            out.writeObject(mEngine);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        mEngine.saveMachineStateToFile(path);
         System.out.println("The data saved successfully.");
     }
 
@@ -417,30 +421,38 @@ public class UserInterface {
         System.out.println("You selected to load the machine data from file.");
         System.out.println("Please enter the full file(without extension) of the file: ");
         String path = scanner.nextLine();
-        path=path.replaceAll("\"","");//for case user enter with " "
-        path += ".bat";
-        File file = new File(path);
-        while (!file.exists()) {
-            System.out.println("This file doesn't exists. PLease enter valid file path:");
-            path = scanner.nextLine();
-            path += ".bat";
-            file = new File(path);
-        }
-
-        try (ObjectInputStream in =
-                     new ObjectInputStream(
-                             new FileInputStream(path))) {
-            MenuEngine menuEngine =
-                    (MenuEngine) in.readObject();
-            this.mEngine = menuEngine;
+//        path=path.replaceAll("\"","");//for case user enter with " "
+//        path += ".bat";
+//        File file = new File(path);
+//
+//
+//
+//        while (!file.exists()) {
+//            System.out.println("This file doesn't exists. PLease enter valid file path:");
+//            path = scanner.nextLine();
+//            path += ".bat";
+//            file = new File(path);
+//        }
+//
+//        try (ObjectInputStream in =
+//                     new ObjectInputStream(
+//                             new FileInputStream(path))) {
+//            MenuEngine menuEngine =
+//                    (MenuEngine) in.readObject();
+//            this.mEngine = menuEngine;
+//            machineData = mEngine.getMachineData();
+//            selectedData = mEngine.getSelectedData();
+//            historyData = mEngine.getStatisticDataDTO();
+        try {
+        mEngine=MenuEngine.loadMachineStateFromFile(path);
+        System.out.println("The data was loaded successfully.");
             machineData = mEngine.getMachineData();
             selectedData = mEngine.getSelectedData();
             historyData = mEngine.getStatisticDataDTO();
             currentCode=selectedData!=null;
-            System.out.println("The data was loaded successfully.");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
 
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 

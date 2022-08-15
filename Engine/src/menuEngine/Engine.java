@@ -29,7 +29,12 @@ public interface Engine {
     void checkIfReflectorNumValid(String ReflectorNum);
     int getNumberOfRotorInSystem();
     List<String> getReflectorIdList();
-    void CheckPlugBoardPairs(String pairs) throws Exception;
+
+    void checkPlugBoardPairs(String pairs) ;
+    void  saveMachineStateToFile(String filePathNoExtension);
+    int checkPlugBoardNum(String plugBoardNum);
+
+
 
     void setCodeAutomatically();
     String getAlphabetString();
