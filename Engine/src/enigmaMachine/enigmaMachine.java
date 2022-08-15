@@ -131,7 +131,7 @@ public class enigmaMachine implements Serializable {
 
     private void setRotorTable(List<CTEPositioning> ctePos,Rotor rotor) {
         for(CTEPositioning pos:ctePos)
-            rotor.addMapLatterToRotor(pos.getLeft().charAt(0),pos.getRight().charAt(0));
+            rotor.addMapLetterToRotor(pos.getLeft().charAt(0),pos.getRight().charAt(0));
     }
 
     public void setReflectors(List<CTEReflector> ReflectorsArray) {

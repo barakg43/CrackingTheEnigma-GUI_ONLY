@@ -10,27 +10,27 @@ import java.util.Map;
 public class Rotor implements Serializable {
 
     //right side of the rotor
-    private Map<Character,Integer> latter2IndexRightSide=null;
-    private char[] index2latterRightSide=null;
+    private Map<Character,Integer> letter2IndexRightSide =null;
+    private char[] index2letterRightSide =null;
     //left side of the rotor
-    private Map<Character,Integer> latter2IndexLeftSide=null;
-    private char[] index2latterLeftSide=null;
-    private final int latterSize;
+    private Map<Character,Integer> letter2IndexLeftSide =null;
+    private char[] index2letterLeftSide =null;
+    private final int letterSize;
     private int currentMapSize=0;
     private int windowPosition=0;
     private final int notchPosition;
     private final int rotorID;
     private int initialWindowPosition;
     private final boolean debugMode;
-       public Rotor(int latterSize, int notch, int id, boolean debugMode) {
-        this.latterSize = latterSize;
+       public Rotor(int letterSize, int notch, int id, boolean debugMode) {
+        this.letterSize = letterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
         this.debugMode = debugMode;
         initRotorArrays();
     }
-    public Rotor(int latterSize, int notch, int id) {
-        this(latterSize, notch, id, false);
+    public Rotor(int letterSize, int notch, int id) {
+        this(letterSize, notch, id, false);
     }
 
     public int getRotorID() {
@@ -42,37 +42,37 @@ public class Rotor implements Serializable {
         return notchPosition;
     }
 
-    public void setInitialWindowPosition(char latter) {
-        initialWindowPosition = latter2IndexRightSide.get(latter);
+    public void setInitialWindowPosition(char letter) {
+        initialWindowPosition = letter2IndexRightSide.get(letter);
         resetWindowPositionToInitialPosition();
 
     }
 
 private void initRotorArrays() {
-        index2latterRightSide = new char[latterSize];
-        index2latterLeftSide = new char[latterSize];
-        latter2IndexLeftSide = new HashMap<>(latterSize);
-        latter2IndexRightSide = new HashMap<>(latterSize);
-        for (int i = 0; i < latterSize; i++) {
-            index2latterLeftSide[i] = index2latterRightSide[i] = 0;
+        index2letterRightSide = new char[letterSize];
+        index2letterLeftSide = new char[letterSize];
+        letter2IndexLeftSide = new HashMap<>(letterSize);
+        letter2IndexRightSide = new HashMap<>(letterSize);
+        for (int i = 0; i < letterSize; i++) {
+            index2letterLeftSide[i] = index2letterRightSide[i] = 0;
         }
     }
     public void resetWindowPositionToInitialPosition() {
         windowPosition = initialWindowPosition;
     }
 
-    public void addMapLatterToRotor(char leftLatter, char rightLatter) {
-        if (currentMapSize > latterSize)
-            throw new RuntimeException("overflow latter size,too many mapped latter!");
-        if (latter2IndexLeftSide.containsKey(leftLatter))
-            throw new RuntimeException(String.format("the latter %c is already in roter table with %c", leftLatter, index2latterRightSide[latter2IndexLeftSide.get(leftLatter)]));
-        if (latter2IndexRightSide.containsKey(rightLatter))
-            throw new RuntimeException(String.format("the latter %c is already in roter table with %c", rightLatter, index2latterLeftSide[latter2IndexRightSide.get(rightLatter)]));
-        index2latterRightSide[currentMapSize] = rightLatter;
-        index2latterLeftSide[currentMapSize] = leftLatter;
+    public void addMapLetterToRotor(char leftLetter, char rightLetter) {
+        if (currentMapSize > letterSize)
+            throw new RuntimeException("overflow letter size,too many mapped letter!");
+        if (letter2IndexLeftSide.containsKey(leftLetter))
+            throw new RuntimeException(String.format("the letter %c is already in roter table with %c", leftLetter, index2letterRightSide[letter2IndexLeftSide.get(leftLetter)]));
+        if (letter2IndexRightSide.containsKey(rightLetter))
+            throw new RuntimeException(String.format("the letter %c is already in roter table with %c", rightLetter, index2letterLeftSide[letter2IndexRightSide.get(rightLetter)]));
+        index2letterRightSide[currentMapSize] = rightLetter;
+        index2letterLeftSide[currentMapSize] = leftLetter;
 
-        latter2IndexLeftSide.put(leftLatter, currentMapSize);
-        latter2IndexRightSide.put(rightLatter, currentMapSize);
+        letter2IndexLeftSide.put(leftLetter, currentMapSize);
+        letter2IndexRightSide.put(rightLetter, currentMapSize);
         currentMapSize++;
     }
 
@@ -84,13 +84,13 @@ private void initRotorArrays() {
         else
             value = index + windowPosition;
         //(a % b + b) % b get the correct answer also for (negative number)%(positive number)
-        return (value % latterSize + latterSize) % latterSize;
+        return (value % letterSize + letterSize) % letterSize;
 
     }
      public int calculateDistanceFromNotchToWindows(boolean isFromInitialWindow)
      {
          int distance=isFromInitialWindow?(notchPosition-initialWindowPosition):(notchPosition-windowPosition);
-         return (distance % latterSize + latterSize) % latterSize;
+         return (distance % letterSize + letterSize) % letterSize;
      }
     /**
      * advance the window if window position arrive notch position [(window position)==(notch position)] previous rotor
@@ -100,7 +100,7 @@ private void initRotorArrays() {
     public boolean forwardWindowPosition(boolean previousNotchRotorArriveWindow) {
         if (previousNotchRotorArriveWindow) {
             windowPosition++;
-            windowPosition = windowPosition % latterSize;
+            windowPosition = windowPosition % letterSize;
         }
         if (debugMode)
             System.out.format("Rotor ID:%d,window position:%d,notch position:%d\n", this.rotorID, windowPosition, notchPosition);
@@ -114,25 +114,25 @@ private void initRotorArrays() {
      * @return output row from rotor table that determined by input letter in table
      */
     public Integer getOutputMapIndex(int inputRowRotorTable, boolean isInputFromLeft) {
-        char inputLatter;
+        char inputletter;
         int relativeIndex = calcIndexRotorTable(inputRowRotorTable, false);
         int otherSideRelativIndex;
         if (debugMode)
-            System.out.format("Rotor ID:%d,latter:%c\n", this.rotorID, index2latterRightSide[relativeIndex]);
+            System.out.format("Rotor ID:%d,letter:%c\n", this.rotorID, index2letterRightSide[relativeIndex]);
         if (isInputFromLeft) {
-            inputLatter = index2latterLeftSide[relativeIndex];//translate the input index to latter in left side
-            otherSideRelativIndex = calcIndexRotorTable(latter2IndexRightSide.get(inputLatter), true);
+            inputletter = index2letterLeftSide[relativeIndex];//translate the input index to letter in left side
+            otherSideRelativIndex = calcIndexRotorTable(letter2IndexRightSide.get(inputletter), true);
         } else {
-            inputLatter = index2latterRightSide[relativeIndex];//translate the input index to latter in right side
-            otherSideRelativIndex = calcIndexRotorTable(latter2IndexLeftSide.get(inputLatter), true);
+            inputletter = index2letterRightSide[relativeIndex];//translate the input index to letter in right side
+            otherSideRelativIndex = calcIndexRotorTable(letter2IndexLeftSide.get(inputletter), true);
         }
         if (debugMode)
-            System.out.format("Rotor ID:%d,input latter:%c,input flow:%d -> %d\n", this.rotorID, inputLatter, inputRowRotorTable, otherSideRelativIndex);
+            System.out.format("Rotor ID:%d,input letter:%c,input flow:%d -> %d\n", this.rotorID, inputletter, inputRowRotorTable, otherSideRelativIndex);
         return otherSideRelativIndex;
     }
 
-    public boolean checkIfAllLatterMapped() {
-        return latter2IndexLeftSide.size() == latterSize && latter2IndexRightSide.size() == latterSize;
+    public boolean checkIfAllletterMapped() {
+        return letter2IndexLeftSide.size() == letterSize && letter2IndexRightSide.size() == letterSize;
     }
 
     public void printRotorTableDebugModeOnly()
@@ -140,8 +140,8 @@ private void initRotorArrays() {
         if(debugMode)
         {
             System.out.println("Rotor id:"+rotorID);
-            for (int i = 0; i < latterSize; i++) {
-                System.out.println(index2latterLeftSide[i]+" "+index2latterRightSide[i]);
+            for (int i = 0; i < letterSize; i++) {
+                System.out.println(index2letterLeftSide[i]+" "+ index2letterRightSide[i]);
 
             }
         }
@@ -150,11 +150,11 @@ private void initRotorArrays() {
     @Override
     public String toString() {
         return "Rotor{" +
-                "latter2IndexRightSide=" + latter2IndexRightSide +
-                ", index2latterRightSide=" + Arrays.toString(index2latterRightSide) +
-                ", latter2IndexLeftSide=" + latter2IndexLeftSide +
-                ", index2latterLeftSide=" + Arrays.toString(index2latterLeftSide) +
-                ", latterSize=" + latterSize +
+                "letter2IndexRightSide=" + letter2IndexRightSide +
+                ", index2letterRightSide=" + Arrays.toString(index2letterRightSide) +
+                ", letter2IndexLeftSide=" + letter2IndexLeftSide +
+                ", index2letterLeftSide=" + Arrays.toString(index2letterLeftSide) +
+                ", letterSize=" + letterSize +
                 ", currentMapSize=" + currentMapSize +
                 ", windowPosition=" + windowPosition +
                 ", notchPosition=" + notchPosition +
