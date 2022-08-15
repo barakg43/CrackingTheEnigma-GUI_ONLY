@@ -114,24 +114,24 @@ private void initRotorArrays() {
      * @return output row from rotor table that determined by input letter in table
      */
     public Integer getOutputMapIndex(int inputRowRotorTable, boolean isInputFromLeft) {
-        char inputletter;
-        int relativeIndex = calcIndexRotorTable(inputRowRotorTable, false);
+        int innerTableIndex = calcIndexRotorTable(inputRowRotorTable, false);
         int otherSideRelativIndex;
         if (debugMode)
-            System.out.format("Rotor ID:%d,letter:%c\n", this.rotorID, index2letterRightSide[relativeIndex]);
+            System.out.format("Rotor ID:%d,letter:%c\n", this.rotorID, index2letterRightSide[innerTableIndex]);
+        char inputLetter;
         if (isInputFromLeft) {
-            inputletter = index2letterLeftSide[relativeIndex];//translate the input index to letter in left side
-            otherSideRelativIndex = calcIndexRotorTable(letter2IndexRightSide.get(inputletter), true);
+            inputLetter = index2letterLeftSide[innerTableIndex];//translate the input index to letter in left side
+            otherSideRelativIndex = calcIndexRotorTable(letter2IndexRightSide.get(inputLetter), true);
         } else {
-            inputletter = index2letterRightSide[relativeIndex];//translate the input index to letter in right side
-            otherSideRelativIndex = calcIndexRotorTable(letter2IndexLeftSide.get(inputletter), true);
+            inputLetter = index2letterRightSide[innerTableIndex];//translate the input index to letter in right side
+            otherSideRelativIndex = calcIndexRotorTable(letter2IndexLeftSide.get(inputLetter), true);
         }
         if (debugMode)
-            System.out.format("Rotor ID:%d,input letter:%c,input flow:%d -> %d\n", this.rotorID, inputletter, inputRowRotorTable, otherSideRelativIndex);
+            System.out.format("Rotor ID:%d,input letter:%c,input flow:%d -> %d\n", this.rotorID, inputLetter, inputRowRotorTable, otherSideRelativIndex);
         return otherSideRelativIndex;
     }
 
-    public boolean checkIfAllletterMapped() {
+    public boolean checkIfAllLetterMapped() {
         return letter2IndexLeftSide.size() == letterSize && letter2IndexRightSide.size() == letterSize;
     }
 
