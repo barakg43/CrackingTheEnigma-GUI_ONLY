@@ -81,7 +81,7 @@ public class UserInterface {
                         withPlugBoardPairs = false;
                         currentCode = false;
                         isDataCipered=false;
-                        mEngine.resetSelected();
+                       // mEngine.resetSelected();
                         machineConfByUser();
                         break;
                     }
@@ -276,18 +276,24 @@ public class UserInterface {
 
     private void machineConfByUser() // case 3
     {
-        currentCode=true;
-        boolean rotorsRetVal=rotorsConfig();
-        if(!rotorsRetVal)
+        if(!rotorsConfig())
+        {
+            currentCode=selectedData!=null;
             return;
-        boolean reflectorRetVal = reflectorConfig();
-        if(!reflectorRetVal)
+        }
+        if(!reflectorConfig())
+        {
+            currentCode=selectedData!=null;
             return;
-        boolean plugBoardRetVal = PlugBoardConfig();
-        if(!plugBoardRetVal)
+        }
+        if(!PlugBoardConfig())
+        {
+            currentCode=selectedData!=null;
             return;
+        }
 
         selectedData = mEngine.getSelectedData();
+        currentCode=true;
         System.out.println("The data was successfully received.");
     }
 
@@ -316,7 +322,7 @@ public class UserInterface {
                 String positions=scanner.nextLine().toUpperCase();
                 if(positions.contains("\t"))
                 {
-                    mEngine.resetSelected();
+                   // mEngine.resetSelected();
                     return false;
                 }
                 mEngine.checkIfPositionsValid(positions);
@@ -343,7 +349,7 @@ public class UserInterface {
                 String reflector = scanner.nextLine();
                 if(reflector.contains("\t"))
                 {
-                    mEngine.resetSelected();
+                   // mEngine.resetSelected();
                     return false;
                 }
                 mEngine.checkIfReflectorNumValid(reflector);
@@ -367,7 +373,7 @@ public class UserInterface {
                     String plugBoardPairs = scanner.nextLine().toUpperCase();
                     if(plugBoardPairs.contains("\t"))
                     {
-                        mEngine.resetSelected();
+                       // mEngine.resetSelected();
                         return false;
                     }
                     mEngine.CheckPlugBoardPairs(plugBoardPairs);
