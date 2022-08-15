@@ -14,17 +14,15 @@ public interface Engine {
 
      void checkIfRotorsValid(String rotors);
 
-     void checkIfDataValid(String data);
+     boolean checkIfDataValid(String data);
 
-    StatisticsDataDTO getStatisticDataDTO();
+     StatisticsDataDTO getStatisticDataDTO();
 
     void checkIfPositionsValid(String positions);
 
     String cipherData(String dataInput);
 
     void resetCodePosition();
-
-    String getCodeFormat();
 
     void resetSelected();
 
@@ -39,13 +37,14 @@ public interface Engine {
 
 
     void setCodeAutomatically();
-
+    String getAlphabetString();
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
+    int addCipheredInputs();
     @Override
     String toString();
     void resetAllData();
     boolean isMachineLoaded();
+    String getCodeFormat(boolean isSelectedData,boolean isHistory);
 
-
-}
+    }
