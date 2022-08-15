@@ -314,6 +314,11 @@ public class MenuEngine implements Engine , Serializable {
         }
     }
 
+    @Override
+    public int checkPlugBoardNum(String plugBoardNum) {
+        return 0;
+    }
+
     public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
     filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
     filePathNoExtension+=".bat";
@@ -446,14 +451,7 @@ public class MenuEngine implements Engine , Serializable {
             }
 
         }
-    private int[] setNotchPositions()
-    {
-        int[] notchArray=new int[selectedPositions.length];
-        for (int i = 0; i < selectedPositions.length; i++) {
-            notchArray[i]=selectedRotors[i].calcDistanceFromNotchToWindowPosition();
-        }
-        return notchArray;
-    }
+
         private int[] copySelectedRotorsID (Rotor[] selectedRotors)
         {
             int[] selectedRotorsID = new int[selectedRotors.length];
