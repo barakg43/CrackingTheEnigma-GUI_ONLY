@@ -70,8 +70,7 @@ public class UserInterface {
                         currentCode = false;
                         withPlugBoardPairs = false;
                         ///     selectedOptions.clear();
-                        mEngine.resetAllData();
-
+                        //mEngine.resetAllData();
                         break;
                     }
                     case SHOW_SPECS: {
@@ -157,47 +156,53 @@ public class UserInterface {
     }
 
     private int getOptionAndValidate() throws Exception {
-       String line=scanner.nextLine();
+       String line = checkThatStringInputValid(scanner.nextLine());
 
-        int optionNum ;
-        while(line.length()>2 || line.equals("") || !Character.isDigit(line.charAt(0)))
-        {
-            System.out.println("You have selected an incorrect option.");
-            printMenu();
-            line=scanner.nextLine();
-        }
-        optionNum = Integer.parseInt(line);
+       int optionNum = Integer.parseInt(line);
 
-        while(optionNum<START_OPTION || optionNum-1>EXIT.ordinal() )
-        {
-            System.out.println("You have selected an incorrect option.");
-            printMenu();
-            optionNum=scanner.nextInt();
-        }
+       while(optionNum<START_OPTION || optionNum-1>EXIT.ordinal() )
+       {
+           System.out.println("You have selected an incorrect option.");
+           printMenu();
+           line =checkThatStringInputValid(scanner.nextLine());
+           optionNum = Integer.parseInt(line);
+       }
 
-//        if(optionNum ==1)
-//            isFirstOptionSelected=true;
-//
-//        if(selectedOptions.contains(LOAD_DATA.ordinal()+1))
-//            isFirstOptionSelected=true;
-        while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
-        {
+       while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
+       {
            System.out.println("You need first load the machine from file.\nPlease select option number 1.");
-            printMenu();
-            line=scanner.nextLine();
-            optionNum=Integer.parseInt(line);
-        }
+           printMenu();
+           line =checkThatStringInputValid(scanner.nextLine());
+           optionNum = Integer.parseInt(line);
+       }
+
+       while((optionNum==RST_CODE.ordinal()+1 || optionNum==CIPER_DATA.ordinal()+1) && selectedData==null)
+       {
+           System.out.println("You need first configure the machine ( option 3 or 4).");
+           printMenu();
+           line =checkThatStringInputValid(scanner.nextLine());
+           optionNum = Integer.parseInt(line);
+       }
 
         if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");
 
-
         if(optionNum==STATS.ordinal()+1 && historyData==null)
-        {
             System.out.println("There is no history to show yet.");
-        }
 
         return optionNum;
+    }
+
+    private String checkThatStringInputValid(String inputOption)
+    {
+        while(inputOption.length()>2 || inputOption.equals("") || !Character.isDigit(inputOption.charAt(0)))
+        {
+            System.out.println("You have selected an incorrect option.");
+            printMenu();
+            inputOption=scanner.nextLine();
+        }
+        return inputOption;
+
     }
 
     private void loadMachineConfigurationFromXmlFile()  //case 1
@@ -230,8 +235,7 @@ public class UserInterface {
 
     private void printMachineData()  //case 2
     {
-        System.out.println("\nMachine details:");
-
+        System.out.println("Machine details:");
 
 
         System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
@@ -240,13 +244,7 @@ public class UserInterface {
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
         if(currentCode) {
-            //int[] notchArray=selectedData.getNotchPositions();
-           // int[] rotorsArray=selectedData.getSelectedRotorsID();
-           // System.out.println("Position of notch from window position in each rotor:");
-//            for(int i=0;i<selectedData.getNotchPositions().length;i++)
-//            {
-//                System.out.printf("Rotor number: %d , notch position from window position: %d\n" , rotorsArray[i],notchArray[i]);
-//            }
+
             System.out.println("Selected machine code:");
             printCurrentCode(true);
         }
@@ -279,26 +277,34 @@ public class UserInterface {
     private void machineConfByUser() // case 3
     {
         currentCode=true;
-        rotorsConfig();
-        reflectorConfig();
-        PlugBoardConfig();
-        selectedData = mEngine.getSelectedData();
+        boolean rotorsRetVal=rotorsConfig();
+        if(!rotorsRetVal)
+            return;
+        boolean reflectorRetVal = reflectorConfig();
+        if(!reflectorRetVal)
+            return;
+        boolean plugBoardRetVal = PlugBoardConfig();
+        if(!plugBoardRetVal)
+            return;
 
+        selectedData = mEngine.getSelectedData();
         System.out.println("The data was successfully received.");
     }
 
-    private void rotorsConfig()
+    private boolean rotorsConfig()
     {
         boolean res=false;
         System.out.printf("Please enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n",
                     machineData.getNumberOfRotorsInUse(),mEngine.getNumberOfRotorInSystem());
         while(!res) {
             try {
-                mEngine.checkIfRotorsValid(scanner.nextLine());
+                String rotors=scanner.nextLine();
+                if(rotors.contains("\t"))
+                    return false;
+                mEngine.checkIfRotorsValid(rotors);
                 res = true;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-
+                System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
             }
         }
 
@@ -307,15 +313,22 @@ public class UserInterface {
         res=false;
         while(!res) {
             try {
-                mEngine.checkIfPositionsValid(scanner.nextLine().toUpperCase());
+                String positions=scanner.nextLine().toUpperCase();
+                if(positions.contains("\t"))
+                {
+                    mEngine.resetSelected();
+                    return false;
+                }
+                mEngine.checkIfPositionsValid(positions);
                 res = true;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
             }
         }
 
+        return true;
     }
-    private void reflectorConfig()
+    private boolean reflectorConfig()
     {
         boolean res=false;
         int numOfReflectors= machineData.getNumberOfReflectors();
@@ -327,15 +340,22 @@ public class UserInterface {
         }
         while(!res) {
             try {
-                mEngine.checkIfReflectorNumValid(scanner.nextLine());
+                String reflector = scanner.nextLine();
+                if(reflector.contains("\t"))
+                {
+                    mEngine.resetSelected();
+                    return false;
+                }
+                mEngine.checkIfReflectorNumValid(reflector);
                 res = true;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
             }
         }
+        return true;
     }
 
-    private void PlugBoardConfig()
+    private boolean PlugBoardConfig()
     {
 
             withPlugBoardPairs=true;
@@ -345,13 +365,19 @@ public class UserInterface {
             while (!res) {
                 try {
                     String plugBoardPairs = scanner.nextLine().toUpperCase();
+                    if(plugBoardPairs.contains("\t"))
+                    {
+                        mEngine.resetSelected();
+                        return false;
+                    }
                     mEngine.CheckPlugBoardPairs(plugBoardPairs);
                     res = true;
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
 
                 }
             }
+            return true;
 
     }
 
@@ -404,6 +430,7 @@ public class UserInterface {
             machineData = mEngine.getMachineData();
             selectedData = mEngine.getSelectedData();
             historyData = mEngine.getStatisticDataDTO();
+            currentCode=selectedData!=null;
             System.out.println("The data was loaded successfully.");
 
         } catch (IOException | ClassNotFoundException e) {
@@ -414,6 +441,7 @@ public class UserInterface {
         private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
+        System.out.printf("The Alphabet: %s\n", mEngine.getAlphabetString());
         String inputData;
         boolean validInput=true;
 
@@ -422,6 +450,7 @@ public class UserInterface {
                 inputData = scanner.nextLine();
                 System.out.println("output:" + mEngine.cipherData(inputData));
                 isDataCipered=true;
+                mEngine.addCipheredInputs();
             }
             catch (RuntimeException e) {
                 System.out.println(e.getMessage());
