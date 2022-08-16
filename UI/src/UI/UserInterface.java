@@ -80,7 +80,7 @@ public class UserInterface {
                         withPlugBoardPairs = false;
                         currentCode = false;
                         isDataCipered=false;
-                       // mEngine.resetSelected();
+                        mEngine.resetSelected();
                         machineConfByUser();
                         break;
                     }
@@ -247,10 +247,9 @@ public class UserInterface {
 
             System.out.println("Selected machine code:");
             System.out.println(mEngine.getCodeFormat(true));
-            System.out.println(mEngine.getCodeFormat(false));
+            if(isDataCipered)
+                System.out.println(mEngine.getCodeFormat(false));
         }
-
-
     }
 
     private void printHistoricalStaticsData()
@@ -292,6 +291,7 @@ public class UserInterface {
         }
 
         selectedData = mEngine.getSelectedData();
+        mEngine.setInitialCode();
         currentCode=true;
 
         System.out.println("The data was successfully received.");
@@ -376,7 +376,7 @@ public class UserInterface {
                        // mEngine.resetSelected();
                         return false;
                     }
-                    mEngine.CheckPlugBoardPairs(plugBoardPairs);
+                    mEngine.checkPlugBoardPairs(plugBoardPairs);
 
                     res = true;
                 } catch (Exception e) {
@@ -467,7 +467,8 @@ public class UserInterface {
                 inputData = scanner.nextLine();
                 System.out.println("output:" + mEngine.cipherData(inputData));
                 isDataCipered=true;
-                mEngine.addCipheredInputs();
+
+              //  mEngine.addCipheredInputs();
             }
             catch (RuntimeException e) {
                 System.out.println(e.getMessage());

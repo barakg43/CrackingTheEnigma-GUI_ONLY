@@ -1,10 +1,11 @@
 package dtoObjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CodeFormatDTO {
+public class CodeFormatDTO implements Serializable {
 
     private final RotorInfoDTO[] rotorInfo;
     private final String reflectorID;

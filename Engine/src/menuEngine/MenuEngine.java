@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MenuEngine implements Engine , Serializable {
-
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
@@ -299,7 +298,7 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
 
-    public void checkPlugBoardPairs(String pairs){
+    public void checkPlugBoardPairs(String pairs) throws Exception {
 
 
         plugBoardPairs=new ArrayList<>();
@@ -335,8 +334,6 @@ public class MenuEngine implements Engine , Serializable {
 
         }
 
-
-
     }
     @Override
     public void  saveMachineStateToFile(String filePathNoExtension) {
@@ -344,7 +341,7 @@ public class MenuEngine implements Engine , Serializable {
         filePathNoExtension+=".bat";
         try (ObjectOutputStream out =
                      new ObjectOutputStream(
-                             Files.newOutputStream(Paths.get(filePathNoExtension)))) {
+                             new FileOutputStream(filePathNoExtension))) {
             out.writeObject(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -357,54 +354,22 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
-    filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
-    filePathNoExtension+=".bat";
-    File savedStateFile = new File(filePathNoExtension);
-    if(!savedStateFile.exists())
-        throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
+        filePathNoExtension = filePathNoExtension.replaceAll("\"", "");//for case user enter with " "
+        filePathNoExtension += ".bat";
+        File savedStateFile = new File(filePathNoExtension);
+        if (!savedStateFile.exists())
+            throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
 
-    try (ObjectInputStream in =
+        try (ObjectInputStream in =
                      new ObjectInputStream(
-                             Files.newInputStream(Paths.get(filePathNoExtension)))) {
-            return (MenuEngine) in.readObject();
-
+                             new FileInputStream(filePathNoExtension))) {
+                   return (MenuEngine) in.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    @Override
-    public void saveMachineStateToFile(String filePathNoExtension) {
-        filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
-        filePathNoExtension+=".bat";
-        try (ObjectOutputStream out =
-                     new ObjectOutputStream(
-                             Files.newOutputStream(Paths.get(filePathNoExtension)))) {
-            out.writeObject(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
-    filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
-    filePathNoExtension+=".bat";
-    File savedStateFile = new File(filePathNoExtension);
-    if(!savedStateFile.exists())
-        throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
-
-    try (ObjectInputStream in =
-                     new ObjectInputStream(
-                             Files.newInputStream(Paths.get(filePathNoExtension)))) {
-            return (MenuEngine) in.readObject();
-
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void setCodeAutomatically() {
@@ -412,8 +377,13 @@ public class MenuEngine implements Engine , Serializable {
         setRandomReflector();
         setRandomPositions();
         setRandomPlugboardPairs();
-        initialCodeFormat =createCodeFormat(true);
+        setInitialCode();
         createSelectedDataObj(true);
+    }
+
+    public void setInitialCode()
+    {
+        initialCodeFormat = createCodeFormat(true);
     }
 
     @Override

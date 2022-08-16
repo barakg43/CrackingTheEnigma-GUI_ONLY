@@ -12,8 +12,9 @@ public interface Engine {
     MachineDataDTO getMachineData();
 
     SelectedConfigurationDTO getSelectedData();
+    public void setInitialCode();
 
-     void LoadXMLFile(String filePath);
+    void LoadXMLFile(String filePath);
 
      void checkIfRotorsValid(String rotors);
 
@@ -31,17 +32,14 @@ public interface Engine {
     int getNumberOfRotorInSystem();
     List<String> getReflectorIdList();
 
-    void checkPlugBoardPairs(String pairs) ;
-    void  saveMachineStateToFile(String filePathNoExtension);
+    void checkPlugBoardPairs(String pairs)  throws Exception;
     int checkPlugBoardNum(String plugBoardNum);
-
-
 
     void setCodeAutomatically();
     String getAlphabetString();
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
-     void saveMachineStateToFile(String filePathNoExtension);
+    void  saveMachineStateToFile(String filePathNoExtension);
     @Override
     String toString();
     void resetAllData();

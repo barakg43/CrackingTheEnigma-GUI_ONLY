@@ -1,6 +1,8 @@
 package dtoObjects;
 
-public class RotorInfoDTO {
+import java.io.Serializable;
+
+public class RotorInfoDTO implements Serializable {
     private final int id;
     private final int distanceToWindow;
     private final char statingLetter;
