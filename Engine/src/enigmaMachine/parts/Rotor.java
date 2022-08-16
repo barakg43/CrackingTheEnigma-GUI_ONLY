@@ -23,16 +23,18 @@ public class Rotor implements Serializable {
     private final int notchPosition;
     private final int rotorID;
     private int initialWindowPosition;
+    private String alphabet;
     private final boolean debugMode;
-       public Rotor(int letterSize, int notch, int id, boolean debugMode) {
+       public Rotor(int letterSize, int notch, int id, boolean debugMode,String alphbet) {
         this.letterSize = letterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
         this.debugMode = debugMode;
+        this.alphabet=alphbet;
         initRotorArrays();
     }
-    public Rotor(int letterSize, int notch, int id) {
-        this(letterSize, notch, id, false);
+    public Rotor(int letterSize, int notch, int id,String alphbet) {
+        this(letterSize, notch, id, false,alphbet);
     }
 
     public int getRotorID() {
@@ -66,15 +68,21 @@ private void initRotorArrays() {
 
 
     public void addMapLetterToRotor(char leftLetter, char rightLetter) {
+           leftLetter=Character.toUpperCase(leftLetter);
+           rightLetter=Character.toUpperCase(rightLetter);
+
         if (currentMapSize > letterSize)
             throw new RuntimeException("overflow letter size,too many mapped letter!");
+        if(alphabet.indexOf(leftLetter)==-1)
+            throw new RuntimeException("the letter "+leftLetter+ " don't exist in the alphbet.");
+        if(alphabet.indexOf(rightLetter)==-1)
+            throw new RuntimeException("the letter "+rightLetter+ " don't exist in the alphbet.");
         if (letter2IndexLeftSide.containsKey(leftLetter))
-            throw new RuntimeException(String.format("the letter %c is already in roter table with %c", leftLetter, index2letterRightSide[letter2IndexLeftSide.get(leftLetter)]));
+            throw new RuntimeException("the letter "+ leftLetter+ " is already in roter table with "+ index2letterRightSide[letter2IndexLeftSide.get(leftLetter)]);
         if (letter2IndexRightSide.containsKey(rightLetter))
-            throw new RuntimeException(String.format("the letter %c is already in roter table with %c", rightLetter, index2letterLeftSide[letter2IndexRightSide.get(rightLetter)]));
+            throw new RuntimeException("the letter "+ rightLetter+ " is already in roter table with "+  index2letterLeftSide[letter2IndexRightSide.get(rightLetter)]);
         index2letterRightSide[currentMapSize] = rightLetter;
         index2letterLeftSide[currentMapSize] = leftLetter;
-
 
         letter2IndexLeftSide.put(leftLetter, currentMapSize);
         letter2IndexRightSide.put(rightLetter, currentMapSize);

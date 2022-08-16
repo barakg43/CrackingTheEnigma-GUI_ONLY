@@ -1,6 +1,8 @@
 package dtoObjects;
 
-public class PlugboardPairDTO {
+import java.io.Serializable;
+
+public class PlugboardPairDTO implements Serializable {
 
    private final char firstLetter;
    private final char secondLetter;
