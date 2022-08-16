@@ -41,7 +41,15 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
     private final int NOT_INIT=-1;
     public static int convertRomanIdToNumber(String id)
     {
-        return ID.valueOf(id).getID();
+        try {
+            if (ID.isExist(ID.valueOf(id).getID()))
+                return ID.valueOf(id).getID();
+            else
+                return -1;
+        }catch (Exception ex){
+            throw new RuntimeException("Reflector number "+ id +" don't exist.");
+        }
+
     }
     public Reflector(int lettersSize,String refID)
     {
@@ -87,7 +95,7 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
 
         if(input.equals(output))
             throw new RuntimeException("cant mapped input to himself!");
-        if(input<0||input> lettersSize ||output<0||output> lettersSize)
+        if(input<0||input>= lettersSize ||output<0||output>= lettersSize)
             throw new RuntimeException("invalid input mapped reflection-out of bounds");
         if(mappedReflectorsArray[output]!=NOT_INIT)
                 throw new RuntimeException("In reflector No '"+ reflectorIdNum +"' the output "  + (output+1) +" appears more than once.");

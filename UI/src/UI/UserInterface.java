@@ -247,8 +247,8 @@ public class UserInterface {
 
             System.out.println("Selected machine code:");
             System.out.println(mEngine.getCodeFormat(true));
-            if(isDataCipered)
-                System.out.println(mEngine.getCodeFormat(false));
+            System.out.println("Current machine code:");
+            System.out.println(mEngine.getCodeFormat(false));
         }
     }
 
