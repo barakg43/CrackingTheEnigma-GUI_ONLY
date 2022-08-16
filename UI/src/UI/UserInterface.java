@@ -217,7 +217,7 @@ public class UserInterface {
               //
                 // if(xmlPath.contains(""))
 //                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
-                mEngine.LoadXMLFile(xmlPath);
+                mEngine.loadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 System.out.println("The file path loaded successfully.");
                 currentCode=false;

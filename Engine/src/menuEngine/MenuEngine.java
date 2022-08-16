@@ -72,7 +72,7 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
-    public void LoadXMLFile(String filePath) {
+    public void loadXMLFile(String filePath) {
         filePath=filePath.replaceAll("\"","");//for case user enter with " "
 
         File file = new File(filePath);
@@ -325,7 +325,7 @@ public class MenuEngine implements Engine , Serializable {
                 letterSet.add(pairs.charAt(i));
         }
         if(alreadyExistLetter.size()!=0)
-            throw new Exception("the letters:\n"+alreadyExistLetter+ " appears more then once.");
+            throw new RuntimeException("the letters:\n"+alreadyExistLetter+ " appears more then once.");
 
         for(int i=0;i<pairs.length();i+=2)
         {
@@ -505,9 +505,7 @@ public class MenuEngine implements Engine , Serializable {
         }
 
         private void copyAllData (CTEEnigma eng){
-            String alphabet = eng.getCTEMachine().getABC().replaceAll("\n", "");
-            alphabet = alphabet.replaceAll("\t", "");
-
+            String alphabet = eng.getCTEMachine().getABC().trim().toUpperCase();
             if (alphabet.length() % 2 != 0)
                 throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
 

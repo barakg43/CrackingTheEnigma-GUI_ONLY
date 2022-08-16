@@ -14,7 +14,7 @@ public interface Engine {
     SelectedConfigurationDTO getSelectedData();
     public void setInitialCode();
 
-    void LoadXMLFile(String filePath);
+    void loadXMLFile(String filePath);
 
      void checkIfRotorsValid(String rotors);
 
