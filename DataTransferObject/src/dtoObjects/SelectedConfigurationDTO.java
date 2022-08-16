@@ -10,10 +10,10 @@ public class SelectedConfigurationDTO implements Serializable {
     private final String selectedReflectorID;
     private final int[] selectedRotorsID;
 
-    private final List<String> plugBoardPairs;
+    private final List<PlugboardPairDTO> plugBoardPairs;
     private final int[] notchPositions;
 
-    public SelectedConfigurationDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID, List<String> plugBoardPairs,int[] notchPositions) {
+    public SelectedConfigurationDTO(char[] selectedPositions, String selectedReflectorID, int[] selectedRotorsID, List<PlugboardPairDTO> plugBoardPairs,int[] notchPositions) {
         this.selectedPositions = selectedPositions;
         this.selectedReflectorID = selectedReflectorID;
         this.selectedRotorsID = selectedRotorsID;
@@ -40,7 +40,7 @@ public class SelectedConfigurationDTO implements Serializable {
         return selectedRotorsID;
     }
 
-    public List<String> getPlugBoardPairs() {
+    public List<PlugboardPairDTO> getPlugBoardPairs() {
         return plugBoardPairs;
     }
 

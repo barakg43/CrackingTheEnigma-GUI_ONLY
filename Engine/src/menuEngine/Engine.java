@@ -1,6 +1,9 @@
 package menuEngine;
 
-import dtoObjects.*;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.MachineDataDTO;
+import dtoObjects.SelectedConfigurationDTO;
+import dtoObjects.StatisticsDataDTO;
 
 import java.util.List;
 
@@ -13,8 +16,6 @@ public interface Engine {
      void LoadXMLFile(String filePath);
 
      void checkIfRotorsValid(String rotors);
-
-     boolean checkIfDataValid(String data);
 
      StatisticsDataDTO getStatisticDataDTO();
 
@@ -40,11 +41,11 @@ public interface Engine {
     String getAlphabetString();
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
-    int addCipheredInputs();
+     void saveMachineStateToFile(String filePathNoExtension);
     @Override
     String toString();
     void resetAllData();
     boolean isMachineLoaded();
-    String getCodeFormat(boolean isSelectedData,boolean isHistory);
+    CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
 
     }

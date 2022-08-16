@@ -1,14 +1,12 @@
 package UI;
-import dtoObjects.MachineDataDTO;
-import dtoObjects.SelectedConfigurationDTO;
-import dtoObjects.StatisticsDataDTO;
-import menuEngine.StatisticRecord;
-//import enigmaMachine.parts.reflectorId;
-import menuEngine.*;
 
+import dtoObjects.*;
+import menuEngine.Engine;
+import menuEngine.MenuEngine;
 
-import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import static UI.UserInterface.OPTIONS.*;
 
@@ -248,36 +246,35 @@ public class UserInterface {
         if(currentCode) {
 
             System.out.println("Selected machine code:");
-            printCurrentCode(true);
+            System.out.println(mEngine.getCodeFormat(true));
+            System.out.println(mEngine.getCodeFormat(false));
         }
-        if(isDataCipered) {
-            printCurrentCode(!isDataCipered);
-        }
+
 
     }
 
     private void printHistoricalStaticsData()
     {
         historyData= mEngine.getStatisticDataDTO();
-        Map<String, List<StatisticRecord>> statisticsList=historyData.getStatisticsData();
+        Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsList=historyData.getStatisticsData();
         String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)\n";
-
-        for(String code:statisticsList.keySet())
+        for(CodeFormatDTO code:statisticsList.keySet())
         {
             System.out.println(code);
-            for(StatisticRecord stat: statisticsList.get(code))
+            for(StatisticRecordDTO stat: statisticsList.get(code))
             {
                 System.out.format(formatStatistics,stat.getInput(),stat.getOutput(),stat.getProcessingTime());
             }
         }
     }
-    private void printCurrentCode(boolean selectedCode)
-    {
-        System.out.println(mEngine.getCodeFormat(selectedCode,false));
-    }
+//    private void printCurrentCode(boolean selectedCode)
+//    {
+//        System.out.println(mEngine.getCodeFormat(selectedCode,false));
+//    }
 
     private void machineConfByUser() // case 3
     {
+
         if(!rotorsConfig())
         {
             currentCode=selectedData!=null;
@@ -296,6 +293,7 @@ public class UserInterface {
 
         selectedData = mEngine.getSelectedData();
         currentCode=true;
+
         System.out.println("The data was successfully received.");
     }
 
@@ -398,7 +396,8 @@ public class UserInterface {
         withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
         selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
-        printCurrentCode(true);
+        System.out.println(mEngine.getCodeFormat(true));
+//        printCurrentCode(true);
     }
 
     private void  saveMachineData() {
@@ -444,6 +443,7 @@ public class UserInterface {
 //            selectedData = mEngine.getSelectedData();
 //            historyData = mEngine.getStatisticDataDTO();
         try {
+
         mEngine=MenuEngine.loadMachineStateFromFile(path);
         System.out.println("The data was loaded successfully.");
             machineData = mEngine.getMachineData();
@@ -455,7 +455,6 @@ public class UserInterface {
 
         }
     }
-
         private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
