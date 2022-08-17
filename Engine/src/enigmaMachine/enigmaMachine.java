@@ -1,13 +1,15 @@
 package enigmaMachine;
 
-import enigmaMachine.parts.*;
+import enigmaMachine.parts.Keyboard;
+import enigmaMachine.parts.Plugboard;
+import enigmaMachine.parts.Reflector;
+import enigmaMachine.parts.Rotor;
 import jaxb.CTEPositioning;
 import jaxb.CTEReflect;
 import jaxb.CTEReflector;
 import jaxb.CTERotor;
 
 import java.io.Serializable;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +27,6 @@ public class enigmaMachine implements Serializable {
     private Keyboard keyboard;
 
 
-
-    //selected by user
-//    private Reflector selectedReflector;
-//    private Rotor[] selectedRotors;
-//    private char[] selectedPositions;
-
-
     public enigmaMachine() {
         plugBoardPairs=new Plugboard();
     }
@@ -43,9 +38,7 @@ public class enigmaMachine implements Serializable {
     public int getRotorNumberInUse() {
         return numOfRotorsInUse;
     }
-//    public Reflector[] getAllReflectors() {
-//        return allReflectorsArray;
-//    }
+
     public int getNumberOfRotorsInMachine()
     {return allRotorsArray.length;}
     public Reflector getReflectorById(int id)
@@ -62,15 +55,7 @@ public class enigmaMachine implements Serializable {
         return numberOfRotors;
     }
 
-//    public void setSelectedPositions(char[] selectedPositions) {
-//        this.selectedPositions = selectedPositions;}
-//    public char[] getSelectedPositions() {
-//        return selectedPositions;
-//    }
 
-//    public Rotor[] getAllRotorsArray(){
-//        return AllRotorsArray;
-//    }
     public Rotor getRotorById(int id)
     {
         if(id<1||id>allRotorsArray.length)
@@ -79,8 +64,7 @@ public class enigmaMachine implements Serializable {
     }
 
     public void setAlphabet(String alphabet) {
-        alphabet=alphabet.replaceAll("\n","");
-        alphabet=alphabet.replaceAll("\t","");
+        alphabet=alphabet.trim();
         keyboard=new Keyboard(alphabet.toUpperCase(),plugBoardPairs);
         this.alphabet=alphabet.toUpperCase();
     }
@@ -92,24 +76,6 @@ public class enigmaMachine implements Serializable {
     public String getAlphabet() {
         return alphabet;
     }
-//    public void setSelectedReflector(Reflector selectedRef) {
-//        selectedReflector=selectedRef;
-//    }
-
-
-
-
-
-//    public Reflector getSelectedReflector() {
-//        return selectedReflector;
-//    }
-//    public Rotor[] getSelectedRotors() {
-//        return selectedRotors;
-//    }
-
-//    public void setSelectedRotors(Rotor[] selectedRotorsArray) {
-//        selectedRotors=selectedRotorsArray;
-//    }
 
     public void setRotors(List<CTERotor> RotorsArray) {
         numberOfRotors=RotorsArray.size();
@@ -122,11 +88,13 @@ public class enigmaMachine implements Serializable {
             if(allRotorsArray[rotor.getId()-1]!=null)
                 throw new RuntimeException("There are 2 rotors with same id.\nplease correct this.");
             if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() <= 0)
-                throw new RuntimeException("Notch number of rotor: "+rotor.getId()+  " need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
+                throw new RuntimeException("Rotor id "+ rotor.getId() +": notch number need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
             if(rotor.getCTEPositioning().size()!=alphabet.length() )
-                throw new RuntimeException("in rotor number "+ rotor.getId() +" the number of positions are not equal to the alphabet size.");
+                throw new RuntimeException("Rotor id "+ rotor.getId() +": the number of positions are not equal to the alphabet size.");
             allRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId(),alphabet);
             setRotorTable(rotor.getCTEPositioning(), allRotorsArray[rotor.getId()-1]);
+            if(!allRotorsArray[rotor.getId()-1].checkIfAllLetterMapped())
+                throw new RuntimeException("Rotor id "+ rotor.getId() +":not all letter in alphabet are mapped in rotor table");
 
         }
     }

@@ -1,4 +1,4 @@
-package menuEngine;
+package enigmaEngine;
 
 import dtoObjects.*;
 import enigmaMachine.enigmaMachine;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MenuEngine implements Engine , Serializable {
+public class EnigmaEngine implements Engine , Serializable {
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
@@ -35,7 +35,7 @@ public class MenuEngine implements Engine , Serializable {
         return enigmaMachine!=null;
     }
 
-    public MenuEngine() {
+    public EnigmaEngine() {
         enigmaMachine = null;
         statisticsData=new StatisticsData();
         selectedConfigurationDTO =new SelectedConfigurationDTO();
@@ -72,7 +72,7 @@ public class MenuEngine implements Engine , Serializable {
     }
 
     @Override
-    public void LoadXMLFile(String filePath) {
+    public void loadXMLFile(String filePath) {
         filePath=filePath.replaceAll("\"","");//for case user enter with " "
 
         File file = new File(filePath);
@@ -219,50 +219,6 @@ public class MenuEngine implements Engine , Serializable {
             return initialCodeFormat;
         else
             return createCodeFormat(false);
-
-//            int[] selectedRotorsArray= selectedConfigurationDTO.getSelectedRotorsID();
-//            char[] selectedPositions= selectedConfigurationDTO.getSelectedPositions();
-//            int[] notchArray;
-//
-//            if(selectedRotorsArray==null)//if user only start the program and not select any configuration
-//                return "";
-//
-//            StringBuilder codeFormat=new StringBuilder();
-//            codeFormat.append('<');
-//            notchArray= isSelectedData? selectedConfigurationDTO.getNotchPositions() : setNotchPositions();
-//
-//            for(int i=selectedRotorsArray.length-1;i>0;i--)
-//            {
-//                codeFormat.append(selectedRotorsArray[i]);
-//                if(isHistory)
-//                    codeFormat.append(",");
-//                else
-//                    codeFormat.append("(").append(notchArray[i]).append(")").append(",");
-//            }
-//            codeFormat.append(selectedRotorsArray[0]);
-//            if(isHistory)
-//                codeFormat.append(",");
-//            else
-//                codeFormat.append("(").append(notchArray[0]).append(")");
-//
-//            for(int i=selectedPositions.length-1;i>=0;i--) {
-//                codeFormat.append(selectedPositions[i]);
-//            }
-//           codeFormat.append(">");
-//            codeFormat.append(String.format("<%s>", selectedConfigurationDTO.getSelectedReflectorID()));
-//
-//            if(withPlugBoardPairs)
-//            {
-//                List<String> pairs= selectedConfigurationDTO.getPlugBoardPairs();
-//                codeFormat.append('<');
-//                for (int i = 0; i < pairs.size()-1; i++)
-//                    codeFormat.append(String.format("%c|%c,", pairs.get(i).charAt(0), pairs.get(i).charAt(1)));
-//
-//                codeFormat.append(String.format("%c|%c>",pairs.get(pairs.size()-1).charAt(0),pairs.get(pairs.size()-1).charAt(1)));
-//
-//            }
-//            return codeFormat.toString();
-
     }
 
     @Override
@@ -298,7 +254,7 @@ public class MenuEngine implements Engine , Serializable {
 
     @Override
 
-    public void checkPlugBoardPairs(String pairs) throws Exception {
+    public void checkPlugBoardPairs(String pairs)  {
 
 
         plugBoardPairs=new ArrayList<>();
@@ -325,7 +281,7 @@ public class MenuEngine implements Engine , Serializable {
                 letterSet.add(pairs.charAt(i));
         }
         if(alreadyExistLetter.size()!=0)
-            throw new Exception("the letters:\n"+alreadyExistLetter+ " appears more then once.");
+            throw new RuntimeException("the letters:\n"+alreadyExistLetter+ " appears more then once.");
 
         for(int i=0;i<pairs.length();i+=2)
         {
@@ -341,7 +297,7 @@ public class MenuEngine implements Engine , Serializable {
         filePathNoExtension+=".bat";
         try (ObjectOutputStream out =
                      new ObjectOutputStream(
-                             new FileOutputStream(filePathNoExtension))) {
+                             Files.newOutputStream(Paths.get(filePathNoExtension)))) {
             out.writeObject(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -353,7 +309,7 @@ public class MenuEngine implements Engine , Serializable {
         return 0;
     }
 
-    public static MenuEngine loadMachineStateFromFile(String filePathNoExtension) {
+    public static EnigmaEngine loadMachineStateFromFile(String filePathNoExtension) {
         filePathNoExtension = filePathNoExtension.replaceAll("\"", "");//for case user enter with " "
         filePathNoExtension += ".bat";
         File savedStateFile = new File(filePathNoExtension);
@@ -362,8 +318,8 @@ public class MenuEngine implements Engine , Serializable {
 
         try (ObjectInputStream in =
                      new ObjectInputStream(
-                             new FileInputStream(filePathNoExtension))) {
-                   return (MenuEngine) in.readObject();
+                             Files.newInputStream(Paths.get(filePathNoExtension)))) {
+                   return (EnigmaEngine) in.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -414,10 +370,6 @@ public class MenuEngine implements Engine , Serializable {
         selectedReflector = enigmaMachine.getReflectorById(reflectorNum);
     }
 
-//    private static Reflector setRandomReflector(Reflector[] arr) {
-//        return arr[ThreadLocalRandom.current().nextInt(arr.length)];
-//    }
-
     private void setRandomPositions() {
         selectedPositions = new char[selectedRotors.length];
         char[] alphabetArray = new char[enigmaMachine.getAlphabet().length()];
@@ -449,11 +401,11 @@ public class MenuEngine implements Engine , Serializable {
                 while (!res) {
                     try {
                         char input = charList.get(random.nextInt(charList.size()));
-                        charList.remove(charList.indexOf(input));
+                        charList.remove(input);
                         char output = charList.get(random.nextInt(charList.size()));
                         while (!charList.contains(output))
                             output = charList.get(random.nextInt(charList.size()));
-                        charList.remove(charList.indexOf(output));
+                        charList.remove(output);
                         enigmaMachine.getPlugBoard().addMappedInputOutput(input, output);
                         plugBoardPairs.add(new PlugboardPairDTO(input,output));
                         res = true;
@@ -505,9 +457,7 @@ public class MenuEngine implements Engine , Serializable {
         }
 
         private void copyAllData (CTEEnigma eng){
-            String alphabet = eng.getCTEMachine().getABC().replaceAll("\n", "");
-            alphabet = alphabet.replaceAll("\t", "");
-
+            String alphabet = eng.getCTEMachine().getABC().trim().toUpperCase();
             if (alphabet.length() % 2 != 0)
                 throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
 

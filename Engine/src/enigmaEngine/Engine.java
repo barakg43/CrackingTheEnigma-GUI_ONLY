@@ -1,4 +1,4 @@
-package menuEngine;
+package enigmaEngine;
 
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
@@ -12,9 +12,9 @@ public interface Engine {
     MachineDataDTO getMachineData();
 
     SelectedConfigurationDTO getSelectedData();
-    public void setInitialCode();
+    void setInitialCode();
 
-    void LoadXMLFile(String filePath);
+    void loadXMLFile(String filePath);
 
      void checkIfRotorsValid(String rotors);
 
@@ -32,7 +32,7 @@ public interface Engine {
     int getNumberOfRotorInSystem();
     List<String> getReflectorIdList();
 
-    void checkPlugBoardPairs(String pairs)  throws Exception;
+    void checkPlugBoardPairs(String pairs) ;
     int checkPlugBoardNum(String plugBoardNum);
 
     void setCodeAutomatically();

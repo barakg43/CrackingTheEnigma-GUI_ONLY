@@ -23,27 +23,22 @@ public class Rotor implements Serializable {
     private final int notchPosition;
     private final int rotorID;
     private int initialWindowPosition;
-    private String alphabet;
+    private final String alphabet;
     private final boolean debugMode;
-       public Rotor(int letterSize, int notch, int id, boolean debugMode,String alphbet) {
+       public Rotor(int letterSize, int notch, int id, String alphabet,boolean debugMode) {
         this.letterSize = letterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
         this.debugMode = debugMode;
-        this.alphabet=alphbet;
+        this.alphabet=alphabet;
         initRotorArrays();
     }
-    public Rotor(int letterSize, int notch, int id,String alphbet) {
-        this(letterSize, notch, id, false,alphbet);
+    public Rotor(int letterSize, int notch, int id,String alphabet) {
+        this(letterSize, notch, id,alphabet, false);
     }
 
     public int getRotorID() {
         return rotorID;
-    }
-
-    public int getNotchPosition()
-    {
-        return notchPosition;
     }
 
     public void setInitialWindowPosition(char letter) {
@@ -74,9 +69,9 @@ private void initRotorArrays() {
         if (currentMapSize > letterSize)
             throw new RuntimeException("overflow letter size,too many mapped letter!");
         if(alphabet.indexOf(leftLetter)==-1)
-            throw new RuntimeException("the letter "+leftLetter+ " don't exist in the alphbet.");
+            throw new RuntimeException("the letter "+leftLetter+ " don't exist in the alphabet.");
         if(alphabet.indexOf(rightLetter)==-1)
-            throw new RuntimeException("the letter "+rightLetter+ " don't exist in the alphbet.");
+            throw new RuntimeException("the letter "+rightLetter+ " don't exist in the alphabet.");
         if (letter2IndexLeftSide.containsKey(leftLetter))
             throw new RuntimeException("the letter "+ leftLetter+ " is already in roter table with "+ index2letterRightSide[letter2IndexLeftSide.get(leftLetter)]);
         if (letter2IndexRightSide.containsKey(rightLetter))
@@ -96,18 +91,10 @@ private void initRotorArrays() {
         int value;
         if (isInnerTableIndex)
             value = index - windowPosition;//the index is inner index table
-
         else
             value = index + windowPosition;//outer index that came from outer source
         //(a % b + b) % b get the correct answer also for (negative number)%(positive number)
         return (value % letterSize + letterSize) % letterSize;
-
-
-    }
-    public int calcDistanceFromNotchToWindowPosition()
-    {
-        return calcIndexRotorTable(notchPosition,true);
-
 
 
     }

@@ -28,8 +28,6 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
                     return true;
                 }
             }
-
-
             return false;
         }
 
@@ -41,15 +39,10 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
     private final int NOT_INIT=-1;
     public static int convertRomanIdToNumber(String id)
     {
-        try {
             if (ID.isExist(ID.valueOf(id).getID()))
                 return ID.valueOf(id).getID();
             else
                 return -1;
-        }catch (Exception ex){
-            throw new RuntimeException("Reflector number "+ id +" don't exist.");
-        }
-
     }
     public Reflector(int lettersSize,String refID)
     {
