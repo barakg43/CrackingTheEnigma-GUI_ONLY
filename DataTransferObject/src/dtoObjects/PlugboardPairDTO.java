@@ -48,7 +48,7 @@ public class PlugboardPairDTO implements Serializable {
 
         //compare the data member name ,there is no meaning to the order in the object(first or second)
         return  (firstLetter==other.firstLetter &&secondLetter==other.secondLetter)
-                ||(secondLetter==other.secondLetter&&secondLetter== other.firstLetter);
+                ||(firstLetter==other.secondLetter&&secondLetter== other.firstLetter);
 
     }
     @Override
