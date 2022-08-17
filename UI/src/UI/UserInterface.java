@@ -1,8 +1,8 @@
 package UI;
 
 import dtoObjects.*;
-import menuEngine.Engine;
-import menuEngine.MenuEngine;
+import enigmaEngine.Engine;
+import enigmaEngine.EnigmaEngine;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class UserInterface {
     private SelectedConfigurationDTO selectedData;
     private StatisticsDataDTO historyData;
 
-    private boolean isDataCipered;
+
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
@@ -33,22 +33,18 @@ public class UserInterface {
                             EXIT
     }
     private boolean currentCode;
-    private boolean isFirstOptionSelected;
-    private boolean withPlugBoardPairs;
-
-  //  private int cipheredInputs;
 
     public UserInterface()
     {
         currentCode=false;
-        mEngine=new MenuEngine();
-        isFirstOptionSelected=false;
-        withPlugBoardPairs=false;
+        mEngine=new EnigmaEngine();
+
+
         scanner=new Scanner(System.in);
         selectedData=null;
       //  cipheredInputs=0;
         historyData=null;
-        isDataCipered=false;
+
        // selectedOptions=new HashSet<>();
 
     }
@@ -66,7 +62,7 @@ public class UserInterface {
 
                         loadMachineConfigurationFromXmlFile();
                         currentCode = false;
-                        withPlugBoardPairs = false;
+
                         ///     selectedOptions.clear();
                         //mEngine.resetAllData();
                         break;
@@ -77,17 +73,13 @@ public class UserInterface {
                         break;
                     }
                     case CHSE_CNFG: {
-                        withPlugBoardPairs = false;
                         currentCode = false;
-                        isDataCipered=false;
                         mEngine.resetSelected();
                         machineConfByUser();
                         break;
                     }
                     case AUTO_CONFG: {
-                        withPlugBoardPairs = false;
                         currentCode = false;
-                        isDataCipered=false;
                         mEngine.resetSelected();
                         machineConfAutomatically();
                         break;
@@ -154,7 +146,7 @@ public class UserInterface {
         }
     }
 
-    private int getOptionAndValidate() throws Exception {
+    private int getOptionAndValidate()  {
        String line = checkThatStringInputValid(scanner.nextLine());
 
        int optionNum = Integer.parseInt(line);
@@ -207,29 +199,20 @@ public class UserInterface {
 
     private void loadMachineConfigurationFromXmlFile()  //case 1
     {
-
-        boolean res=false;
-       // while(!res){
             try {
-               //  "C:\\Users\\nikol\\Desktop\\java\\new\\CrackingTheEnigma\\src\\Resources\\ex1-sanity-small.xml"
-                System.out.println("Please enter full XML file path: ");
+
+                System.out.println("Please enter full XML file path(with or without path commas): ");
                String xmlPath= scanner.nextLine();
-              //
-                // if(xmlPath.contains(""))
-//                String xmlPath=  "C:\\ComputerScience\\Java\\EXCISES\\TEST-Files\\EX 1\\ex1-sanity-small.xml";
                 mEngine.loadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 System.out.println("The file path loaded successfully.");
                 currentCode=false;
-                withPlugBoardPairs=false;
-                //selectedOptions.clear();
                 mEngine.resetAllData();
-                res=true;
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-                //System.out.println("Please enter full XML file path or Press Esc to go back to main menu.");
+
             }
-       // }
 
     }
 
@@ -266,10 +249,7 @@ public class UserInterface {
             }
         }
     }
-//    private void printCurrentCode(boolean selectedCode)
-//    {
-//        System.out.println(mEngine.getCodeFormat(selectedCode,false));
-//    }
+
 
     private void machineConfByUser() // case 3
     {
@@ -363,8 +343,6 @@ public class UserInterface {
 
     private boolean PlugBoardConfig()
     {
-
-            withPlugBoardPairs=true;
             System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
                     "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
             boolean res = false;
@@ -393,7 +371,6 @@ public class UserInterface {
         currentCode=true;
         System.out.println("You choose to get machine code automatically. ");
         mEngine.setCodeAutomatically();
-        withPlugBoardPairs=mEngine.getWithPlugBoardPairs();
         selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
         System.out.println(mEngine.getCodeFormat(true));
@@ -404,47 +381,17 @@ public class UserInterface {
         System.out.println("You selected to save machine data in file.");
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
-//        path+=".bat";
-//        try (ObjectOutputStream out =
-//                     new ObjectOutputStream(
-//                             new FileOutputStream(path))) {
-//            out.writeObject(mEngine);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         mEngine.saveMachineStateToFile(path);
         System.out.println("The data saved successfully.");
     }
 
     private void loadMachineData() {
         System.out.println("You selected to load the machine data from file.");
-        System.out.println("Please enter the full file(without extension) of the file: ");
+        System.out.println("Please enter the full file(without extension) of the file(with or without path commas): ");
         String path = scanner.nextLine();
-//        path=path.replaceAll("\"","");//for case user enter with " "
-//        path += ".bat";
-//        File file = new File(path);
-//
-//
-//
-//        while (!file.exists()) {
-//            System.out.println("This file doesn't exists. PLease enter valid file path:");
-//            path = scanner.nextLine();
-//            path += ".bat";
-//            file = new File(path);
-//        }
-//
-//        try (ObjectInputStream in =
-//                     new ObjectInputStream(
-//                             new FileInputStream(path))) {
-//            MenuEngine menuEngine =
-//                    (MenuEngine) in.readObject();
-//            this.mEngine = menuEngine;
-//            machineData = mEngine.getMachineData();
-//            selectedData = mEngine.getSelectedData();
-//            historyData = mEngine.getStatisticDataDTO();
         try {
 
-        mEngine=MenuEngine.loadMachineStateFromFile(path);
+        mEngine= EnigmaEngine.loadMachineStateFromFile(path);
         System.out.println("The data was loaded successfully.");
             machineData = mEngine.getMachineData();
             selectedData = mEngine.getSelectedData();
@@ -460,21 +407,16 @@ public class UserInterface {
         System.out.println("Please enter data that you want to chipper:");
         System.out.printf("The Alphabet: %s\n", mEngine.getAlphabetString());
         String inputData;
-        boolean validInput=true;
 
-       // do {
             try {
                 inputData = scanner.nextLine();
                 System.out.println("output:" + mEngine.cipherData(inputData));
-                isDataCipered=true;
-
-              //  mEngine.addCipheredInputs();
             }
             catch (RuntimeException e) {
                 System.out.println(e.getMessage());
-             //   validInput=false;
+
             }
-      //  } while (!validInput);
+
 
 
     }

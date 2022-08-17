@@ -25,7 +25,7 @@ public class Rotor implements Serializable {
     private int initialWindowPosition;
     private final String alphabet;
     private final boolean debugMode;
-       public Rotor(int letterSize, int notch, int id, boolean debugMode,String alphabet) {
+       public Rotor(int letterSize, int notch, int id, String alphabet,boolean debugMode) {
         this.letterSize = letterSize;
         this.notchPosition = notch-1;
         this.rotorID = id;
@@ -34,7 +34,7 @@ public class Rotor implements Serializable {
         initRotorArrays();
     }
     public Rotor(int letterSize, int notch, int id,String alphabet) {
-        this(letterSize, notch, id, false,alphabet);
+        this(letterSize, notch, id,alphabet, false);
     }
 
     public int getRotorID() {
@@ -69,9 +69,9 @@ private void initRotorArrays() {
         if (currentMapSize > letterSize)
             throw new RuntimeException("overflow letter size,too many mapped letter!");
         if(alphabet.indexOf(leftLetter)==-1)
-            throw new RuntimeException("the letter "+leftLetter+ " don't exist in the alphbet.");
+            throw new RuntimeException("the letter "+leftLetter+ " don't exist in the alphabet.");
         if(alphabet.indexOf(rightLetter)==-1)
-            throw new RuntimeException("the letter "+rightLetter+ " don't exist in the alphbet.");
+            throw new RuntimeException("the letter "+rightLetter+ " don't exist in the alphabet.");
         if (letter2IndexLeftSide.containsKey(leftLetter))
             throw new RuntimeException("the letter "+ leftLetter+ " is already in roter table with "+ index2letterRightSide[letter2IndexLeftSide.get(leftLetter)]);
         if (letter2IndexRightSide.containsKey(rightLetter))
