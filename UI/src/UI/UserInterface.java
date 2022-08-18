@@ -197,7 +197,6 @@ public class UserInterface {
     private void loadMachineConfigurationFromXmlFile()  //case 1
     {
             try {
-
                 System.out.println("Please enter full XML file path(with or without path commas): ");
                String xmlPath= scanner.nextLine();
                 mEngine.loadXMLFile(xmlPath);
@@ -207,7 +206,7 @@ public class UserInterface {
                 mEngine.resetAllData();
 
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()+"\nPlease try again...");
 
             }
 
@@ -277,13 +276,16 @@ public class UserInterface {
     private boolean rotorsConfig()
     {
         boolean res=false;
-        System.out.printf("Please enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n",
+        System.out.printf("Please enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n\nEnter 'Tab' and 'Enter' to return to the menu\n",
                     machineData.getNumberOfRotorsInUse(),machineData.getNumberOfRotorInSystem());
         while(!res) {
             try {
                 String rotors=scanner.nextLine();
-                if(rotors.contains("\t"))
+                if(rotors.contains("\t")) {
+                    System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
+                }
+
                 mEngine.checkIfRotorsValid(rotors);
                 res = true;
             } catch (Exception e) {
@@ -292,14 +294,16 @@ public class UserInterface {
         }
 
         System.out.format("Please enter the %d initial positions of the rotors without white spaces between them.\nfor example: ABC " +
-                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",machineData.getNumberOfRotorsInUse(),machineData.getAlphabetString());
+                            "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )" +
+                            "\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n" +
+                            "Enter 'Tab' and 'Enter' to return to the menu\n",machineData.getNumberOfRotorsInUse(),machineData.getAlphabetString());
         res=false;
         while(!res) {
             try {
                 String positions=scanner.nextLine();
                 if(positions.contains("\t"))
                 {
-                   // mEngine.resetSelected();
+                    System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
                 }
                mEngine.checkIfPositionsValid(positions);
@@ -314,7 +318,7 @@ public class UserInterface {
     private boolean reflectorConfig()
     {
         boolean res=false;
-        System.out.println("Please select reflector number: ");
+        System.out.println("Please select reflector number:\nEnter 'Tab' and 'Enter' to return to the menu\n");
         List<String> reflectorIDName=machineData.getReflectorIdList();
         for(int i = 0; i< machineData.getNumberOfReflectors(); i++)
         {
@@ -325,7 +329,7 @@ public class UserInterface {
                 String reflector = scanner.nextLine();
                 if(reflector.contains("\t"))
                 {
-                   // mEngine.resetSelected();
+                    System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
                 }
                 mEngine.checkIfReflectorNumValid(reflector);
@@ -340,14 +344,15 @@ public class UserInterface {
     private boolean PlugBoardConfig()
     {
             System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",machineData.getAlphabetString());
+                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\nEnter 'Tab' and 'Enter' to return to the menu\n",machineData.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {
                     String plugBoardPairsString = scanner.nextLine();
                     if(plugBoardPairsString.contains("\t"))
                     {
-                       // mEngine.resetSelected();
+
+                        System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                         return false;
                     }
                     mEngine.checkPlugBoardPairs(plugBoardPairsString);
@@ -394,7 +399,7 @@ public class UserInterface {
             historyData = mEngine.getStatisticDataDTO();
             currentCode=selectedData!=null;
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"\nPlease try again...");
 
         }
     }
@@ -403,13 +408,12 @@ public class UserInterface {
         System.out.println("Please enter data that you want to chipper:");
         System.out.printf("The Alphabet: %s\n", machineData.getAlphabetString());
         String inputData;
-
             try {
                 inputData = scanner.nextLine();
                 System.out.println("output:" + mEngine.cipherData(inputData));
             }
             catch (RuntimeException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()+"\nPlease try again...");
 
             }
 
