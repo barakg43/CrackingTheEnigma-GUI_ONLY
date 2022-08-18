@@ -2,42 +2,46 @@ package dtoObjects;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 public class MachineDataDTO implements Serializable {
 
-
-    private final int numberOfReflectors;
     private final int numberOfRotorsInUse;
     private final int[] rotorsId;
-    private final int[] notchNums;
+    private String alphabet;
+    private final List<String> reflectorList;
 
-
-    public MachineDataDTO()
-    {
-        numberOfReflectors=0;
-        numberOfRotorsInUse=0;
-        rotorsId=null;
-        notchNums=null;
+    public MachineDataDTO() {
+        numberOfRotorsInUse = 0;
+        rotorsId = null;
+        reflectorList = null;
     }
-    public MachineDataDTO(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
-        this.numberOfReflectors = numberOfReflectors;
+
+
+    public MachineDataDTO( int numOfRotorsInUse, int[] rotorsIdArray,List<String> reflectorList,String alphabet) {
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
-        notchNums =notchArray;
+        this.reflectorList=reflectorList;
+        this.alphabet=alphabet;
     }
 
-    public static MachineDataDTO create(int numberOfReflectors, int numOfRotorsInUse, int[] rotorsIdArray, int[] notchArray) {
-        return new MachineDataDTO(numberOfReflectors,numOfRotorsInUse, rotorsIdArray, notchArray);
-    }
+
 
     public int getNumberOfReflectors() {
-        return numberOfReflectors;
+        assert reflectorList != null;
+        return reflectorList.size();
     }
+    public int getNumberOfRotorInSystem()
+    {
+        assert rotorsId != null;
+        return rotorsId.length;}
 
-    public int[] getNotchNums() {
-        return notchNums;
-    }
 
+    public List<String> getReflectorIdList(){
+        return reflectorList;}
+
+    public String getAlphabetString() {
+        return alphabet;}
     public int[] getRotorsId() {
         return rotorsId;
     }
@@ -49,10 +53,9 @@ public class MachineDataDTO implements Serializable {
     @Override
     public String toString() {
         return "dtoObjects.MachineDataDTO{" +
-                "numberOfReflectors=" + numberOfReflectors +
+                "numberOfReflectors=" + getNumberOfReflectors() +
                 ", numberOfRotorsInUse=" + numberOfRotorsInUse +
                 ", rotorsId=" + Arrays.toString(rotorsId) +
-                ", notchNums=" + Arrays.toString(notchNums) +
                 '}';
     }
 
