@@ -16,10 +16,10 @@ public class UserInterface {
     private final Scanner scanner;
     private Engine mEngine;
     private MachineDataDTO machineData;
-    private SelectedConfigurationDTO selectedData;
+
     private StatisticsDataDTO historyData;
 
-
+    private SelectedConfigurationDTO selectedData;
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
@@ -38,10 +38,7 @@ public class UserInterface {
     {
         currentCode=false;
         mEngine=new EnigmaEngine();
-
-
         scanner=new Scanner(System.in);
-        selectedData=null;
       //  cipheredInputs=0;
         historyData=null;
 
@@ -281,7 +278,7 @@ public class UserInterface {
     {
         boolean res=false;
         System.out.printf("Please enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n",
-                    machineData.getNumberOfRotorsInUse(),mEngine.getNumberOfRotorInSystem());
+                    machineData.getNumberOfRotorsInUse(),machineData.getNumberOfRotorInSystem());
         while(!res) {
             try {
                 String rotors=scanner.nextLine();
@@ -294,18 +291,18 @@ public class UserInterface {
             }
         }
 
-        System.out.format("Please enter the initial positions of the rotors without white spaces between them.\nfor example: ABC " +
-                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
+        System.out.format("Please enter the %d initial positions of the rotors without white spaces between them.\nfor example: ABC " +
+                "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",machineData.getNumberOfRotorsInUse(),machineData.getAlphabetString());
         res=false;
         while(!res) {
             try {
-                String positions=scanner.nextLine().toUpperCase();
+                String positions=scanner.nextLine();
                 if(positions.contains("\t"))
                 {
                    // mEngine.resetSelected();
                     return false;
                 }
-                mEngine.checkIfPositionsValid(positions);
+               mEngine.checkIfPositionsValid(positions);
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
@@ -317,10 +314,9 @@ public class UserInterface {
     private boolean reflectorConfig()
     {
         boolean res=false;
-        int numOfReflectors= machineData.getNumberOfReflectors();
         System.out.println("Please select reflector number: ");
-        List<String> reflectorIDName=mEngine.getReflectorIdList();
-        for(int i=0;i<numOfReflectors;i++)
+        List<String> reflectorIDName=machineData.getReflectorIdList();
+        for(int i = 0; i< machineData.getNumberOfReflectors(); i++)
         {
             System.out.printf("%d. %s\n",i+1, reflectorIDName.get(i));
         }
@@ -344,17 +340,17 @@ public class UserInterface {
     private boolean PlugBoardConfig()
     {
             System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",mEngine.getAlphabetString());
+                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n",machineData.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {
-                    String plugBoardPairs = scanner.nextLine().toUpperCase();
-                    if(plugBoardPairs.contains("\t"))
+                    String plugBoardPairsString = scanner.nextLine();
+                    if(plugBoardPairsString.contains("\t"))
                     {
                        // mEngine.resetSelected();
                         return false;
                     }
-                    mEngine.checkPlugBoardPairs(plugBoardPairs);
+                    mEngine.checkPlugBoardPairs(plugBoardPairsString);
 
                     res = true;
                 } catch (Exception e) {
@@ -405,7 +401,7 @@ public class UserInterface {
         private void getInputAndCipher()
     {
         System.out.println("Please enter data that you want to chipper:");
-        System.out.printf("The Alphabet: %s\n", mEngine.getAlphabetString());
+        System.out.printf("The Alphabet: %s\n", machineData.getAlphabetString());
         String inputData;
 
             try {

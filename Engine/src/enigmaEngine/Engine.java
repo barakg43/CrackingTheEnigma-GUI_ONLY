@@ -1,42 +1,23 @@
 package enigmaEngine;
 
-import dtoObjects.CodeFormatDTO;
-import dtoObjects.MachineDataDTO;
-import dtoObjects.SelectedConfigurationDTO;
-import dtoObjects.StatisticsDataDTO;
+import dtoObjects.*;
 
-import java.util.List;
 
 public interface Engine {
-
+    void setInitialCode();
+    void loadXMLFile(String filePath);
+    void checkIfRotorsValid(String rotors);
+    void checkIfPositionsValid(String positions);
+    void checkIfReflectorNumValid(String ReflectorNum);
+    void checkPlugBoardPairs(String pairs) ;
+    StatisticsDataDTO getStatisticDataDTO();
     MachineDataDTO getMachineData();
 
     SelectedConfigurationDTO getSelectedData();
-    void setInitialCode();
-
-    void loadXMLFile(String filePath);
-
-     void checkIfRotorsValid(String rotors);
-
-     StatisticsDataDTO getStatisticDataDTO();
-
-    void checkIfPositionsValid(String positions);
-
     String cipherData(String dataInput);
-
     void resetCodePosition();
-
     void resetSelected();
-
-    void checkIfReflectorNumValid(String ReflectorNum);
-    int getNumberOfRotorInSystem();
-    List<String> getReflectorIdList();
-
-    void checkPlugBoardPairs(String pairs) ;
-    int checkPlugBoardNum(String plugBoardNum);
-
     void setCodeAutomatically();
-    String getAlphabetString();
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
     void  saveMachineStateToFile(String filePathNoExtension);

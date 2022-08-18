@@ -1,5 +1,6 @@
 package enigmaMachine;
 
+import dtoObjects.MachineDataDTO;
 import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Plugboard;
 import enigmaMachine.parts.Reflector;
@@ -74,7 +75,7 @@ public class enigmaMachine implements Serializable {
     }
 
     public String getAlphabet() {
-        return alphabet;
+        return new String(alphabet) ;
     }
 
     public void setRotors(List<CTERotor> RotorsArray) {
