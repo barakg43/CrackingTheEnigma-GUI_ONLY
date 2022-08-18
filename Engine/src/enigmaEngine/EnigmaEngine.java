@@ -225,10 +225,10 @@ public class EnigmaEngine implements Engine , Serializable {
         selectedRotors = null;
         selectedPositions = null;
         selectedReflector = null;
-        tempSelectedReflectorID=0;
-        tempPlugBoardPairs=null;
-        tempSelectedInitPositions=null;
-        tempSelectedRotorsID=null;
+       // tempSelectedReflectorID=0;
+      //  tempPlugBoardPairs=null;
+        //tempSelectedInitPositions=null;
+       // tempSelectedRotorsID=null;
         enigmaMachine.getPlugBoard().resetPlugBoardPairs();
         createSelectedDataObj(true);
     }
@@ -272,7 +272,7 @@ public class EnigmaEngine implements Engine , Serializable {
             if (enigmaMachine.getAlphabet().indexOf(pairs.charAt(i)) == -1 )
                 throw new RuntimeException("Pair: " + pairs.charAt(i) + " doesn't exist in the machine alphabet.");
             if(letterSet.contains(pairs.charAt(i)))
-                alreadyExistLetter.add(pairs.charAt(i)+"\n");
+                alreadyExistLetter.add(String.valueOf(pairs.charAt(i)));
             else
                 letterSet.add(pairs.charAt(i));
         }
@@ -288,7 +288,9 @@ public class EnigmaEngine implements Engine , Serializable {
 
         setMachineConfigurationByUser();//user success to choose all machine configuration ,move to new setup
     }
-    public void setMachineConfigurationByUser() {
+    public void setMachineConfigurationByUser()
+    {
+        resetSelected();
 
         selectedPositions=tempSelectedInitPositions;
         selectedRotors=new Rotor[enigmaMachine.getRotorNumberInUse()];
