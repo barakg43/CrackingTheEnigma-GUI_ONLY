@@ -18,8 +18,6 @@ public class UserInterface {
     private MachineDataDTO machineData;
 
     private StatisticsDataDTO historyData;
-
-    private SelectedConfigurationDTO selectedData;
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{  LOAD_XML,
                             SHOW_SPECS,
@@ -32,11 +30,10 @@ public class UserInterface {
                             LOAD_DATA,
                             EXIT
     }
-    private boolean currentCode;
+
 
     public UserInterface()
     {
-        currentCode=false;
         mEngine=new EnigmaEngine();
         scanner=new Scanner(System.in);
       //  cipheredInputs=0;
@@ -58,7 +55,6 @@ public class UserInterface {
                         //    loadMachineDataFile();
 
                         loadMachineConfigurationFromXmlFile();
-                        currentCode = false;
 
                         ///     selectedOptions.clear();
                         //mEngine.resetAllData();
@@ -76,15 +72,14 @@ public class UserInterface {
                         break;
                     }
                     case AUTO_CONFG: {
-                        currentCode = false;
                         mEngine.resetSelected();
                         machineConfAutomatically();
                         break;
                     }
                     case CIPER_DATA: {
-                        if (selectedData.getSelectedRotorsID() == null) {
+                        if (!mEngine.isCodeConfigurationIsSet()) {
                             System.out.format("machine configuration not set yet.\n" +
-                                    "please select the %d or %d option from menu", CHSE_CNFG.ordinal(), AUTO_CONFG.ordinal());
+                                    "please select the %d or %d option from menu", CHSE_CNFG.ordinal()+1, AUTO_CONFG.ordinal()+1);
                         } else {
                             getInputAndCipher();
 
@@ -163,9 +158,9 @@ public class UserInterface {
            optionNum = Integer.parseInt(line);
        }
 
-       while((optionNum==RST_CODE.ordinal()+1 || optionNum==CIPER_DATA.ordinal()+1) && selectedData==null)
+       while((optionNum==RST_CODE.ordinal()+1 || optionNum==CIPER_DATA.ordinal()+1) && !mEngine.isCodeConfigurationIsSet())
        {
-           System.out.println("You need first configure the machine ( option 3 or 4).");
+           System.out.format("You need first configure the machine ( option %d  or %d).",CHSE_CNFG.ordinal() +1,AUTO_CONFG.ordinal() +1 );
            printMenu();
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
@@ -202,7 +197,6 @@ public class UserInterface {
                 mEngine.loadXMLFile(xmlPath);
                 machineData=mEngine.getMachineData();
                 System.out.println("The file path loaded successfully.");
-                currentCode=false;
                 mEngine.resetAllData();
 
             } catch (Exception e) {
@@ -222,7 +216,7 @@ public class UserInterface {
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
         System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
 
-        if(currentCode) {
+        if(mEngine.isCodeConfigurationIsSet()) {
 
             System.out.println("Selected machine code:");
             System.out.println(mEngine.getCodeFormat(true));
@@ -251,24 +245,16 @@ public class UserInterface {
     {
 
         if(!rotorsConfig())
-        {
-            currentCode=selectedData!=null;
             return;
-        }
         if(!reflectorConfig())
-        {
-            currentCode=selectedData!=null;
             return;
-        }
         if(!PlugBoardConfig())
-        {
-            currentCode=selectedData!=null;
             return;
-        }
 
-        selectedData = mEngine.getSelectedData();
-        mEngine.setInitialCode();
-        currentCode=true;
+
+
+
+
 
         System.out.println("The data was successfully received.");
     }
@@ -369,10 +355,8 @@ public class UserInterface {
 
     private void machineConfAutomatically()
     {
-        currentCode=true;
         System.out.println("You choose to get machine code automatically. ");
         mEngine.setCodeAutomatically();
-        selectedData = mEngine.getSelectedData();
         System.out.println("The automatically selected code is:");
         System.out.println(mEngine.getCodeFormat(true));
 //        printCurrentCode(true);
@@ -395,9 +379,7 @@ public class UserInterface {
         mEngine= EnigmaEngine.loadMachineStateFromFile(path);
         System.out.println("The data was loaded successfully.");
             machineData = mEngine.getMachineData();
-            selectedData = mEngine.getSelectedData();
             historyData = mEngine.getStatisticDataDTO();
-            currentCode=selectedData!=null;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage()+"\nPlease try again...");
 

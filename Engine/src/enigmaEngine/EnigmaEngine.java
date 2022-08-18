@@ -21,7 +21,6 @@ public class EnigmaEngine implements Engine , Serializable {
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private enigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
-    private SelectedConfigurationDTO selectedConfigurationDTO;
     private List<PlugboardPairDTO> plugBoardPairs;
 
     private StatisticsData statisticsData;
@@ -30,7 +29,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private char[] selectedPositions;
     private Rotor[] selectedRotors;
     private int cipheredInputs;
-    private CodeFormatDTO initialCodeFormat =null;
+    private CodeFormatDTO initialCodeFormat;
     private  char[] tempSelectedInitPositions;
     private  int tempSelectedReflectorID;
     private  List<Integer> tempSelectedRotorsID;
@@ -45,13 +44,13 @@ public class EnigmaEngine implements Engine , Serializable {
     public EnigmaEngine() {
         enigmaMachine = null;
         statisticsData=new StatisticsData();
-        selectedConfigurationDTO =new SelectedConfigurationDTO();
         cipheredInputs=0;
+        initialCodeFormat=null;
     }
 
     public void resetAllData()
     {
-        selectedConfigurationDTO=new SelectedConfigurationDTO();
+
         plugBoardPairs=new ArrayList<>();
         statisticsData=new StatisticsData();
         selectedRotors=null;
@@ -68,11 +67,9 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
 
-
     @Override
-    public SelectedConfigurationDTO getSelectedData() {
-        createSelectedDataObj(false);
-        return selectedConfigurationDTO;
+    public boolean isCodeConfigurationIsSet() {
+        return initialCodeFormat!=null;
     }
 
     @Override
@@ -230,7 +227,7 @@ public class EnigmaEngine implements Engine , Serializable {
         //tempSelectedInitPositions=null;
        // tempSelectedRotorsID=null;
         enigmaMachine.getPlugBoard().resetPlugBoardPairs();
-        createSelectedDataObj(true);
+
     }
 
 
@@ -256,9 +253,10 @@ public class EnigmaEngine implements Engine , Serializable {
     public void checkPlugBoardPairs(String pairs)  {
         pairs=pairs.toUpperCase();
         tempPlugBoardPairs=new ArrayList<>();
-        if(pairs.length()==0)
+        if(pairs.length()==0) {
+            setMachineConfigurationByUser();
             return;
-
+        }
 
 
         if(pairs.length()%2!=0)
@@ -266,13 +264,13 @@ public class EnigmaEngine implements Engine , Serializable {
 
 
         //withPlugBoardPairs=true;
-        List<String> alreadyExistLetter=new ArrayList<>();
+        List<Character> alreadyExistLetter=new ArrayList<>();
         Set<Character> letterSet=new HashSet<>(pairs.length());
         for(int i=0;i<pairs.length();i++) {
             if (enigmaMachine.getAlphabet().indexOf(pairs.charAt(i)) == -1 )
                 throw new RuntimeException("Pair: " + pairs.charAt(i) + " doesn't exist in the machine alphabet.");
             if(letterSet.contains(pairs.charAt(i)))
-                alreadyExistLetter.add(String.valueOf(pairs.charAt(i)));
+                alreadyExistLetter.add(pairs.charAt(i));
             else
                 letterSet.add(pairs.charAt(i));
         }
@@ -300,9 +298,11 @@ public class EnigmaEngine implements Engine , Serializable {
             selectedRotors[i].setInitialWindowPosition(selectedPositions[i]);
         }
         selectedReflector=enigmaMachine.getReflectorById(tempSelectedReflectorID);
+        plugBoardPairs=tempPlugBoardPairs;
       for(PlugboardPairDTO pair:tempPlugBoardPairs)
           enigmaMachine.getPlugBoard().addMappedInputOutput(pair.getFirstLetter(),pair.getSecondLetter());
 
+        setInitialCode();
 
     }
 
@@ -346,11 +346,10 @@ public class EnigmaEngine implements Engine , Serializable {
         setRandomPositions();
         setRandomPlugboardPairs();
         setInitialCode();
-        createSelectedDataObj(true);
+
     }
 
-    public void setInitialCode()
-    {
+    private void setInitialCode() {
         initialCodeFormat = createCodeFormat(true);
     }
 
@@ -403,26 +402,32 @@ public class EnigmaEngine implements Engine , Serializable {
         plugBoardPairs=new ArrayList<>();
         boolean res;
         if (withPlugBoardPairs) {
-            List<Character> charList = new ArrayList<>();
-            for (int i = 0; i < enigmaMachine.getAlphabet().length(); i++) {
-                charList.add(enigmaMachine.getAlphabet().charAt(i));
-            }
-            int numOfPairs = random.nextInt(enigmaMachine.getAlphabet().length() / 2) + 1;
+            String alphabet=enigmaMachine.getAlphabet();
+            int alphabetSize=alphabet.length();
+            Set<Character> alreadyExist=new HashSet<>(alphabet.length());
+            int numOfPairs = random.nextInt(alphabet.length() / 2) + 1;
+            char input,output;
             for (int i = 0; i < numOfPairs; i++) {
                  res = false;
                 while (!res) {
                     try {
-                        char input = charList.get(random.nextInt(charList.size()));
-                        charList.remove(input);
-                        char output = charList.get(random.nextInt(charList.size()));
-                        while (!charList.contains(output))
-                            output = charList.get(random.nextInt(charList.size()));
-                        charList.remove(output);
+                        input = alphabet.charAt(random.nextInt(alphabetSize));
+                        while(alreadyExist.contains(input))
+                        {
+                            input = alphabet.charAt(random.nextInt(alphabetSize));
+                        }
+                        alreadyExist.add(input);
+                        output = alphabet.charAt(random.nextInt(alphabetSize));
+                        while(alreadyExist.contains(output))
+                        {
+                            output = alphabet.charAt(random.nextInt(alphabetSize));
+                        }
+                        alreadyExist.add(output);
                         enigmaMachine.getPlugBoard().addMappedInputOutput(input, output);
                         plugBoardPairs.add(new PlugboardPairDTO(input,output));
                         res = true;
-                    } catch (Exception ex) {
-                        break;
+                    } catch (RuntimeException ex) {
+                        throw new RuntimeException(ex);
                     }
 
                 }
@@ -446,27 +451,7 @@ public class EnigmaEngine implements Engine , Serializable {
         }
 
 
-        private void createSelectedDataObj ( boolean alreadyExists)
-        {
-            if (!alreadyExists) {
 
-                int[] rotorsID = copySelectedRotorsID(selectedRotors);
-                selectedConfigurationDTO = new SelectedConfigurationDTO(selectedPositions, selectedReflector.getReflectorIdName(),
-                        rotorsID, plugBoardPairs);
-            } else {
-                selectedConfigurationDTO = new SelectedConfigurationDTO();
-            }
-
-        }
-
-        private int[] copySelectedRotorsID (Rotor[] selectedRotors)
-        {
-            int[] selectedRotorsID = new int[selectedRotors.length];
-            for (int i = selectedRotorsID.length-1; i >= 0 ; i--) {
-                selectedRotorsID[i] = selectedRotors[i].getRotorID();
-            }
-            return selectedRotorsID;
-        }
 
         private void copyAllData (CTEEnigma eng){
             String alphabet = eng.getCTEMachine().getABC().trim().toUpperCase();
@@ -484,6 +469,7 @@ public class EnigmaEngine implements Engine , Serializable {
             enigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
             enigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
+            initialCodeFormat=null;
             machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
                                              enigmaMachine.getReflectorIDList(),
@@ -500,14 +486,7 @@ public class EnigmaEngine implements Engine , Serializable {
             return rotorsID;
         }
 
-        private int[] copyNotchArray (List < CTERotor > rotorsArray)
-        {
-            int[] notchNumbers = new int[rotorsArray.size()];
-            for (int i = 0; i < rotorsArray.size(); i++) {
-                notchNumbers[i] = rotorsArray.get(i).getNotch();
-            }
-            return notchNumbers;
-        }
+
 
     public int getCipheredInputs()
     {
@@ -517,7 +496,6 @@ public class EnigmaEngine implements Engine , Serializable {
     public String toString() {
         return "MenuEngine{" +
                 ", \nmachineData=" + machineData +
-                ", \nselectedConfigurationDTO=" + selectedConfigurationDTO +
                 ", \nplugBoardPairs=" + plugBoardPairs +
                 ", \nselectedRotors=" + Arrays.toString(selectedRotors) +
                 ", \nstatisticsData=" + statisticsData +

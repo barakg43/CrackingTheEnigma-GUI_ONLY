@@ -4,7 +4,6 @@ import dtoObjects.*;
 
 
 public interface Engine {
-    void setInitialCode();
     void loadXMLFile(String filePath);
     void checkIfRotorsValid(String rotors);
     void checkIfPositionsValid(String positions);
@@ -13,7 +12,7 @@ public interface Engine {
     StatisticsDataDTO getStatisticDataDTO();
     MachineDataDTO getMachineData();
 
-    SelectedConfigurationDTO getSelectedData();
+
     String cipherData(String dataInput);
     void resetCodePosition();
     void resetSelected();
@@ -21,6 +20,7 @@ public interface Engine {
     boolean getWithPlugBoardPairs();
     int getCipheredInputs();
     void  saveMachineStateToFile(String filePathNoExtension);
+    boolean isCodeConfigurationIsSet();
     @Override
     String toString();
     void resetAllData();
