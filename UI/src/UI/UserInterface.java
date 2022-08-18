@@ -71,7 +71,7 @@ public class UserInterface {
                     }
                     case CHSE_CNFG: {
                         currentCode = false;
-                        mEngine.resetSelected();
+                        //mEngine.resetSelected();
                         machineConfByUser();
                         break;
                     }
