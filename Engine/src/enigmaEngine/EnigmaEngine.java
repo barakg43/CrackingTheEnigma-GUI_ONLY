@@ -204,7 +204,7 @@ public class EnigmaEngine implements Engine , Serializable {
         for (int i = 0; i < rotorInfoArray.length; i++) {
             rotorID=selectedRotors[i].getRotorID();
             distanceToWindow=selectedRotors[i].calculateDistanceFromNotchToWindows(isCalcDistanceFromInitWindow);
-            initPositionLetter=selectedPositions[i];
+            initPositionLetter=isCalcDistanceFromInitWindow? selectedPositions[i ]: selectedRotors[i].getLetterInWindowPosition();
             rotorInfoArray[i]=new RotorInfoDTO(rotorID,distanceToWindow,initPositionLetter);
 
         }

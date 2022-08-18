@@ -149,7 +149,10 @@ private void initRotorArrays() {
         return letter2IndexLeftSide.size() == letterSize && letter2IndexRightSide.size() == letterSize;
 
     }
-
+    public char getLetterInWindowPosition()
+    {
+        return index2letterRightSide[windowPosition];
+    }
     public void printRotorTableDebugModeOnly()
     {
         if(debugMode)
