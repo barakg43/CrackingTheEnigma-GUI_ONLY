@@ -36,18 +36,19 @@ public class CodeFormatDTO implements Serializable {
     @Override
     public String toString() {
         StringBuilder codeFormat=new StringBuilder();
-        //example:<45(2),27(5),94(20)><AO!><III><A|Z,D|E>
-        //<rotor ID(distance from notch to window),...> =<45(2),27(5),94(20)>
+        //example:<45,27,94><A(2)O(5)!(20)><III><A|Z,D|E>
+        //<rotor ID(distance from notch to window),...> =<45,27,94>
         codeFormat.append('<');
         for(int i=rotorInfo.length-1;i>0;i--)
         {
-            codeFormat.append(String.format("%d(%d),",rotorInfo[i].getId(),rotorInfo[i].getDistanceToWindow()));
+            codeFormat.append(String.format("%d,",rotorInfo[i].getId()));
         }
-        codeFormat.append(String.format("%d(%d)>",rotorInfo[0].getId(),rotorInfo[0].getDistanceToWindow()));
-        //<starting letter leftest,...,starting letter rightest> = <AO!>
+
+        codeFormat.append(String.format("%d>",rotorInfo[0].getId()));
+        //<starting letter leftest,...,starting letter rightest> = <A(2)O(5)!(20)>
         codeFormat.append('<');
         for(int i=rotorInfo.length-1;i>=0;i--) {
-            codeFormat.append(rotorInfo[i].getStatingLetter());
+            codeFormat.append(String.format("%c(%d)",rotorInfo[i].getStatingLetter(),rotorInfo[i].getDistanceToWindow()));
         }
         codeFormat.append('>');
         //<reflector id> = <III>
