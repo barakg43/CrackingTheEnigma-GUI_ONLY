@@ -1,6 +1,8 @@
 package enigmaEngine;
 
-import dtoObjects.*;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.MachineDataDTO;
+import dtoObjects.StatisticsDataDTO;
 
 
 public interface Engine {

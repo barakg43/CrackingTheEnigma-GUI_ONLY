@@ -1,6 +1,9 @@
 package UI;
 
-import dtoObjects.*;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.MachineDataDTO;
+import dtoObjects.StatisticRecordDTO;
+import dtoObjects.StatisticsDataDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 

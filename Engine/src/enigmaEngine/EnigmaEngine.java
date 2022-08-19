@@ -363,6 +363,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private void setRandomRotors() {
         Random random = new Random();
         int rotorNum;
+        Set<Integer> alreadyUsed=new HashSet<>();
         selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
         for (int i = 0; i < enigmaMachine.getRotorNumberInUse(); i++) {
             selectedRotors[i] = null;
@@ -371,8 +372,8 @@ public class EnigmaEngine implements Engine , Serializable {
             do {
                 rotorNum=random.nextInt(enigmaMachine.getNumberOfRotors()) + 1;
             }
-            while (rotorNum > enigmaMachine.getNumberOfRotors() ||
-                    findRotorByIdInSelectedRotors(rotorNum) != null);
+            while (alreadyUsed.contains(rotorNum));
+            alreadyUsed.add(rotorNum);
             selectedRotors[i] = enigmaMachine.getRotorById(rotorNum);
         }
     }
@@ -384,17 +385,11 @@ public class EnigmaEngine implements Engine , Serializable {
 
     private void setRandomPositions() {
         selectedPositions = new char[selectedRotors.length];
-        char[] alphabetArray = new char[enigmaMachine.getAlphabet().length()];
-        for (int i = 0; i < enigmaMachine.getAlphabet().length(); i++) {
-            alphabetArray[i] = enigmaMachine.getAlphabet().charAt(i);
-        }
         for (int i = 0; i < selectedRotors.length; i++) {
-            selectedPositions[i] = getRandomCharacter(alphabetArray);
+            selectedPositions[i] = getRandomCharacter(enigmaMachine.getAlphabet());
+            selectedRotors[i].setInitialWindowPosition(selectedPositions[i]);
         }
 
-        for (int j = 0; j < selectedRotors.length; j++) {
-            selectedRotors[j].setInitialWindowPosition(selectedPositions[j]);
-        }
     }
 
     private void setRandomPlugboardPairs() {
@@ -437,8 +432,8 @@ public class EnigmaEngine implements Engine , Serializable {
         }
     }
 
-        private char getRandomCharacter ( char[] arr){
-            return arr[ThreadLocalRandom.current().nextInt(arr.length)];
+        private char getRandomCharacter ( String alphabet){
+            return alphabet.charAt(ThreadLocalRandom.current().nextInt(alphabet.length()));
         }
 
 

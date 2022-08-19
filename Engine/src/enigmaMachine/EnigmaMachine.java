@@ -72,7 +72,7 @@ public class EnigmaMachine implements Serializable {
     }
 
     public String getAlphabet() {
-        return new String(alphabet) ;
+        return alphabet;
     }
 
     public void setRotors(List<CTERotor> RotorsArray) {
