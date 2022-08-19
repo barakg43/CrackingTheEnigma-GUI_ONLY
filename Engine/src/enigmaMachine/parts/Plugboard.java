@@ -1,23 +1,22 @@
 package enigmaMachine.parts;
-import enigmaMachine.Mapper;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Plugboard implements Mapper<Character,Character>, Serializable
+public class Plugboard implements Serializable
 {
     Map<Character,Character> plugMap;
     public Plugboard() {
         this.plugMap = new HashMap<>();
     }
-    @Override
+
     public Character getMappedOutput(Character input) {
         Optional<Character> output=Optional.ofNullable(plugMap.get(input));
         return output.orElse(input);
     }
-    @Override
+
     public void addMappedInputOutput(Character input,Character output) {
 
         if (plugMap.containsKey(input)) {

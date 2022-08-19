@@ -20,6 +20,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
     private enigmaMachine enigmaMachine;
+    private enigmaMachine tempEnigmaMachine;
     private MachineDataDTO machineData;
     private List<PlugboardPairDTO> plugBoardPairs;
 
@@ -34,7 +35,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private  int tempSelectedReflectorID;
     private  List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
-
+    private static final String stateMachineFileExtension=".bat";
     @Override
     public boolean isMachineLoaded()
     {
@@ -260,7 +261,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
 
         if(pairs.length()%2!=0)
-            throw new RuntimeException("There is a character that has no pair.must be even number in input string.\nPlease correct this.");
+            throw new RuntimeException("There is a character that has no pair.must be even number in input string.");
 
 
         //withPlugBoardPairs=true;
@@ -309,7 +310,7 @@ public class EnigmaEngine implements Engine , Serializable {
     @Override
     public void  saveMachineStateToFile(String filePathNoExtension) {
         filePathNoExtension=filePathNoExtension.replaceAll("\"","");//for case user enter with " "
-        filePathNoExtension+=".bat";
+        filePathNoExtension+=stateMachineFileExtension;
         try (ObjectOutputStream out =
                      new ObjectOutputStream(
                              Files.newOutputStream(Paths.get(filePathNoExtension)))) {
@@ -323,7 +324,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
     public static EnigmaEngine loadMachineStateFromFile(String filePathNoExtension) {
         filePathNoExtension = filePathNoExtension.replaceAll("\"", "");//for case user enter with " "
-        filePathNoExtension += ".bat";
+        filePathNoExtension += stateMachineFileExtension;
         File savedStateFile = new File(filePathNoExtension);
         if (!savedStateFile.exists())
             throw new RuntimeException("This file doesn't exists. PLease enter valid file path");
@@ -456,19 +457,20 @@ public class EnigmaEngine implements Engine , Serializable {
         private void copyAllData (CTEEnigma eng){
             String alphabet = eng.getCTEMachine().getABC().trim().toUpperCase();
             if (alphabet.length() % 2 != 0)
-                throw new RuntimeException("The number of letters need to be even.\nPlease correct this.");
+                throw new RuntimeException("The number of letters need to be even.");
 
             if (eng.getCTEMachine().getRotorsCount() < 2)
-                throw new RuntimeException("The number of rotors need to be bigger or equal to 2.\nPlease correct this.");
+                throw new RuntimeException("The number of rotors need to be bigger or equal to 2.");
             if (eng.getCTEMachine().getRotorsCount() > eng.getCTEMachine().getCTERotors().getCTERotor().size())
-                throw new RuntimeException("The number of rotors that used is greater than the number of rotors given with the machine.\nPlease correct this.");
+                throw new RuntimeException("The number of rotors that used is greater than the number of rotors given with the machine.");
 
-            enigmaMachine=new enigmaMachine();
-            enigmaMachine.setAlphabet(eng.getCTEMachine().getABC());
-            enigmaMachine.setRotorsInUse(eng.getCTEMachine().getRotorsCount());
-            enigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
-            enigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
+            tempEnigmaMachine=new enigmaMachine();
+            tempEnigmaMachine.setAlphabet(eng.getCTEMachine().getABC());
+            tempEnigmaMachine.setRotorsInUse(eng.getCTEMachine().getRotorsCount());
+            tempEnigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
+            tempEnigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
+            enigmaMachine=tempEnigmaMachine;
             initialCodeFormat=null;
             machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,

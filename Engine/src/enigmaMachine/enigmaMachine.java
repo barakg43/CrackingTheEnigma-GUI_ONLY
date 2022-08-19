@@ -12,7 +12,9 @@ import jaxb.CTERotor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class enigmaMachine implements Serializable {
 
@@ -26,8 +28,6 @@ public class enigmaMachine implements Serializable {
     private final Plugboard plugBoardPairs;
 
     private Keyboard keyboard;
-
-
     public enigmaMachine() {
         plugBoardPairs=new Plugboard();
     }
@@ -81,21 +81,23 @@ public class enigmaMachine implements Serializable {
     public void setRotors(List<CTERotor> RotorsArray) {
         numberOfRotors=RotorsArray.size();
         allRotorsArray = new Rotor[RotorsArray.size()];
+
         for (CTERotor rotor: RotorsArray) {
             if(rotor.getId()<=0)
                 throw new RuntimeException("The id of rotor "+ rotor.getId() + " need to be bigger then zero." );
             if(rotor.getId()>RotorsArray.size())
                 throw new RuntimeException("The id of rotor "+ rotor.getId() + " need to be smaller then "+ RotorsArray.size()+ " .");
-            if(allRotorsArray[rotor.getId()-1]!=null)
-                throw new RuntimeException("There are 2 rotors with same id.\nplease correct this.");
+            if(getRotorById(rotor.getId())!=null)
+                throw new RuntimeException("The rotor id "+rotor.getId()+" appear more then once.");
             if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() <= 0)
-                throw new RuntimeException("Rotor id "+ rotor.getId() +": notch number need to be smaller than " + (rotor.getCTEPositioning().size()+1) + " and bigger then 0" +"\nPlease correct this.");
-            if(rotor.getCTEPositioning().size()!=alphabet.length() )
-                throw new RuntimeException("Rotor id "+ rotor.getId() +": the number of positions are not equal to the alphabet size.");
+                throw new RuntimeException("Rotor id "+ rotor.getId() +": notch number need to be between 1 to " + rotor.getCTEPositioning().size());
             allRotorsArray[rotor.getId()-1]=new Rotor(alphabet.length(),rotor.getNotch(),rotor.getId(),alphabet);
             setRotorTable(rotor.getCTEPositioning(), allRotorsArray[rotor.getId()-1]);
             if(!allRotorsArray[rotor.getId()-1].checkIfAllLetterMapped())
                 throw new RuntimeException("Rotor id "+ rotor.getId() +":not all letter in alphabet are mapped in rotor table");
+            if(rotor.getCTEPositioning().size()!=alphabet.length() )
+                throw new RuntimeException("Rotor id "+ rotor.getId() +": the number of positions are not equal to the alphabet size.");
+
 
         }
     }
@@ -114,17 +116,20 @@ public class enigmaMachine implements Serializable {
                 throw new RuntimeException("reflector number "+ reflector.getId() + " don't exist");
 
             if(reflectorId <= 0 || reflectorId > ReflectorsArray.size())
-                throw new RuntimeException("The reflector id " + reflectorId + " need to be between 1 to " + ReflectorsArray.size());
+                throw new RuntimeException("The reflector id " + reflectorId + " is not between 1 to " + ReflectorsArray.size());
             reflectorId--;
             if( allReflectorsArray[reflectorId]!=null) {
                 allReflectorsArray=null;
-                throw new RuntimeException("There are 2 reflectors with same id.\nplease correct this.");
+                throw new RuntimeException("The reflector id "+(reflectorId+1)+" appear more then once.");
             }
 
-            if(reflector.getCTEReflect().size() *2 !=alphabet.length() )
-                throw new RuntimeException("in reflector number "+ reflector.getId() +" there are characters without mapping");
+
             allReflectorsArray[reflectorId]= new Reflector(reflector.getCTEReflect().size()*2,reflector.getId());
            setReflectorArray(reflector.getCTEReflect(), allReflectorsArray[reflectorId]);
+            if(reflector.getCTEReflect().size() *2 >alphabet.length() )
+                throw new RuntimeException("in reflector number "+ reflector.getId() +" there are too many line input to line output mappings");
+            if(reflector.getCTEReflect().size() *2 <alphabet.length() )
+                throw new RuntimeException("in reflector number "+ reflector.getId() +" there are missing line input to line output mappings");
         }
     }
     public List<String> getReflectorIDList()

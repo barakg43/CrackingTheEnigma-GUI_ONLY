@@ -19,15 +19,16 @@ public class UserInterface {
 
     private StatisticsDataDTO historyData;
   //  private Set<Integer> selectedOptions;
-    protected enum  OPTIONS{  LOAD_XML,
+    protected enum  OPTIONS{
+                            LOAD_MCHN_FROM_XML,
                             SHOW_SPECS,
-                            CHSE_CNFG,
+                            CHSE_CNFG_MNUAL,
                             AUTO_CONFG,
                             CIPER_DATA,
                             RST_CODE,
-                            STATS,
-                            SAVE_DATA,
-                            LOAD_DATA,
+                            STATS_HISTORY,
+                            SAVE_DATA_TO_FILE,
+                            LOAD_DATA_TO_FILE,
                             EXIT
     }
 
@@ -36,11 +37,7 @@ public class UserInterface {
     {
         mEngine=new EnigmaEngine();
         scanner=new Scanner(System.in);
-      //  cipheredInputs=0;
         historyData=null;
-
-       // selectedOptions=new HashSet<>();
-
     }
 
     public void startMenu(){
@@ -50,14 +47,8 @@ public class UserInterface {
 
             while (option - 1 != EXIT.ordinal()) {
                 switch (OPTIONS.values()[option - 1]) {
-                    case LOAD_XML: {
-
-                        //    loadMachineDataFile();
-
+                    case LOAD_MCHN_FROM_XML: {
                         loadMachineConfigurationFromXmlFile();
-
-                        ///     selectedOptions.clear();
-                        //mEngine.resetAllData();
                         break;
 
                     }
@@ -65,7 +56,7 @@ public class UserInterface {
                         printMachineData();
                         break;
                     }
-                    case CHSE_CNFG: {
+                    case CHSE_CNFG_MNUAL: {
                        // currentCode = false;
                        // mEngine.resetAllData();
                         machineConfByUser();
@@ -79,7 +70,7 @@ public class UserInterface {
                     case CIPER_DATA: {
                         if (!mEngine.isCodeConfigurationIsSet()) {
                             System.out.format("machine configuration not set yet.\n" +
-                                    "please select the %d or %d option from menu", CHSE_CNFG.ordinal()+1, AUTO_CONFG.ordinal()+1);
+                                    "please select the %d or %d option from menu", CHSE_CNFG_MNUAL.ordinal()+1, AUTO_CONFG.ordinal()+1);
                         } else {
                             getInputAndCipher();
 
@@ -93,15 +84,15 @@ public class UserInterface {
                         System.out.println("The code reset was made successfully");
                         break;
                     }
-                    case STATS: {
+                    case STATS_HISTORY: {
                         printHistoricalStaticsData();
                         break;
                     }
-                    case SAVE_DATA: {
+                    case SAVE_DATA_TO_FILE: {
                         saveMachineData();
                         break;
                     }
-                    case LOAD_DATA: {
+                    case LOAD_DATA_TO_FILE: {
                         loadMachineData();
                         break;
                     }
@@ -127,8 +118,8 @@ public class UserInterface {
                         "# 5.  Enter Input for the machine.                     #",
                         "# 6.  Reset machine.                                   #",
                         "# 7.  History and statistics of the machine.           #",
-                        "# 8.  Save machine data.                               #",
-                        "# 9.  Load recent machine data.                        #",
+                        "# 8.  Save machine data and state to file.             #",
+                        "# 9.  Load recent machine data and state from file.    #",
                         "# 10. Exit.                                            #",
                         "########################################################"
                 };
@@ -150,9 +141,9 @@ public class UserInterface {
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
        }
-       while(optionNum!=LOAD_XML.ordinal()+1&&optionNum!=LOAD_DATA.ordinal()+1 && !mEngine.isMachineLoaded())
+       while(optionNum!= LOAD_MCHN_FROM_XML.ordinal()+1&&optionNum!= LOAD_DATA_TO_FILE.ordinal()+1 && !mEngine.isMachineLoaded())
        {
-           System.out.println("You need first load the machine from file.\nPlease select option number 1.");
+           System.out.format("You need first load the machine from file.\nPlease select option number %d or %d.", LOAD_MCHN_FROM_XML.ordinal()+1, LOAD_DATA_TO_FILE.ordinal()+1);
            printMenu();
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
@@ -160,7 +151,7 @@ public class UserInterface {
 
        while((optionNum==RST_CODE.ordinal()+1 || optionNum==CIPER_DATA.ordinal()+1) && !mEngine.isCodeConfigurationIsSet())
        {
-           System.out.format("You need first configure the machine ( option %d  or %d).",CHSE_CNFG.ordinal() +1,AUTO_CONFG.ordinal() +1 );
+           System.out.format("You need first configure the machine ( option %d  or %d).", CHSE_CNFG_MNUAL.ordinal() +1,AUTO_CONFG.ordinal() +1 );
            printMenu();
            line =checkThatStringInputValid(scanner.nextLine());
            optionNum = Integer.parseInt(line);
@@ -168,10 +159,10 @@ public class UserInterface {
 
 
 
-        if(optionNum-1!=EXIT.ordinal() && (optionNum==STATS.ordinal()+1 && historyData==null))
+        if(optionNum-1!=EXIT.ordinal() && (optionNum== STATS_HISTORY.ordinal()+1 && historyData==null))
             System.out.println("Your selection was chosen successfully.");
 
-        if(optionNum==STATS.ordinal()+1 && historyData==null)
+        if(optionNum== STATS_HISTORY.ordinal()+1 && historyData==null)
             System.out.println("There is no history to show yet.");
 
         return optionNum;
@@ -262,7 +253,13 @@ public class UserInterface {
     private boolean rotorsConfig()
     {
         boolean res=false;
-        System.out.printf("Please enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n\nEnter 'Tab' and 'Enter' to return to the menu\n",
+        System.out.println( "============================================================\n"+
+                            "Press any time in this command 'Tab' + 'Enter' \n" +
+                            "will abort the changes and return to the machine menu\n"+
+                            "============================================================"
+
+);
+        System.out.printf("enter %d Rotor IDS between 1 and %d with commas between them (for example: 43,27,5):\n",
                     machineData.getNumberOfRotorsInUse(),machineData.getNumberOfRotorInSystem());
         while(!res) {
             try {
@@ -281,8 +278,8 @@ public class UserInterface {
 
         System.out.format("Please enter the %d initial positions of the rotors without white spaces between them.\nfor example: ABC " +
                             "(the order between them is: rotor number 43 in position A, rotor number 27 in position B, etc.. )" +
-                            "\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n" +
-                            "Enter 'Tab' and 'Enter' to return to the menu\n",machineData.getNumberOfRotorsInUse(),machineData.getAlphabetString());
+                            "\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\n"
+                                ,machineData.getNumberOfRotorsInUse(),machineData.getAlphabetString());
         res=false;
         while(!res) {
             try {
@@ -304,7 +301,7 @@ public class UserInterface {
     private boolean reflectorConfig()
     {
         boolean res=false;
-        System.out.println("Please select reflector number:\nEnter 'Tab' and 'Enter' to return to the menu\n");
+        System.out.println("Please select reflector number:\n");
         List<String> reflectorIDName=machineData.getReflectorIdList();
         for(int i = 0; i< machineData.getNumberOfReflectors(); i++)
         {
@@ -329,8 +326,11 @@ public class UserInterface {
 
     private boolean PlugBoardConfig()
     {
-            System.out.format("Please enter pairs(without white space) for plugBoard.\nFor example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
-                    "\nIf you don't want plugBoard pair, press Enter.\nthe letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):\n%s\nEnter 'Tab' and 'Enter' to return to the menu\n",machineData.getAlphabetString());
+            System.out.format("Please enter pairs(without white space) for plugBoard.\n" +
+                                "For example: ACBG (A and C connected in the plugBoard, B and G connected in the plugBoard)" +
+                                "\nIf you don't want plugBoard pair, press Enter.\n" +
+                                "the letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):" +
+                                "\n%s\n",machineData.getAlphabetString());
             boolean res = false;
             while (!res) {
                 try {

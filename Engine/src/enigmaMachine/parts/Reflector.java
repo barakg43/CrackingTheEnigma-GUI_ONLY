@@ -1,11 +1,9 @@
 package enigmaMachine.parts;
 
-import enigmaMachine.Mapper;
-
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class Reflector implements Mapper<Integer,Integer>, Serializable {
+public class Reflector implements Serializable {
     private enum ID implements Serializable {
         I("I",1),
         II("II",2),
@@ -30,6 +28,14 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
             }
             return false;
         }
+        public static boolean isExist(String id) {
+            for(ID item : ID.values()) {
+                if(id.equals(item.toString())) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 
@@ -39,7 +45,7 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
     private final int NOT_INIT=-1;
     public static int convertRomanIdToNumber(String id)
     {
-            if (ID.isExist(ID.valueOf(id).getID()))
+            if (ID.isExist(id))
                 return ID.valueOf(id).getID();
             else
                 return -1;
@@ -75,7 +81,7 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
     {
         return ID.isExist(num);
     }
-    @Override
+
     public Integer getMappedOutput(Integer input) {
         if(input>= lettersSize ||input<0)
             throw new RuntimeException("invalid input,out of bound reflector id");
@@ -87,9 +93,12 @@ public class Reflector implements Mapper<Integer,Integer>, Serializable {
     {
 
         if(input.equals(output))
-            throw new RuntimeException("cant mapped input to himself!");
-        if(input<0||input>= lettersSize ||output<0||output>= lettersSize)
-            throw new RuntimeException("invalid input mapped reflection-out of bounds");
+            throw new RuntimeException("In reflector No '"+ reflectorIdNum +"' cant mapped input "+(input+1)+" to himself!");
+        if(input<0||input>= lettersSize)
+            throw new RuntimeException("In reflector No '"+ reflectorIdNum +"'invalid input mapped "+(input+1)+" reflection-out of bounds.number need to be between 1 to "+lettersSize);
+          if(output<0||output>= lettersSize)
+              throw new RuntimeException("In reflector No '"+ reflectorIdNum +"'invalid input mapped "+(output+1)+" reflection-out of bounds.number need to be between 1 to "+lettersSize);
+
         if(mappedReflectorsArray[output]!=NOT_INIT)
                 throw new RuntimeException("In reflector No '"+ reflectorIdNum +"' the output "  + (output+1) +" appears more than once.");
         if(mappedReflectorsArray[input]!=NOT_INIT)
