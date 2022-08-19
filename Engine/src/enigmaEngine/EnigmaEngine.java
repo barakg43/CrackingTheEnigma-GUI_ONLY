@@ -1,7 +1,7 @@
 package enigmaEngine;
 
 import dtoObjects.*;
-import enigmaMachine.enigmaMachine;
+import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
 import jaxb.CTEEnigma;
@@ -19,8 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EnigmaEngine implements Engine , Serializable {
 
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
-    private enigmaMachine enigmaMachine;
-    private enigmaMachine tempEnigmaMachine;
+    private EnigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
     private List<PlugboardPairDTO> plugBoardPairs;
 
@@ -464,13 +463,13 @@ public class EnigmaEngine implements Engine , Serializable {
             if (eng.getCTEMachine().getRotorsCount() > eng.getCTEMachine().getCTERotors().getCTERotor().size())
                 throw new RuntimeException("The number of rotors that used is greater than the number of rotors given with the machine.");
 
-            tempEnigmaMachine=new enigmaMachine();
+            EnigmaMachine tempEnigmaMachine = new EnigmaMachine();
             tempEnigmaMachine.setAlphabet(eng.getCTEMachine().getABC());
             tempEnigmaMachine.setRotorsInUse(eng.getCTEMachine().getRotorsCount());
             tempEnigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
             tempEnigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
-            enigmaMachine=tempEnigmaMachine;
+            enigmaMachine= tempEnigmaMachine;
             initialCodeFormat=null;
             machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,

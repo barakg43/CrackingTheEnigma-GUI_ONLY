@@ -1,6 +1,5 @@
 package enigmaMachine;
 
-import dtoObjects.MachineDataDTO;
 import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Plugboard;
 import enigmaMachine.parts.Reflector;
@@ -12,11 +11,9 @@ import jaxb.CTERotor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class enigmaMachine implements Serializable {
+public class EnigmaMachine implements Serializable {
 
     // from file
     private Reflector[] allReflectorsArray;
@@ -28,7 +25,7 @@ public class enigmaMachine implements Serializable {
     private final Plugboard plugBoardPairs;
 
     private Keyboard keyboard;
-    public enigmaMachine() {
+    public EnigmaMachine() {
         plugBoardPairs=new Plugboard();
     }
     public int getReflectorsNumber()
@@ -86,7 +83,7 @@ public class enigmaMachine implements Serializable {
             if(rotor.getId()<=0)
                 throw new RuntimeException("The id of rotor "+ rotor.getId() + " need to be bigger then zero." );
             if(rotor.getId()>RotorsArray.size())
-                throw new RuntimeException("The id of rotor "+ rotor.getId() + " need to be smaller then "+ RotorsArray.size()+ " .");
+                throw new RuntimeException("The id of rotor "+ rotor.getId() + " need to be smaller then "+ RotorsArray.size()+1+ " .");
             if(getRotorById(rotor.getId())!=null)
                 throw new RuntimeException("The rotor id "+rotor.getId()+" appear more then once.");
             if(rotor.getNotch() >rotor.getCTEPositioning().size() || rotor.getNotch() <= 0)
