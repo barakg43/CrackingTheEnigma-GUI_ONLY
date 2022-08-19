@@ -19,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EnigmaEngine implements Engine , Serializable {
 
     private final static String JAXB_XML_PACKAGE_NAME = "jaxb";
+    private static final String stateMachineFileExtension=".bin";
     private EnigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
     private List<PlugboardPairDTO> plugBoardPairs;
@@ -34,7 +35,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private  int tempSelectedReflectorID;
     private  List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
-    private static final String stateMachineFileExtension=".bat";
+
     @Override
     public boolean isMachineLoaded()
     {
