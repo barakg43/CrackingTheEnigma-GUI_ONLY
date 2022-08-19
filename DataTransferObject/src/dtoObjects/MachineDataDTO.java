@@ -22,7 +22,7 @@ public class MachineDataDTO implements Serializable {
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
         this.reflectorList=reflectorList;
-        this.alphabet=alphabet;
+        this.alphabet=new String(alphabet);
     }
 
 
