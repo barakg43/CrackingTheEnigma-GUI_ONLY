@@ -62,6 +62,7 @@ public class EnigmaMachine implements Serializable {
     }
 
     public void setAlphabet(String alphabet) {
+
         alphabet=alphabet.trim();
         keyboard=new Keyboard(alphabet.toUpperCase(),plugBoardPairs);
         this.alphabet=alphabet.toUpperCase();
