@@ -1,11 +1,12 @@
 package UI;
 
 
+import static javafx.application.Application.launch;
+
 public class Main {
 
     public static void main(String[] args) {
-        UserInterface ui = new UserInterface();
-        ui.startMenu();
+            launch(UIApplication.class);
    }
 
 
