@@ -93,6 +93,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
         } catch (JAXBException | FileNotFoundException e) {
             e.printStackTrace();
+            throw new RuntimeException("Error on parsing xml file!");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -146,11 +147,6 @@ public class EnigmaEngine implements Engine , Serializable {
             tempSelectedInitPositions[i--] = ch;
         }
 
-        //selectedPositions = positionsList; TODO:move to ne func
-//        for (int j = 0; j < selectedRotors.length; j++) {
-//            selectedRotors[j].setInitialWindowPosition(selectedPositions[j]);
-//        }
-//       return positionsList;
     }
 
     @Override
@@ -245,7 +241,7 @@ public class EnigmaEngine implements Engine , Serializable {
             throw new RuntimeException("You need to choose one of the options 1-" + enigmaMachine.getReflectorsNumber());
 
         tempSelectedReflectorID=refNum;
-       // selectedReflector = enigmaMachine.getReflectorById(refNum);TODO:move to ne func
+
     }
 
 
@@ -281,8 +277,6 @@ public class EnigmaEngine implements Engine , Serializable {
         for(int i=0;i<pairs.length();i+=2)
         {
             tempPlugBoardPairs.add(new PlugboardPairDTO(pairs.charAt(i),pairs.charAt(i+1)));
-//            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));TODO:move to new func
-
         }
 
         setMachineConfigurationByUser();//user success to choose all machine configuration ,move to new setup

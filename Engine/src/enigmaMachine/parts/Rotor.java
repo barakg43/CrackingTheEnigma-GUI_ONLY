@@ -86,7 +86,7 @@ private void initRotorArrays() {
 
 
 
-   public int calcIndexRotorTable(int index, boolean isInnerTableIndex) {
+   private int calcIndexRotorTable(int index, boolean isInnerTableIndex) {
 
         int value;
         if (isInnerTableIndex)
