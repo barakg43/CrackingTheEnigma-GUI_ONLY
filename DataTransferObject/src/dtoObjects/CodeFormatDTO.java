@@ -47,9 +47,11 @@ public class CodeFormatDTO implements Serializable {
         codeFormat.append(String.format("%d>",rotorInfo[0].getId()));
         //<starting letter leftest,...,starting letter rightest> = <A(2)O(5)!(20)>
         codeFormat.append('<');
-        for(int i=rotorInfo.length-1;i>=0;i--) {
-            codeFormat.append(String.format("%c(%d)",rotorInfo[i].getStatingLetter(),rotorInfo[i].getDistanceToWindow()));
+        for(int i=rotorInfo.length-1;i>0;i--) {
+            codeFormat.append(String.format("%c(%d),",rotorInfo[i].getStatingLetter(),rotorInfo[i].getDistanceToWindow()));
         }
+        codeFormat.append(String.format("%c(%d)",rotorInfo[0].getStatingLetter(),rotorInfo[0].getDistanceToWindow()));
+
         codeFormat.append('>');
         //<reflector id> = <III>
         codeFormat.append(String.format("<%s>", reflectorID));
