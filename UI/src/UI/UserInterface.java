@@ -246,10 +246,6 @@ public class UserInterface {
             return;
 
 
-
-
-
-
         System.out.println("The data was successfully received.");
     }
 
@@ -272,7 +268,7 @@ public class UserInterface {
                     return false;
                 }
 
-                mEngine.checkIfRotorsValid(rotors);
+                //mEngine.checkIfRotorsValid(rotors);
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");

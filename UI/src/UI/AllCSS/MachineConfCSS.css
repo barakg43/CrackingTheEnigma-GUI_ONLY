@@ -1,0 +1,22 @@
+
+.positions-text{
+    -fx-text-fill: PURPLE;
+}
+
+.text-button{
+    -fx-font-weight: BOLD;
+}
+
+.combo-box > .list-cell {
+    -fx-text-fill: BLUE;
+    -fx-font-size: 14;
+    -fx-font-weight: BOLD;
+}
+
+.plugBoardpairs-label{
+    -fx-text-fill: #ff6600;
+}
+
+.rotors-text {
+    -fx-text-fill: RED;
+}

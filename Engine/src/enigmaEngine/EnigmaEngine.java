@@ -99,9 +99,9 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public void checkIfRotorsValid(String rotors) {
+    public void checkIfRotorsValid( String rotors) {
         List<String> arrayString = Arrays.asList(rotors.split(","));
-       //selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
+       selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
         tempSelectedRotorsID=new ArrayList<>(enigmaMachine.getRotorNumberInUse());
         int rotorNum;
         if (arrayString.size() != enigmaMachine.getRotorNumberInUse())
@@ -246,6 +246,12 @@ public class EnigmaEngine implements Engine , Serializable {
 
         tempSelectedReflectorID=refNum;
        // selectedReflector = enigmaMachine.getReflectorById(refNum);TODO:move to ne func
+    }
+
+    @Override
+    public void setReflector(String reflector)
+    {
+        tempSelectedReflectorID=Reflector.convertRomanIdToNumber(reflector);
     }
 
 

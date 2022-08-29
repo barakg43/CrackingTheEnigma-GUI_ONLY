@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane minHeight="615.0" minWidth="361.0" prefHeight="615.0" prefWidth="405.0" stylesheets="@../AllCSS/CurrentCodeCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.AllControllers.CurrentCodeController">
+   <children>
+      <Label fx:id="SelectedReflectorLabel" layoutX="20.0" layoutY="302.0" styleClass="currentReflector-button" text="Selected Reflector:" />
+      <Label fx:id="SelectedReflector" layoutX="191.0" layoutY="304.0" styleClass="currentReflector-button" text="Label" />
+      <Label fx:id="RotorsAndPositionsLabel" layoutX="12.0" layoutY="78.0" styleClass="currentRotors-button" text="Rotors and Positions:" />
+      <TableView fx:id="RotorsAndPositionsTable" layoutX="186.0" layoutY="78.0" prefHeight="200.0" prefWidth="148.0">
+        <columns>
+          <TableColumn fx:id="RotorIDColumn" prefWidth="75.0" text="Rotor ID" />
+          <TableColumn fx:id="PositionColumn" prefWidth="69.0" text="Position" />
+        </columns>
+      </TableView>
+      <ListView fx:id="PairsListView" layoutX="162.0" layoutY="337.0" prefHeight="99.0" prefWidth="92.0" stylesheets="@../AllCSS/CurrentCodeCSS.css" visible="false" />
+      <Label fx:id="PlugBoardPairsLabel" layoutX="20.0" layoutY="348.0" styleClass="currentPlugBoardPairs-button" text="PlugBoard Pairs:" />
+      <Label fx:id="NoPlubBoardPairsLabel" layoutX="161.0" layoutY="350.0" styleClass="currentPlugBoardPairs-button" text="No plugBoard pairs" visible="false" />
+      <Pane fx:id="CurrentCodePane" layoutX="12.0" layoutY="380.0" prefHeight="117.0" prefWidth="385.0">
+         <children>
+            <Label fx:id="CurrentCodeLabel" layoutX="10.0" layoutY="12.0" styleClass="currentCode-Label" text="Current Code:" />
+            <Pane fx:id="currentCodePane" layoutX="69.0" layoutY="55.0" prefHeight="39.0" prefWidth="170.0">
+               <children>
+                  <fx:include fx:id="currCode" source="codeTemplate.fxml" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+   </children>
+</Pane>

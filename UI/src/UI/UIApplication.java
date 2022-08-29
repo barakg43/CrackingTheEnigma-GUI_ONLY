@@ -1,5 +1,7 @@
 package UI;
 
+import UI.AllControllers.CommonResourcesPaths;
+import UI.AllControllers.FilePathController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,10 +17,10 @@ public class UIApplication extends Application {
             primaryStage.setTitle("Enigma Machine");
             FXMLLoader fxmlLoader=new FXMLLoader();
             URL url=getClass().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
-
+            FilePathController filePathController=fxmlLoader.getController();
             fxmlLoader.setLocation(url);
             Parent root=fxmlLoader.load(url.openStream());
-            Scene scene = new Scene(root,900,700);
+            Scene scene = new Scene(root,1000,900);
             primaryStage.setScene(scene);
             primaryStage.show();
         }
