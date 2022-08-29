@@ -1,14 +1,13 @@
-package UI;
+package UI.application;
 
 
+import UI.application.AllMachineController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javax.xml.soap.Text;
-import java.awt.*;
 
 public class FilePathController {
 

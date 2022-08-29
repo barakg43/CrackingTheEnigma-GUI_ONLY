@@ -1,4 +1,4 @@
-package UI;
+package UI.application;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
