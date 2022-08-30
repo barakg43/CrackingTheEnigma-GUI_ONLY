@@ -15,14 +15,11 @@ public interface Engine extends Encryptor {
 
     StatisticsDataDTO getStatisticDataDTO();
     MachineDataDTO getMachineData();
-
-
-
-    void resetCodePosition();
+    
     void resetSelected();
     void setCodeAutomatically();
     boolean getWithPlugBoardPairs();
-    int getCipheredInputs();
+    int getCipheredInputsAmount();
     void  saveMachineStateToFile(String filePathNoExtension);
     boolean isCodeConfigurationIsSet();
     @Override

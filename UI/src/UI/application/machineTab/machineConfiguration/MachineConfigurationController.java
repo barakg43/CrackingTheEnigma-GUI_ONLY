@@ -82,7 +82,7 @@ public class MachineConfigurationController {
         {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse()+"/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
-            CipheredInputs.setText(String.valueOf(mEngine.getCipheredInputs()));
+            CipheredInputs.setText(String.valueOf(mEngine.getCipheredInputsAmount()));
             MachineDetails.setVisible(true);
         }
         if(mEngine.isCodeConfigurationIsSet())
