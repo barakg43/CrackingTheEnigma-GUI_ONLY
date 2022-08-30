@@ -5,9 +5,19 @@
 
 .text-button{
     -fx-font-weight: BOLD;
+    -fx-background-color: #ffffff;
 }
 
-.combo-box > .list-cell {
+#First-to-conf-Label{
+    -fx-background-color: Yellow;
+}
+
+#SelectedReflectorComboBox .list-cell{
+    -fx-text-fill: BLUE;
+    -fx-font-size: 14;
+    -fx-font-weight: BOLD;
+}
+.combo-box .list-cell {
     -fx-text-fill: BLUE;
     -fx-font-size: 14;
     -fx-font-weight: BOLD;

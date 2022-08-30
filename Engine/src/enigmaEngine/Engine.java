@@ -2,6 +2,7 @@ package enigmaEngine;
 
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
+import dtoObjects.PlugboardPairDTO;
 import dtoObjects.StatisticsDataDTO;
 
 import java.util.List;
@@ -9,10 +10,11 @@ import java.util.List;
 
 public interface Engine {
     void loadXMLFile(String filePath);
-    void checkIfRotorsValid(String arrayString);
-    void checkIfPositionsValid(String positions);
+    void checkIfRotorsValid(List<Integer>  arrayString);
+    void checkIfPositionsValid(List<Character> positions);
     void checkIfReflectorNumValid(String ReflectorNum);
     void checkPlugBoardPairs(String pairs) ;
+    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs);
     public void setReflector(String reflector);
 
     StatisticsDataDTO getStatisticDataDTO();

@@ -1,13 +1,13 @@
-package UI.AllControllers;
+package UI.AllMachine;
 
+import UI.FIlePath.FilePathController;
+import UI.MachineConfTab.MachineConfigurationController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class AllMachineController {
 
@@ -29,12 +29,15 @@ public class AllMachineController {
         this.mEngine = mEngine;
     }
 
-   @FXML
-    public void initialize() {
-        if(FilePathComponentController!=null && MachineConfComponentController!=null) {
+    @FXML
+    public void initialize()
+    {
+        if(FilePathComponentController!=null && MachineConfComponentController!=null)
+        {
             FilePathComponentController.setMainAppController(this);
             MachineConfComponentController.setMainAppController(this);
         }
+
     }
     public void setMachineDetails(){
         MachineConfComponentController.setMachineDetails();
@@ -42,7 +45,7 @@ public class AllMachineController {
 
     public void setConfPanel(boolean visible) {
         FirstLoadFileLabel.setVisible(false);
-       // FirstLoadFileLabel.setText("File loaded successfully");
+        // FirstLoadFileLabel.setText("File loaded successfully");
     }
     public void setInitializeCodeConf() {
         MachineConfComponentController.setInitializeConfiguration();

@@ -1,5 +1,7 @@
-package UI.AllControllers;
+package UI.CurrentCode;
 
+import UI.Code.CodeController;
+import UI.MachineConfTab.MachineConfigurationController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -56,10 +58,10 @@ public class CurrentCodeController {
         machineConfController=machineConfigurationController;
     }
 
-    public void SetCurrentCode(Engine mEngine) {
+    public void SetCurrentCode(CodeFormatDTO currentCode) {
 
         currCodeController.resetTextFlow();
-        CodeFormatDTO currentCode=mEngine.getCodeFormat(false);
+
         SelectedReflector.setText(currentCode.getReflectorID());
 
         RotorInfoDTO[] SelectedRotors=currentCode.getRotorInfo();
@@ -77,18 +79,19 @@ public class CurrentCodeController {
             for (int i = 0; i < currentCode.getPlugboardPairDTOList().size(); i++) {
                 plugBoardPairs.add(currentCode.getPlugboardPairDTOList().get(i));
             }
+
             PairsListView.setItems(plugBoardPairs);
             PairsListView.setVisible(true);
             NoPlubBoardPairsLabel.setVisible(false);
-            CurrentCodePane.setLayoutX(PlugBoardPairsLabel.getLayoutX());
-            CurrentCodePane.setLayoutY(PlugBoardPairsLabel.getLayoutY()+100);
+            //CurrentCodePane.setLayoutX(PlugBoardPairsLabel.getLayoutX());
+            //CurrentCodePane.setLayoutY(PlugBoardPairsLabel.getLayoutY()+100);
 
         }
         else{
             NoPlubBoardPairsLabel.setVisible(true);
             PairsListView.setVisible(false);
-            CurrentCodePane.setLayoutX(PlugBoardPairsLabel.getLayoutX());
-            CurrentCodePane.setLayoutY(PlugBoardPairsLabel.getLayoutY()+30);
+            //CurrentCodePane.setLayoutX(PlugBoardPairsLabel.getLayoutX());
+           // CurrentCodePane.setLayoutY(PlugBoardPairsLabel.getLayoutY()+30);
         }
 
         currCodeController.setSelectedCode(currentCode.toString());

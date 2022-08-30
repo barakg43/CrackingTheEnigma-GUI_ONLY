@@ -1,5 +1,7 @@
-package UI.AllControllers;
+package UI.Code;
 
+import UI.MachineConfTab.MachineConfigurationController;
+import UI.CurrentCode.CurrentCodeController;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
