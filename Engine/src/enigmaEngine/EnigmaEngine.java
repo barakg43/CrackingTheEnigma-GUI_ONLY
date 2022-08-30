@@ -79,11 +79,6 @@ public class EnigmaEngine implements Engine , Serializable {
 
         File file = new File(filePath);
 
-        if (!(filePath.toLowerCase().endsWith(".xml")))
-            throw new RuntimeException("The file you entered isn't XML file.");
-        else if (!file.exists())
-            throw new RuntimeException("The file you entered isn't exists.");
-
         try {
             InputStream inputStream = new FileInputStream(filePath);
             JAXBContext jc = JAXBContext.newInstance(JAXB_XML_PACKAGE_NAME);
@@ -100,30 +95,19 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public void checkIfRotorsValid( String rotors) {
-        List<String> arrayString = Arrays.asList(rotors.split(","));
-       selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
-        tempSelectedRotorsID=new ArrayList<>(enigmaMachine.getRotorNumberInUse());
-        int rotorNum;
-        if (arrayString.size() != enigmaMachine.getRotorNumberInUse())
-            throw new RuntimeException("You need to enter " + enigmaMachine.getRotorNumberInUse() + " rotors with comma between them.");
+    public void checkIfRotorsValid( List<Integer> rotors) {
+        tempSelectedRotorsID = new ArrayList<>(enigmaMachine.getRotorNumberInUse());
+         int rotorNum;
+        if (rotors.size() != enigmaMachine.getRotorNumberInUse())
+            throw new RuntimeException("You need to choose " + enigmaMachine.getRotorNumberInUse() + " rotors.");
 
-        for (int j = arrayString.size() - 1; j >= 0; j--) {
-            try {
-                rotorNum = Integer.parseInt(arrayString.get(j));
-            } catch (Exception ex) {
-                tempSelectedRotorsID=null;
-                throw new RuntimeException("The number " +arrayString.get(j)+ " you entered isn't integer.");
-            }
-            if (rotorNum > enigmaMachine.getNumberOfRotors() || rotorNum < 1)
-                throw new RuntimeException("There is no such rotors with "+rotorNum+ " id.");
+        for (int j = rotors.size() - 1; j >= 0; j--) {
+            rotorNum=rotors.get(j);
             if (tempSelectedRotorsID.contains(rotorNum))
                 throw new RuntimeException("You select the same rotor twice.");
             tempSelectedRotorsID.add(rotorNum);
 
         }
-      //  return selectedRotorID.stream().mapToInt(Integer::intValue).toArray();
-//        enigmaMachine.setSelectedRotors(selectedRotors);
     }
 
 
@@ -135,16 +119,22 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public void checkIfPositionsValid(String positions) {
-        positions = positions.toUpperCase();
+    public void checkIfPositionsValid(List<Character> positions) {
+//        positions = positions.toUpperCase();
          tempSelectedInitPositions = new char[enigmaMachine.getRotorNumberInUse()];
+//        int i = enigmaMachine.getRotorNumberInUse()-1;
+//        if (positions.length() != enigmaMachine.getRotorNumberInUse())
+//            throw new RuntimeException("You need to give position for each rotor.");
+//        for (char ch : positions.toCharArray()) {
+//            if (enigmaMachine.getAlphabet().indexOf(ch) == -1)
+//                throw new RuntimeException("This position is not exist in the machine.");
+//            tempSelectedInitPositions[i--] = ch;
+//        }
+
         int i = enigmaMachine.getRotorNumberInUse()-1;
-        if (positions.length() != enigmaMachine.getRotorNumberInUse())
-            throw new RuntimeException("You need to give position for each rotor.");
-        for (char ch : positions.toCharArray()) {
-            if (enigmaMachine.getAlphabet().indexOf(ch) == -1)
-                throw new RuntimeException("This position is not exist in the machine.");
-            tempSelectedInitPositions[i--] = ch;
+        for (int j = positions.size()-1; j >=0; j--) {
+            Character ch=positions.get(j);
+            tempSelectedInitPositions[i--]=ch;
         }
 
     }
@@ -276,6 +266,13 @@ public class EnigmaEngine implements Engine , Serializable {
         }
 
         setMachineConfigurationByUser();//user success to choose all machine configuration ,move to new setup
+    }
+
+    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs)
+    {
+        tempPlugBoardPairs=new ArrayList<>();
+        tempPlugBoardPairs.addAll(plugBoardPairs);
+        setMachineConfigurationByUser();
     }
     public void setMachineConfigurationByUser()
     {

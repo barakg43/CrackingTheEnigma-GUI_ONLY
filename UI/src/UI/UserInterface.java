@@ -288,7 +288,7 @@ public class UserInterface {
                     System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
                 }
-               mEngine.checkIfPositionsValid(positions);
+            //   mEngine.checkIfPositionsValid(positions);
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");

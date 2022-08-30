@@ -1,8 +1,9 @@
 package UI;
 
 
-import UI.application.CommonResourcesPaths;
-import UI.application.fileLoaderComponent.FilePathController;
+import UI.AllMachine.CommonResourcesPaths;
+import UI.FIlePath.FilePathController;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +19,6 @@ public class UIApplication extends Application {
             primaryStage.setTitle("Enigma Machine");
             FXMLLoader fxmlLoader=new FXMLLoader();
             URL url=getClass().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
-            FilePathController filePathController=fxmlLoader.getController();
             fxmlLoader.setLocation(url);
             assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
