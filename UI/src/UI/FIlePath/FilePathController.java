@@ -47,11 +47,11 @@ public class FilePathController {
             Engine mEngine = new EnigmaEngine();
             try {
                 mEngine.loadXMLFile(absolutePath);
-               // mainAppController.setConfPanel();
                 selectedFileProperty.set(absolutePath);
                 mainAppController.setmEngine(mEngine);
                 mainAppController.setMachineDetails();
-                mainAppController.setInitializeCodeConf();
+                mainAppController.setConfPanel();
+                //mainAppController.setInitializeCodeConf();
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
             } catch (Exception ex) {
                 mainAppController.getFirstLoadFileLabel().setVisible(true);
