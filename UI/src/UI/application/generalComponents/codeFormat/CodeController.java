@@ -1,5 +1,7 @@
-package UI.AllControllers;
+package UI.application.generalComponents.codeFormat;
 
+import UI.application.machineTab.currentCodeController.CurrentCodeController;
+import UI.application.machineTab.machineConfiguration.MachineConfigurationController;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -24,7 +26,7 @@ public class CodeController {
 
    public void setSelectedCode(String currCode)
    {
-       String selectedParts[]=currCode.split(">");
+       String[] selectedParts =currCode.split(">");
 
        Text rotors=new Text(selectedParts[0] + ">");
        rotors.getStyleClass().add("Rotors-text");

@@ -1,13 +1,13 @@
-package UI.AllControllers;
+package UI.application;
 
+import UI.application.machineTab.machineConfiguration.MachineConfigurationController;
+import UI.application.fileLoaderComponent.FilePathController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class AllMachineController {
 

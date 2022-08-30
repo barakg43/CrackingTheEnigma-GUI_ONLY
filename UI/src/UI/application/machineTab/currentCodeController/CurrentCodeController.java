@@ -1,5 +1,8 @@
-package UI.AllControllers;
+package UI.application.machineTab.currentCodeController;
 
+import UI.application.rotorsAndPositions;
+import UI.application.generalComponents.codeFormat.CodeController;
+import UI.application.machineTab.machineConfiguration.MachineConfigurationController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;

@@ -1,14 +1,13 @@
-package UI.AllControllers;
+package UI.application.fileLoaderComponent;
 
 
-import UI.AllControllers.AllMachineController;
+import UI.application.AllMachineController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 

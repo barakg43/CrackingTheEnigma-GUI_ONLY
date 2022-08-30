@@ -1,7 +1,8 @@
 package UI;
 
-import UI.AllControllers.CommonResourcesPaths;
-import UI.AllControllers.FilePathController;
+
+import UI.application.CommonResourcesPaths;
+import UI.application.fileLoaderComponent.FilePathController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ public class UIApplication extends Application {
             URL url=getClass().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
             FilePathController filePathController=fxmlLoader.getController();
             fxmlLoader.setLocation(url);
+            assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
             Scene scene = new Scene(root,1000,900);
             primaryStage.setScene(scene);

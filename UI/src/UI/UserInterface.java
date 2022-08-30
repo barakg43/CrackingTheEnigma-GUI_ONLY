@@ -391,7 +391,7 @@ public class UserInterface {
         String inputData;
             try {
                 inputData = scanner.nextLine();
-                System.out.println("output:" + mEngine.cipherData(inputData));
+                System.out.println("output:" + mEngine.processDataInput(inputData));
             }
             catch (RuntimeException e) {
                 System.out.println(e.getMessage()+"\nPlease try again...");

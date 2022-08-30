@@ -8,21 +8,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.AllControllers.AllMachineController">
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.AllMachineController">
    <content>
       <SplitPane dividerPositions="0.10051813471502591" minHeight="967.0" minWidth="1000.0" orientation="VERTICAL">
         <items>
+
             <Pane maxHeight="132.0" minHeight="86.0" minWidth="1017.0" prefHeight="86.0" prefWidth="1017.0">
                <children>
-                  <fx:include fx:id="FilePathComponent" source="filePathFX.fxml" />
+                  <fx:include fx:id="FilePathComponent" source="fileLoaderComponent/filePathFX.fxml" />
                   <Label fx:id="FirstLoadFileLabel" layoutX="14.0" layoutY="70.0" text="You need first load the machine from file" />
                </children>
             </Pane>
             <TabPane minHeight="825.0" minWidth="1017.0" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="1.7976093134862315E308">
+
               <tabs>
                 <Tab text="Machine Configuration">
                      <content>
-                        <fx:include fx:id="MachineConfComponent" source="MachineConfig.fxml" />
+                        <fx:include fx:id="MachineConfComponent" source="machineTab/machineConfiguration/MachineConfig.fxml" />
                      </content>
                   </Tab>
                 <Tab text="Encrypt/Decrypt" />
