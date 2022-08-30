@@ -1,8 +1,8 @@
 package UI;
 
 
-import UI.AllControllers.CommonResourcesPaths;
-import UI.AllControllers.FilePathController;
+import UI.application.CommonResourcesPaths;
+import UI.application.fileLoaderComponent.FilePathController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

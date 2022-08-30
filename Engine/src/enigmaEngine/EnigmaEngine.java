@@ -35,7 +35,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private  int tempSelectedReflectorID;
     private  List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
-
+    private long sumProcessingTime=0;
     @Override
     public boolean isMachineLoaded()
     {
@@ -150,35 +150,25 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public String cipherData(String dataInput) {
-        int currentRow;
-        long startTime=System.nanoTime();
+    public String processDataInput(String dataInput) {
+
+        resetProcessingTime();
         dataInput = dataInput.toUpperCase();
         StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < dataInput.length(); i++) {
-            boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
-            //the row input after moving in plug board
-            currentRow = enigmaMachine.getKeyboard().getMappedOutput(dataInput.charAt(i));
-            //move input flow from right rotor to left rotors
-            for (Rotor selectedRotor : selectedRotors) {
-                advanceNextRotor = selectedRotor.forwardWindowPosition(advanceNextRotor);
-                currentRow = selectedRotor.getOutputMapIndex(currentRow, false);
-            }
-            currentRow = selectedReflector.getMappedOutput(currentRow);
-//        System.out.format("Reflect:%d->%d\n", rotorOutput.getOutputIndex(),currentRow);
-            //input flow go back from left rotor to right rotor after reflector
-            for (int j = selectedRotors.length - 1; j >= 0; j--) {
-                currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
-            }
-//        System.out.println("=====");
-            output.append(enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow));
+            output.append(processDataInput(dataInput.charAt(i)));
         }
         //System.out.println("output:" + output);
-        long endTime=System.nanoTime();
-        statisticsData.addCipheredDataToStats(getCodeFormat(true),dataInput, output.toString(), endTime-startTime);
+
+        statisticsData.addCipheredDataToStats(getCodeFormat(true),dataInput, output.toString(), sumProcessingTime);
         cipheredInputs++;
         return output.toString();
+    }
+
+    @Override
+    public void resetProcessingTime() {
+        sumProcessingTime=0;
     }
 
     @Override
@@ -483,7 +473,30 @@ public class EnigmaEngine implements Engine , Serializable {
             return rotorsID;
         }
 
+    @Override
+    public char processDataInput(char charInput) {
+        long startTime=System.nanoTime();
 
+
+        boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
+        //the row input after moving in plug board
+        int currentRow = enigmaMachine.getKeyboard().getMappedOutput(charInput);
+        //move input flow from right rotor to left rotors
+        for (Rotor selectedRotor : selectedRotors) {
+            advanceNextRotor = selectedRotor.forwardWindowPosition(advanceNextRotor);
+            currentRow = selectedRotor.getOutputMapIndex(currentRow, false);
+        }
+        currentRow = selectedReflector.getMappedOutput(currentRow);
+//        System.out.format("Reflect:%d->%d\n", rotorOutput.getOutputIndex(),currentRow);
+        //input flow go back from left rotor to right rotor after reflector
+        for (int j = selectedRotors.length - 1; j >= 0; j--) {
+            currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
+        }
+
+        sumProcessingTime+=System.nanoTime()-startTime;
+
+        return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
+    }
 
     public int getCipheredInputs()
     {

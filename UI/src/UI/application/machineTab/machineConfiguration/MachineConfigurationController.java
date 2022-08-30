@@ -1,8 +1,8 @@
-package UI.AllControllers;
+package UI.application.machineTab.machineConfiguration;
 
-import UI.AllControllers.CurrentCodeController;
-import UI.AllControllers.AllMachineController;
-import UI.AllControllers.CodeController;
+import UI.application.machineTab.currentCodeController.CurrentCodeController;
+import UI.application.AllMachineController;
+import UI.application.generalComponents.codeFormat.CodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import enigmaEngine.Engine;

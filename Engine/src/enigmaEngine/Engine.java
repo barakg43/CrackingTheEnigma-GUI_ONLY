@@ -4,10 +4,8 @@ import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.StatisticsDataDTO;
 
-import java.util.List;
 
-
-public interface Engine {
+public interface Engine extends Encryptor {
     void loadXMLFile(String filePath);
     void checkIfRotorsValid(String arrayString);
     void checkIfPositionsValid(String positions);
@@ -19,7 +17,7 @@ public interface Engine {
     MachineDataDTO getMachineData();
 
 
-    String cipherData(String dataInput);
+
     void resetCodePosition();
     void resetSelected();
     void setCodeAutomatically();
