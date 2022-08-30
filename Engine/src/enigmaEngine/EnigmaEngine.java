@@ -29,7 +29,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private Reflector selectedReflector = null;
     private char[] selectedPositions;
     private Rotor[] selectedRotors;
-    private int cipheredInputs;
+    private int cipheredInputsAmount;
     private CodeFormatDTO initialCodeFormat;
     private  char[] tempSelectedInitPositions;
     private  int tempSelectedReflectorID;
@@ -45,7 +45,7 @@ public class EnigmaEngine implements Engine , Serializable {
     public EnigmaEngine() {
         enigmaMachine = null;
         statisticsData=new StatisticsData();
-        cipheredInputs=0;
+        cipheredInputsAmount =0;
         initialCodeFormat=null;
     }
 
@@ -57,7 +57,7 @@ public class EnigmaEngine implements Engine , Serializable {
         selectedRotors=null;
         selectedPositions=null;
         selectedReflector=null;
-        cipheredInputs=0;
+        cipheredInputsAmount =0;
     }
 
 
@@ -151,8 +151,7 @@ public class EnigmaEngine implements Engine , Serializable {
         }
         //System.out.println("output:" + output);
 
-        statisticsData.addCipheredDataToStats(getCodeFormat(true),dataInput, output.toString(), sumProcessingTime);
-        cipheredInputs++;
+
         return output.toString();
     }
 
@@ -168,6 +167,11 @@ public class EnigmaEngine implements Engine , Serializable {
         }
     }
 
+    @Override
+    public void addOutputStringToStatics(String input,String output) {
+        statisticsData.addCipheredDataToStats(getCodeFormat(true),input, output, sumProcessingTime);
+        cipheredInputsAmount++;
+    }
 
     private CodeFormatDTO createCodeFormat(boolean isCalcDistanceFromInitWindow)
     {
@@ -495,9 +499,9 @@ public class EnigmaEngine implements Engine , Serializable {
         return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
     }
 
-    public int getCipheredInputs()
+    public int getCipheredInputsAmount()
     {
-        return cipheredInputs;
+        return cipheredInputsAmount;
     }
     @Override
     public String toString() {
@@ -509,7 +513,7 @@ public class EnigmaEngine implements Engine , Serializable {
                 ", \nselectedPositions=" + Arrays.toString(selectedPositions) +
                 ", \nselectedReflector=" + selectedReflector +
                 ", \nwithPlugBoardPairs=" + getWithPlugBoardPairs() +
-                ", \ncipheredInputs=" + cipheredInputs +
+                ", \ncipheredInputs=" + cipheredInputsAmount +
                 '}';
     }
 

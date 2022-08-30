@@ -208,7 +208,7 @@ public class UserInterface {
         System.out.printf("Amount of rotors in use out of the total amount of rotors : %d / %d \n" , machineData.getNumberOfRotorsInUse(),machineData.getRotorsId().length);
 
         System.out.printf("Number of reflectors: %d\n",machineData.getNumberOfReflectors());
-        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputs());
+        System.out.printf("The amount of inputs that have ciphered through the machine so far: %d\n" ,  mEngine.getCipheredInputsAmount());
 
         if(mEngine.isCodeConfigurationIsSet()) {
 
