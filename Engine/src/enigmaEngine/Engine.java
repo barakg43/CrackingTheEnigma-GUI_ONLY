@@ -13,8 +13,7 @@ public interface Engine {
     void checkIfRotorsValid(List<Integer>  arrayString);
     void checkIfPositionsValid(List<Character> positions);
     void checkIfReflectorNumValid(String ReflectorNum);
-    void checkPlugBoardPairs(String pairs) ;
-    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs);
+    void checkPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs) ;
     public void setReflector(String reflector);
 
     StatisticsDataDTO getStatisticDataDTO();

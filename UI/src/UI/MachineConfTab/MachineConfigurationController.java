@@ -1,8 +1,8 @@
 package UI.MachineConfTab;
 
 import UI.AllMachine.AllMachineController;
-import UI.Code.CodeController;
-import UI.CurrentCode.CurrentCodeController;
+import UI.SimpleCode.SimpleCodeController;
+import UI.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
@@ -40,12 +40,12 @@ public class MachineConfigurationController {
     public Pane ButtonsPane;
     public Label SelectedLabel;
     @FXML
-    public CurrentCodeController CurrentCodeComponentController;
+    public NewCodeFormatController CurrentCodeComponentController;
     public Label CuurentMachineCode;
     public Label selectedMachineCodeLabel;
     public Label currentMachineLabel;
     public AnchorPane CurrentCodeConfigurationPane;
-    public CodeController CodeController;
+    public SimpleCodeController CodeController;
     public Pane selectedCodePane;
     public TextField selectedRotors;
     public FlowPane rotorsFlowPane;
@@ -61,13 +61,14 @@ public class MachineConfigurationController {
     public Button ResetAllFieldsButton;
     public Button GetRandomButton;
     public AnchorPane selectedCodeAPane;
-    public CurrentCodeController SelectedCodeComponentController;
+    public NewCodeFormatController SelectedCodeComponentController;
     public TabPane CodeConfTabPane;
     public Label currentConfigurationLabel;
     public ScrollPane selectedCodeScrollPane;
     public ScrollPane selectedCodeConfiguration;
     public Label errorLabel;
-    public Label errorTextLabel;
+
+    public Label ErrorTextLabel;
 
 
     private Engine mEngine;
@@ -127,6 +128,8 @@ public class MachineConfigurationController {
     }
 
     public void setInitializeConfiguration() {
+        currentConfigurationLabel.setVisible(false);
+        configFirstLabel.setVisible(true);
         MachineCodePane.setVisible(true);
         selectedCodeConfiguration.setVisible(true);
         selectedCodeScrollPane.setVisible(false);
@@ -180,45 +183,66 @@ public class MachineConfigurationController {
     @FXML
     public void SetCodeConfActionListener(javafx.event.ActionEvent actionEvent) {
 
+        errorLabel.setVisible(false);
+        ErrorTextLabel.setVisible(false);
+
         List<Integer> selectedRotorsID = new ArrayList<>();
         List<Character> selectedPositions =new ArrayList<>();
-
-        for (int i = 0; i < machineData.getNumberOfRotorsInUse(); i++) {
-            VBox rotorAndPosition=(VBox) rotorsAndPositionsHBox.getChildren().get(i);
-            selectedRotorsID.add(((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem());
-            selectedPositions.add(((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem());
-        }
         try {
-            mEngine.checkIfRotorsValid(selectedRotorsID);
-        }catch (Exception ex)
-        {
-            errorLabel.setVisible(true);
-            errorTextLabel.setVisible(true);
-            errorTextLabel.setText(ex.getMessage());
-        }
+            for (int i = 0; i < rotorsAndPositionsHBox.getChildren().size(); i++) {
+                VBox rotorAndPosition=(VBox) rotorsAndPositionsHBox.getChildren().get(i);
+                if(rotorAndPosition==null)
+                    throw new Exception("You need to configurate all data.");
+                if(((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
+                    throw new Exception("You need to select all rotors and positions. Please check column number: " + (i+1));
+                int selectedID=((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
+                if(((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
+                    throw new Exception("You need to select all rotors and positions. Please check column number: " + (i+1));
+                Character selectedPosition=((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
 
-        mEngine.checkIfPositionsValid(selectedPositions);
-
-        String selectedReflector = (String) SelectedReflectorComboBox.getValue();
-        mEngine.setReflector(selectedReflector);
-
-        boolean withPlugBoardPairs = WithPlugBoardPairs.isSelected();
-        List<PlugboardPairDTO> plugBoardPairs=new ArrayList<>();
-        if (withPlugBoardPairs) {
-
-            for(int i=0;i<numberOfPairs;i++)
-            {
-                Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
+                selectedRotorsID.add(selectedID);
+                selectedPositions.add(selectedPosition);
             }
 
-            mEngine.setPlugBoardPairs(plugBoardPairs);
-        } else {
-            mEngine.setPlugBoardPairs(plugBoardPairs);
+            mEngine.checkIfRotorsValid(selectedRotorsID);
+            mEngine.checkIfPositionsValid(selectedPositions);
+
+            if(SelectedReflectorComboBox.getSelectionModel().getSelectedIndex()==-1)
+                throw new Exception("You need to select reflector.");
+            String selectedReflector = (String) SelectedReflectorComboBox.getValue();
+            mEngine.setReflector(selectedReflector);
+
+            boolean withPlugBoardPairs = WithPlugBoardPairs.isSelected();
+            List<PlugboardPairDTO> plugBoardPairs=new ArrayList<>();
+            if (withPlugBoardPairs) {
+
+                for(int i=0;i<numberOfPairs;i++)
+                {
+                    if(((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                        throw new Exception("You need to select pairs. Please check pair number: " + (i+1));
+                    Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                    if(((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                        throw new Exception("You need to select pairs. Please check pair number: " + (i+1));
+                    Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                    plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
+                }
+                mEngine.checkPlugBoardPairs(plugBoardPairs);
+            } else {
+                mEngine.checkPlugBoardPairs(plugBoardPairs);
+            }
+
+            showAllCodes();
+
+        }catch (Exception ex)
+        {
+            configFirstLabel.setVisible(false);
+            errorLabel.setVisible(true);
+            ErrorTextLabel.setVisible(true);
+            ErrorTextLabel.setText(ex.getMessage());
+            CodeConfTabPane.getSelectionModel().select(0);
+           // resetAllFields();
         }
 
-        showAllCodes();
 
     }
 
@@ -226,11 +250,11 @@ public class MachineConfigurationController {
     {
         selectedCodeScrollPane.setVisible(true);
         CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
-        configFirstLabel.setText("Selected Code");
+       // configFirstLabel.setText("Selected Code");
         currentConfigurationLabel.setVisible(true);
         configFirstLabel.setVisible(false);
 
-        SelectedCodeComponentController.SetCurrentCode(selectedCode);
+        SelectedCodeComponentController.SetCurrentCode(selectedCode,false);
         SelectedMachineCode.setText(selectedCode.toString());
         CodeConfTabPane.getSelectionModel().select(0);
 
@@ -238,9 +262,8 @@ public class MachineConfigurationController {
         CuurentMachineCode.setText(currentCode.toString());
         setVisibleCodeFields(true);
         CurrentCodeConfigurationPane.setVisible(true);
-        CurrentCodeComponentController.SetCurrentCode(currentCode);
+        CurrentCodeComponentController.SetCurrentCode(currentCode,true);
 
-        ResetAllFieldsButton.setDisable(false);
     }
 
     private ChoiceBox<Character> SetPairsChoiceBox(String alphabet) {
@@ -266,7 +289,8 @@ public class MachineConfigurationController {
     }
     public void WithPlugBoardCheckedAction(javafx.event.ActionEvent actionEvent) {
 
-        setPlugBoardPairs();
+        if(WithPlugBoardPairs.isSelected())
+              setPlugBoardPairs();
     }
 
 
@@ -281,12 +305,44 @@ public class MachineConfigurationController {
 
     public void resetAllFields()
     {
+
+        for (int i = 0; i <  rotorsAndPositionsHBox.getChildren().size(); i++) {
+           VBox rotorAndPositionVBOx= (VBox)(rotorsAndPositionsHBox.getChildren().get(i));
+           ChoiceBox<Integer> rotorID = (ChoiceBox<Integer>) (rotorAndPositionVBOx.getChildren().get(0));
+            ChoiceBox<Character> positions = (ChoiceBox<Character>) (rotorAndPositionVBOx.getChildren().get(1));
+            for (int j = 0; j <rotorID.getItems().size() ; j++) {
+                rotorID.getItems().remove(j);
+                positions.getItems().remove(j);
+            }
+            rotorID.getItems().clear();
+            positions.getItems().clear();
+            ((VBox)(rotorsAndPositionsHBox.getChildren().get(i))).getChildren().clear();
+        }
         rotorsAndPositionsHBox.getChildren().clear();
-        SelectedReflectorComboBox.valueProperty().set(null);
+
+        SelectedReflectorComboBox.getItems().clear();
         WithPlugBoardPairs.setSelected(false);
-        PairsHBox.getChildren().clear();
+
+        VBox firstInputs=(VBox)PairsHBox.getChildren().get(0);
+        VBox secondInputs=(VBox)PairsHBox.getChildren().get(1);
+        for (int i = 0; i < firstInputs.getChildren().size(); i++) {
+            ChoiceBox<Character> firstInputFromPair = ( ChoiceBox<Character>)firstInputs.getChildren().get(i);
+            ChoiceBox<Character> secondInputFromPair = ( ChoiceBox<Character>)secondInputs.getChildren().get(i);
+            for (int j = 0; j <firstInputFromPair.getItems().size() ; j++) {
+                firstInputFromPair.getItems().remove(j);
+                secondInputFromPair.getItems().remove(j);
+            }
+            firstInputFromPair.getItems().clear();
+            secondInputFromPair.getItems().clear();
+        }
+        firstInputs.getChildren().clear();;
+        secondInputs.getChildren().clear();
+       // PairsHBox.getChildren().clear();
+
         CurrentCodeComponentController.resetFields();
         SelectedCodeComponentController.resetFields();
+
+        setInitializeConfiguration();
     }
 
     private void disableAllFields(boolean toDisable)

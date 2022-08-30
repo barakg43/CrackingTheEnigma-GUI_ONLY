@@ -1,25 +1,25 @@
-package UI.Code;
+package UI.SimpleCode;
 
 import UI.MachineConfTab.MachineConfigurationController;
-import UI.CurrentCode.CurrentCodeController;
+import UI.NewCodeFormat.NewCodeFormatController;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class CodeController {
+public class SimpleCodeController {
 
     @FXML
     private TextFlow codeTextFlow;
 
     private MachineConfigurationController machineCodeController;
-    private CurrentCodeController currentCodeController;
+    private NewCodeFormatController currentCodeController;
 
    public void SetMachineConfController(MachineConfigurationController machineController)
    {
        machineCodeController=machineController;
    }
 
-    public void setCurrCodeController(CurrentCodeController currCodeController)
+    public void setCurrCodeController(NewCodeFormatController currCodeController)
     {
         currentCodeController=currCodeController;
     }

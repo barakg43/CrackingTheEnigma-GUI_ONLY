@@ -16,11 +16,8 @@ import java.io.File;
 public class FilePathController {
 
     private SimpleStringProperty selectedFileProperty;
-    public Label fileSuccessfullyLabel;
     public Label SelectedFilePath;
     private AllMachineController mainAppController;
-    @FXML
-    private Button LoadFileButton;
 
     public void setMainAppController(AllMachineController MainController)
     {
@@ -37,7 +34,7 @@ public class FilePathController {
     @FXML
     public void LoadFileButtonActionListener(javafx.event.ActionEvent actionEvent) {
         try {
-            Stage stage=new Stage();
+            Stage stage = new Stage();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select file");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
@@ -47,18 +44,24 @@ public class FilePathController {
             }
 
             String absolutePath = selectedFile.getAbsolutePath();
-            selectedFileProperty.set(absolutePath);
+            Engine mEngine = new EnigmaEngine();
+            try {
+                mEngine.loadXMLFile(absolutePath);
+               // mainAppController.setConfPanel();
+                selectedFileProperty.set(absolutePath);
+                mainAppController.setmEngine(mEngine);
+                mainAppController.setMachineDetails();
+                mainAppController.setInitializeCodeConf();
+                mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
+            } catch (Exception ex) {
+                mainAppController.getFirstLoadFileLabel().setVisible(true);
+                mainAppController.getFirstLoadFileLabel().setText("In file: " + absolutePath +"\n" + ex.getMessage());
+            }
 
-            Engine mEngine=new EnigmaEngine();
-            mEngine.loadXMLFile(absolutePath);
-            mainAppController.setmEngine(mEngine);
-            mainAppController.setConfPanel(false);
-            mainAppController.setMachineDetails();
-            mainAppController.setInitializeCodeConf();
 
         }catch (Exception ex)
         {
-            mainAppController.setConfPanel(false);
+            mainAppController.setConfPanel();
         }
 
     }

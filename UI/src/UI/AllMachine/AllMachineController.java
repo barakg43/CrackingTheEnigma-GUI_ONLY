@@ -29,6 +29,10 @@ public class AllMachineController {
         this.mEngine = mEngine;
     }
 
+    public Label getFirstLoadFileLabel()
+    {
+        return FirstLoadFileLabel;
+    }
     @FXML
     public void initialize()
     {
@@ -43,9 +47,8 @@ public class AllMachineController {
         MachineConfComponentController.setMachineDetails();
     }
 
-    public void setConfPanel(boolean visible) {
-        FirstLoadFileLabel.setVisible(false);
-        // FirstLoadFileLabel.setText("File loaded successfully");
+    public void setConfPanel() {
+        MachineConfComponentController.resetAllFields();
     }
     public void setInitializeCodeConf() {
         MachineConfComponentController.setInitializeConfiguration();

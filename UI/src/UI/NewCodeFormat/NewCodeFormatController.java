@@ -1,11 +1,10 @@
-package UI.CurrentCode;
+package UI.NewCodeFormat;
 
-import UI.Code.CodeController;
+import UI.SimpleCode.SimpleCodeController;
 import UI.MachineConfTab.MachineConfigurationController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
-import enigmaEngine.Engine;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,7 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextFlow;
 
-public class CurrentCodeController {
+public class NewCodeFormatController {
 
     public TableColumn RotorIDColumn;
     public TableColumn PositionColumn;
@@ -23,7 +22,7 @@ public class CurrentCodeController {
     public Label rotorsCurrCode;
     public Label positionCurrLabel;
     public TextFlow currCode;
-    public CodeController currCodeController;
+    public SimpleCodeController currCodeController;
     public Pane currentCodePane;
     private MachineConfigurationController machineConfController;
     @FXML
@@ -58,7 +57,7 @@ public class CurrentCodeController {
         machineConfController=machineConfigurationController;
     }
 
-    public void SetCurrentCode(CodeFormatDTO currentCode) {
+    public void SetCurrentCode(CodeFormatDTO currentCode,boolean isCurrentCode) {
 
         currCodeController.resetTextFlow();
 
@@ -95,6 +94,11 @@ public class CurrentCodeController {
         }
 
         currCodeController.setSelectedCode(currentCode.toString());
+
+        if(isCurrentCode)
+            CurrentCodeLabel.setText("Current Code");
+        else
+            CurrentCodeLabel.setText("Selected Code");
     }
 
     public void resetFields()
