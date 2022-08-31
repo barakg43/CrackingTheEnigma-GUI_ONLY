@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class StatisticsDataDTO implements Serializable {
 
-     protected final Map<CodeFormatDTO, List<StatisticRecordDTO>> codesToProcessData ;
+    protected final Map<CodeFormatDTO, List<StatisticRecordDTO>> codesToProcessData ;
     public StatisticsDataDTO(){
         this.codesToProcessData=new HashMap<>();
     }

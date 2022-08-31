@@ -5,10 +5,12 @@ import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.StatisticsDataDTO;
 
+import java.util.List;
+
 
 public interface Engine extends Encryptor {
     void loadXMLFile(String filePath);
-    void checkIfRotorsValid(List<Integer>  arrayString);
+    void checkIfRotorsValid(List<Integer> arrayString);
     void checkIfPositionsValid(List<Character> positions);
     void checkIfReflectorNumValid(String ReflectorNum);
     void checkPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs) ;
