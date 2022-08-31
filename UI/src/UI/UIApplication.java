@@ -1,8 +1,6 @@
 package UI;
 
 
-import UI.AllMachine.CommonResourcesPaths;
-import UI.FIlePath.FilePathController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
