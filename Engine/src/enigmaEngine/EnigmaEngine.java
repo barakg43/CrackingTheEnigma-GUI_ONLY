@@ -110,8 +110,6 @@ public class EnigmaEngine implements Engine , Serializable {
         }
     }
 
-
-
     @Override
     public StatisticsDataDTO getStatisticDataDTO()
     {
@@ -237,47 +235,49 @@ public class EnigmaEngine implements Engine , Serializable {
 
 
     @Override
-    public void checkPlugBoardPairs(String pairs)  {
-        pairs=pairs.toUpperCase();
+    public void checkPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs)  {
         tempPlugBoardPairs=new ArrayList<>();
-        if(pairs.length()==0) {
+        if(plugBoardPairs.size()==0) {
             setMachineConfigurationByUser();
             return;
         }
 
-
-        if(pairs.length()%2!=0)
-            throw new RuntimeException("There is a character that has no pair.must be even number in input string.");
-
-
         //withPlugBoardPairs=true;
         List<Character> alreadyExistLetter=new ArrayList<>();
-        Set<Character> letterSet=new HashSet<>(pairs.length());
-        for(int i=0;i<pairs.length();i++) {
-            if (enigmaMachine.getAlphabet().indexOf(pairs.charAt(i)) == -1 )
-                throw new RuntimeException("Pair: " + pairs.charAt(i) + " doesn't exist in the machine alphabet.");
-            if(letterSet.contains(pairs.charAt(i)))
-                alreadyExistLetter.add(pairs.charAt(i));
+        Set<Character> letterSet=new HashSet<>(plugBoardPairs.size());
+        for(int i=0;i<plugBoardPairs.size();i++) {
+            if(letterSet.contains(plugBoardPairs.get(i).getFirstLetter()) )
+                alreadyExistLetter.add(plugBoardPairs.get(i).getFirstLetter());
+            if(letterSet.contains(plugBoardPairs.get(i).getSecondLetter()))
+                alreadyExistLetter.add(plugBoardPairs.get(i).getSecondLetter());
             else
-                letterSet.add(pairs.charAt(i));
+            {
+                letterSet.add(plugBoardPairs.get(i).getFirstLetter());
+                letterSet.add(plugBoardPairs.get(i).getSecondLetter());
+            }
         }
         if(alreadyExistLetter.size()!=0)
-            throw new RuntimeException("the letters:\n"+alreadyExistLetter+ " appears more then once.");
+            throw new RuntimeException("In plugBoard pairs the letters:\n"+alreadyExistLetter+ " appears more then once.");
 
-        for(int i=0;i<pairs.length();i+=2)
-        {
-            tempPlugBoardPairs.add(new PlugboardPairDTO(pairs.charAt(i),pairs.charAt(i+1)));
-        }
+
+        tempPlugBoardPairs.addAll(plugBoardPairs);
+//        for(int i=0;i<plugBoardPairs.size();i+=2)
+//        {
+//            tempPlugBoardPairs.add(new PlugboardPairDTO(plugBoardPairs.get(i).getFirstLetter(),plugBoardPairs.get(i).getSecondLetter()));
+////            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));TODO:move to new func
+//
+//        }
+
 
         setMachineConfigurationByUser();//user success to choose all machine configuration ,move to new setup
     }
 
-    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs)
-    {
-        tempPlugBoardPairs=new ArrayList<>();
-        tempPlugBoardPairs.addAll(plugBoardPairs);
-        setMachineConfigurationByUser();
-    }
+//    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs)
+//    {
+//        tempPlugBoardPairs=new ArrayList<>();
+//        tempPlugBoardPairs.addAll(plugBoardPairs);
+//        setMachineConfigurationByUser();
+//    }
     public void setMachineConfigurationByUser()
     {
         resetSelected();
