@@ -60,20 +60,23 @@
                               </Pane>
                               <TabPane fx:id="CodeConfTabPane">
                                  <tabs>
-                                    <Tab text="Selected Code">
+                                    <Tab closable="false" text="Selected Code">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
                                                 <Label id="First-to-conf-Label" fx:id="configFirstLabel" layoutX="18.0" layoutY="13.0" prefHeight="35.0" prefWidth="281.0" text="You need first to configure the machine" />
                                                 <Label fx:id="currentConfigurationLabel" layoutX="114.0" layoutY="14.0" styleClass="currentCode-Label" text="Selected Machine Configuration" visible="false" />
-                                                <Label id="First-to-conf-Label" fx:id="ErrorTextLabel" layoutX="203.0" layoutY="14.0" stylesheets="@../NewCodeFormat/NewCodeForamtCSS.css" text="Label" visible="false" />
+                                                <Label id="First-to-conf-Label" fx:id="ErrorTextLabel" layoutX="114.0" layoutY="14.0" stylesheets="@../NewCodeFormat/NewCodeForamtCSS.css" text="Label" visible="false" />
                                                 <Label fx:id="errorLabel" layoutX="18.0" layoutY="13.0" prefHeight="36.0" prefWidth="89.0" text="ERROR :" visible="false" />
-                                                <ScrollPane fx:id="selectedCodeScrollPane" fitToHeight="true" fitToWidth="true" layoutX="63.0" layoutY="76.0" maxHeight="400.0" maxWidth="400.0">
+                                                <ScrollPane fx:id="selectedCodeScrollPane" fitToHeight="true" fitToWidth="true" layoutX="18.0" layoutY="53.0" maxHeight="465.0" maxWidth="471.0" prefHeight="430.0" prefWidth="410.0">
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
                                                             <fx:include fx:id="SelectedCodeComponent" source="../NewCodeFormat/NewCodeFormat.fxml" />
                                                          </children>
+                                                         <padding>
+                                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                         </padding>
                                                       </AnchorPane>
                                                    </content>
                                                 </ScrollPane>
@@ -81,17 +84,17 @@
                                           </AnchorPane>
                                       </content>
                                     </Tab>
-                                    <Tab fx:id="rotorsAndPositionsTab" text="Select rotors and positions">
+                                    <Tab fx:id="rotorsAndPositionsTab" closable="false" text="Select rotors and positions">
                                        <content>
                                           <Pane fx:id="MachineCodePane" minHeight="451.0" minWidth="501.0" prefHeight="451.0">
                                              <children>
                                                 <Label fx:id="SelectRotorsLabel" layoutX="15.0" layoutY="57.0" styleClass="currentRotors-button" text="Select rotors:" />
-                                                <ScrollPane fitToWidth="true" layoutX="187.0" layoutY="48.0" maxHeight="400.0" maxWidth="400.0">
+                                                <ScrollPane fitToWidth="true" layoutX="161.0" layoutY="48.0" maxHeight="130.0" maxWidth="300.0" minHeight="130.0">
                                                    <content>
                                                       <HBox fx:id="rotorsAndPositionsHBox" />
                                                    </content>
                                                    <padding>
-                                                      <Insets bottom="20.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </padding>
                                                 </ScrollPane>
                                                 <Label layoutX="15.0" layoutY="122.0" styleClass="currentPositions-button" text="Select positions:" />
@@ -103,7 +106,7 @@
                                           </Pane>
                                        </content>
                                     </Tab>
-                                    <Tab fx:id="reflectorTab" text="Select reflector">
+                                    <Tab fx:id="reflectorTab" closable="false" text="Select reflector">
                                       <content>
                                           <Pane prefHeight="559.0" prefWidth="534.0">
                                              <children>

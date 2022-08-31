@@ -7,32 +7,40 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="520.0" maxWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.NewCodeFormat.NewCodeFormatController">
    <content>
       <AnchorPane>
          <children>
-            <Label fx:id="SelectedReflectorLabel" layoutX="23.0" layoutY="303.0" styleClass="currentReflector-button" text="Selected Reflector:" />
-            <Label fx:id="SelectedReflector" layoutX="191.0" layoutY="303.0" styleClass="currentReflector-button" text="Label" />
+            <Label fx:id="SelectedReflectorLabel" layoutX="23.0" layoutY="314.0" styleClass="currentReflector-button" text="Selected Reflector:" />
+            <Label fx:id="SelectedReflector" layoutX="191.0" layoutY="314.0" styleClass="currentReflector-button" text="Label" />
             <Label fx:id="RotorsAndPositionsLabel" layoutX="14.0" layoutY="127.0" styleClass="currentRotors-button" text="Rotors and Positions:" />
-            <TableView fx:id="RotorsAndPositionsTable" layoutX="191.0" layoutY="127.0" prefHeight="137.0" prefWidth="148.0">
+            <TableView fx:id="RotorsAndPositionsTable" layoutX="191.0" layoutY="127.0" maxWidth="148.0" minWidth="148.0" prefHeight="166.0">
               <columns>
                 <TableColumn fx:id="RotorIDColumn" prefWidth="75.0" text="Rotor ID" />
                 <TableColumn fx:id="PositionColumn" prefWidth="69.0" text="Position" />
               </columns>
             </TableView>
-            <ListView fx:id="PairsListView" layoutX="180.0" layoutY="369.0" prefHeight="99.0" prefWidth="92.0" stylesheets="@NewCodeForamtCSS.css" visible="false" />
-            <Label fx:id="PlugBoardPairsLabel" layoutX="23.0" layoutY="369.0" styleClass="currentPlugBoardPairs-button" text="PlugBoard Pairs:" />
+            <ListView fx:id="PairsListView" layoutX="180.0" layoutY="369.0" prefHeight="116.0" prefWidth="114.0" stylesheets="@NewCodeForamtCSS.css" visible="false" />
+            <Label fx:id="PlugBoardPairsLabel" layoutX="23.0" layoutY="359.0" styleClass="currentPlugBoardPairs-button" text="PlugBoard Pairs:" />
             <Label fx:id="NoPlubBoardPairsLabel" layoutX="169.0" layoutY="369.0" styleClass="currentPlugBoardPairs-button" text="No plugBoard pairs" visible="false" />
             <Pane fx:id="CurrentCodePane" layoutX="1.0" layoutY="14.0" prefHeight="99.0" prefWidth="385.0">
                <children>
                   <Label fx:id="CurrentCodeLabel" layoutX="14.0" layoutY="14.0" styleClass="currentCode-Label" text="Current Code:" />
-                  <Pane layoutX="14.0" layoutY="67.0">
-                     <children>
-                        <fx:include fx:id="currCode" source="../SimpleCode/simpleCodeVersion.fxml" />
-                     </children>
-                  </Pane>
+                  <ScrollPane fitToWidth="true" layoutX="14.0" layoutY="41.0" maxHeight="50.0" maxWidth="350.0" minHeight="50.0">
+                     <content>
+                        <FlowPane>
+                           <children>
+                              <fx:include fx:id="currCode" source="../SimpleCode/simpleCodeVersion.fxml" />
+                           </children>
+                        </FlowPane>
+                     </content>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </ScrollPane>
                </children>
             </Pane>
          </children>

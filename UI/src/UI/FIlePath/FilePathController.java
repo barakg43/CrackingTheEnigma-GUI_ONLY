@@ -47,6 +47,7 @@ public class FilePathController {
             Engine mEngine = new EnigmaEngine();
             try {
                 mEngine.loadXMLFile(absolutePath);
+                mEngine.resetAllData();
                 selectedFileProperty.set(absolutePath);
                 mainAppController.setmEngine(mEngine);
                 mainAppController.setMachineDetails();

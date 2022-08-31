@@ -128,6 +128,9 @@ public class MachineConfigurationController {
     }
 
     public void setInitializeConfiguration() {
+
+        numberOfPairs=0;
+        SetCodeConfButton.setDisable(false);
         currentConfigurationLabel.setVisible(false);
         configFirstLabel.setVisible(true);
         MachineCodePane.setVisible(true);
@@ -236,6 +239,7 @@ public class MachineConfigurationController {
         }catch (Exception ex)
         {
             configFirstLabel.setVisible(false);
+            currentConfigurationLabel.setVisible(false);
             errorLabel.setVisible(true);
             ErrorTextLabel.setVisible(true);
             ErrorTextLabel.setText(ex.getMessage());
@@ -295,6 +299,8 @@ public class MachineConfigurationController {
 
 
     public void GetRandomButtonActionListener(ActionEvent actionEvent) {
+        errorLabel.setVisible(false);
+        ErrorTextLabel.setVisible(false);
         resetAllFields();
         disableAllFields(true);
         mEngine.resetSelected();
@@ -351,6 +357,7 @@ public class MachineConfigurationController {
         PairsHBox.setDisable(toDisable);
         SelectedReflectorComboBox.setDisable(toDisable);
         WithPlugBoardPairs.setDisable(toDisable);
+        AddMorePairsButton.setDisable(toDisable);
     }
 
     public void ResetAllFieldsButtonActionListener(ActionEvent actionEvent) {
