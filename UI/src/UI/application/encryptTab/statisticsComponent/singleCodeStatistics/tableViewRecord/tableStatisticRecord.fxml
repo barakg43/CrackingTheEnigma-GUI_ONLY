@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="statisticTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord.TableStatisticRecordController">
+  <columns>
+    <TableColumn fx:id="inputColumn" prefWidth="108.0" text="Input String" />
+    <TableColumn fx:id="outputColumn" prefWidth="112.0" text="Output String" />
+      <TableColumn fx:id="processTimeColumn" prefWidth="124.0" text="Processing Time" />
+  </columns>
+</TableView>
