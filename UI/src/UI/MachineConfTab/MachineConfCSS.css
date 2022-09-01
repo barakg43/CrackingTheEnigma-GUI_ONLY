@@ -5,7 +5,7 @@
 
 .text-button{
     -fx-font-weight: BOLD;
-    -fx-background-color: #ffffff;
+    //-fx-background-color: #ffffff;
 }
 
 #First-to-conf-Label{

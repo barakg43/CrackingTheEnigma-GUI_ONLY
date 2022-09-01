@@ -4,6 +4,7 @@ package UI.FIlePath;
 import UI.AllMachine.AllMachineController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import java.io.File;
 public class FilePathController {
 
     private SimpleStringProperty selectedFileProperty;
+    private SimpleBooleanProperty isFileSelected;
     public Label SelectedFilePath;
     private AllMachineController mainAppController;
 
@@ -25,8 +27,8 @@ public class FilePathController {
     }
     public FilePathController(){
         selectedFileProperty = new SimpleStringProperty();
+        isFileSelected= new SimpleBooleanProperty();
     }
-
     @FXML
     private void initialize(){
         SelectedFilePath.textProperty().bind(selectedFileProperty);
@@ -54,12 +56,11 @@ public class FilePathController {
                 mainAppController.setConfPanel();
                 //mainAppController.setInitializeCodeConf();
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
+                isFileSelected.set(true);
             } catch (Exception ex) {
                 mainAppController.getFirstLoadFileLabel().setVisible(true);
                 mainAppController.getFirstLoadFileLabel().setText("In file: " + absolutePath +"\n" + ex.getMessage());
             }
-
-
         }catch (Exception ex)
         {
             mainAppController.setConfPanel();
