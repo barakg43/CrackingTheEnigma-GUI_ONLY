@@ -7,6 +7,7 @@ import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
@@ -58,8 +59,13 @@ public class FilePathController {
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
                 isFileSelected.set(true);
             } catch (Exception ex) {
-                mainAppController.getFirstLoadFileLabel().setVisible(true);
-                mainAppController.getFirstLoadFileLabel().setText("In file: " + absolutePath +"\n" + ex.getMessage());
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText("Invalid file details");
+                errorAlert.setContentText("In file " + selectedFile.getPath() +"\n\n" + ex.getMessage());
+                errorAlert.showAndWait();
+                //mainAppController.getFirstLoadFileLabel().setVisible(true);
+                //mainAppController.getFirstLoadFileLabel().setText("In file: " + absolutePath +"\n" + ex.getMessage());
             }
         }catch (Exception ex)
         {
