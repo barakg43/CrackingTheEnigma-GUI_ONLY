@@ -11,6 +11,8 @@ import UI.MachineConfTab.MachineConfigurationController;
 >>>>>>>> Nikol:UI/src/UI/AllMachine/AllMachineController.java
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -23,12 +25,14 @@ public class AllMachineController {
     @FXML private FilePathController FilePathComponentController;
     @FXML private MachineConfigurationController MachineConfComponentController;
     @FXML private Label FirstLoadFileLabel;
-
     private Engine mEngine;
 
+
     public AllMachineController(){
+
         mEngine=new EnigmaEngine();
     }
+
     public Engine getmEngine() {
         return mEngine;
     }
@@ -48,6 +52,7 @@ public class AllMachineController {
             FilePathComponentController.setMainAppController(this);
             MachineConfComponentController.setMainAppController(this);
         }
+
 
     }
     public void setMachineDetails(){

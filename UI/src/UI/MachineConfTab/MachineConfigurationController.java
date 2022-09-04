@@ -8,67 +8,53 @@ import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextFlow;
 
 import java.util.*;
 
 public class MachineConfigurationController {
 
-    //Machine Details
     public AnchorPane MachineDetails;
     public Label NumberOfRotors;
     public Label numberOfReflectors;
     public Label CipheredInputs;
     public Pane MachineCodePane;
 
-    //Machine code configuration - initialize
-    public Label SelectRotorsLabel;
-    public TextField searchTextField;
-    public ListView RotorsListView;
-    public TextField InitialRotorsPositionsTextField;
     public ComboBox SelectedReflectorComboBox;
     public CheckBox WithPlugBoardPairs;
-    public TextArea PlugBoardPairsTextArea;
-    public Label writePlugBoardLabel;
     public Button SetCodeConfButton;
-    public Label SelectedMachineCode;
-    public Pane ButtonsPane;
-    public Label SelectedLabel;
-    @FXML
-    public NewCodeFormatController CurrentCodeComponentController;
-    public Label CuurentMachineCode;
-    public Label selectedMachineCodeLabel;
-    public Label currentMachineLabel;
-    public AnchorPane CurrentCodeConfigurationPane;
-    public SimpleCodeController CodeController;
-    public Pane selectedCodePane;
-    public TextField selectedRotors;
-    public FlowPane rotorsFlowPane;
-    public HBox rotorsAndPositionsHBox;
-    public Tab rotorsAndPositionsTab;
+    public TextFlow SelectedMachineCode;
+    public SimpleCodeController SelectedMachineCodeController;
 
+    public NewCodeFormatController CurrentCodeComponentController;
+    public SimpleCodeController CurrentMachineCodeController;
+    public TextFlow CurrentMachineCode;
+
+    public AnchorPane CurrentCodeConfigurationPane;
+    public HBox rotorsAndPositionsHBox;
     // Tab: plugBoard pairs
     public HBox PairsHBox;
     public VBox firstInputVBox;
     public VBox secondInputVBox;
     public Button AddMorePairsButton;
     public Label configFirstLabel;
-    public Button ResetAllFieldsButton;
-    public Button GetRandomButton;
-    public AnchorPane selectedCodeAPane;
     public NewCodeFormatController SelectedCodeComponentController;
     public TabPane CodeConfTabPane;
     public Label currentConfigurationLabel;
     public ScrollPane selectedCodeScrollPane;
     public ScrollPane selectedCodeConfiguration;
-    public Label errorLabel;
-
-    public Label ErrorTextLabel;
+    public Button removePlugBoardPairButton;
+    public ScrollPane currentCodeScrollPane;
+    public ScrollPane selectedCodeConfigScrollPane;
+    public Label selectedMachineCodeLabel;
+    public Label currentMachineLabel;
 
 
     private Engine mEngine;
@@ -76,19 +62,36 @@ public class MachineConfigurationController {
     private AllMachineController mainAppController;
     private int numberOfPairs;
 
+    private SimpleBooleanProperty isCodeSelectedByUser;
+    private SimpleBooleanProperty isSelected;
+    private SimpleBooleanProperty showCodeDetails;
+
+
     @FXML
     public void initialize() {
 
-
-        if (CurrentCodeComponentController != null && CodeController != null && SelectedCodeComponentController!=null) {
+        if (CurrentCodeComponentController != null && SelectedCodeComponentController!=null
+        && CurrentMachineCodeController!=null && SelectedMachineCodeController!=null) {
             CurrentCodeComponentController.SetMachineConfController(this);
-            CodeController.SetMachineConfController(this);
             SelectedCodeComponentController.SetMachineConfController(this);
+            SelectedMachineCodeController.SetMachineConfController(this);
+            CurrentMachineCodeController.SetMachineConfController(this);
         }
+
+        SetCodeConfButton.disableProperty().bind(isCodeSelectedByUser.not());
+        selectedCodeConfigScrollPane.visibleProperty().bind(showCodeDetails);
+        currentCodeScrollPane.visibleProperty().bind(showCodeDetails);
+        selectedMachineCodeLabel.visibleProperty().bind(showCodeDetails);
+        currentMachineLabel.visibleProperty().bind(showCodeDetails);
+
+
     }
     public MachineConfigurationController()
     {
         numberOfPairs=0;
+        isCodeSelectedByUser=new SimpleBooleanProperty();
+        isSelected=new SimpleBooleanProperty(false);
+        showCodeDetails=new SimpleBooleanProperty(false);
     }
 
     public Engine getmEngine() {
@@ -101,6 +104,10 @@ public class MachineConfigurationController {
     }
 
     public void setMachineDetails() {
+
+        showCodeDetails.set(false);
+        CurrentMachineCodeController.resetTextFlow();
+        SelectedMachineCodeController.resetTextFlow();
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
         if (machineData != null) {
@@ -111,9 +118,9 @@ public class MachineConfigurationController {
         }
         if (mEngine.isCodeConfigurationIsSet()) {
             CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
-            SelectedMachineCode.setText(selectedCode.toString());
+            SelectedMachineCodeController.setSelectedCode(selectedCode.toString());
             CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
-            CuurentMachineCode.setText(currentCode.toString());
+            CurrentMachineCodeController.setSelectedCode(currentCode.toString());
             setVisibleCodeFields(true);
         } else {
             setVisibleCodeFields(false);
@@ -122,15 +129,15 @@ public class MachineConfigurationController {
 
     private void setVisibleCodeFields(boolean toVisible) {
         SelectedMachineCode.setVisible(toVisible);
-        CuurentMachineCode.setVisible(toVisible);
-        selectedMachineCodeLabel.setVisible(toVisible);
-        currentMachineLabel.setVisible(toVisible);
+       // currentCodeScrollPane.setVisible(true);
+        //selectedCodeConfigScrollPane.setVisible(true);
+
     }
 
     public void setInitializeConfiguration() {
 
         numberOfPairs=0;
-        SetCodeConfButton.setDisable(false);
+        isCodeSelectedByUser.set(false);
         currentConfigurationLabel.setVisible(false);
         configFirstLabel.setVisible(true);
         MachineCodePane.setVisible(true);
@@ -186,9 +193,6 @@ public class MachineConfigurationController {
     @FXML
     public void SetCodeConfActionListener(javafx.event.ActionEvent actionEvent) {
 
-        errorLabel.setVisible(false);
-        ErrorTextLabel.setVisible(false);
-
         List<Integer> selectedRotorsID = new ArrayList<>();
         List<Character> selectedPositions =new ArrayList<>();
         try {
@@ -197,10 +201,10 @@ public class MachineConfigurationController {
                 if(rotorAndPosition==null)
                     throw new Exception("You need to configurate all data.");
                 if(((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
-                    throw new Exception("You need to select all rotors and positions. Please check column number: " + (i+1));
+                    throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
                 int selectedID=((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
                 if(((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
-                    throw new Exception("You need to select all rotors and positions. Please check column number: " + (i+1));
+                    throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
                 Character selectedPosition=((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
 
                 selectedRotorsID.add(selectedID);
@@ -222,10 +226,10 @@ public class MachineConfigurationController {
                 for(int i=0;i<numberOfPairs;i++)
                 {
                     if(((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
-                        throw new Exception("You need to select pairs. Please check pair number: " + (i+1));
+                        throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
                     Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
                     if(((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
-                        throw new Exception("You need to select pairs. Please check pair number: " + (i+1));
+                        throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
                     Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
                     plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
                 }
@@ -234,17 +238,22 @@ public class MachineConfigurationController {
                 mEngine.checkPlugBoardPairs(plugBoardPairs);
             }
 
+            CurrentMachineCodeController.resetTextFlow();
+            SelectedMachineCodeController.resetTextFlow();
+
             showAllCodes();
+            isCodeSelectedByUser.set(false);
 
         }catch (Exception ex)
         {
-            configFirstLabel.setVisible(false);
-            currentConfigurationLabel.setVisible(false);
-            errorLabel.setVisible(true);
-            ErrorTextLabel.setVisible(true);
-            ErrorTextLabel.setText(ex.getMessage());
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Invalid configuration");
+            errorAlert.setContentText(ex.getMessage());
+            errorAlert.showAndWait();
+
+            resetAllFields();
             CodeConfTabPane.getSelectionModel().select(0);
-           // resetAllFields();
+
         }
 
 
@@ -252,18 +261,19 @@ public class MachineConfigurationController {
 
     private void showAllCodes()
     {
+
         selectedCodeScrollPane.setVisible(true);
         CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
-       // configFirstLabel.setText("Selected Code");
+
         currentConfigurationLabel.setVisible(true);
         configFirstLabel.setVisible(false);
 
         SelectedCodeComponentController.SetCurrentCode(selectedCode,false);
-        SelectedMachineCode.setText(selectedCode.toString());
+        SelectedMachineCodeController.setSelectedCode(selectedCode.toString());
         CodeConfTabPane.getSelectionModel().select(0);
 
         CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
-        CuurentMachineCode.setText(currentCode.toString());
+        CurrentMachineCodeController.setSelectedCode(currentCode.toString());
         setVisibleCodeFields(true);
         CurrentCodeConfigurationPane.setVisible(true);
         CurrentCodeComponentController.SetCurrentCode(currentCode,true);
@@ -299,19 +309,20 @@ public class MachineConfigurationController {
 
 
     public void GetRandomButtonActionListener(ActionEvent actionEvent) {
-        errorLabel.setVisible(false);
-        ErrorTextLabel.setVisible(false);
         resetAllFields();
         disableAllFields(true);
         mEngine.resetSelected();
         mEngine.setCodeAutomatically();
-
+        showCodeDetails.set(true);
+        isSelected.set(true);
+        CurrentMachineCodeController.resetTextFlow();
+        SelectedMachineCodeController.resetTextFlow();
         showAllCodes();
+        disableAllFields(false);
     }
 
     public void resetAllFields()
     {
-
         for (int i = 0; i <  rotorsAndPositionsHBox.getChildren().size(); i++) {
            VBox rotorAndPositionVBOx= (VBox)(rotorsAndPositionsHBox.getChildren().get(i));
            ChoiceBox<Integer> rotorID = (ChoiceBox<Integer>) (rotorAndPositionVBOx.getChildren().get(0));
@@ -343,12 +354,13 @@ public class MachineConfigurationController {
         }
         firstInputs.getChildren().clear();;
         secondInputs.getChildren().clear();
-       // PairsHBox.getChildren().clear();
 
         CurrentCodeComponentController.resetFields();
         SelectedCodeComponentController.resetFields();
-
+        CodeConfTabPane.getSelectionModel().select(0);
         setInitializeConfiguration();
+        isSelected.set(false);
+        isCodeSelectedByUser.set(false);
     }
 
     private void disableAllFields(boolean toDisable)
@@ -358,6 +370,7 @@ public class MachineConfigurationController {
         SelectedReflectorComboBox.setDisable(toDisable);
         WithPlugBoardPairs.setDisable(toDisable);
         AddMorePairsButton.setDisable(toDisable);
+        removePlugBoardPairButton.setDisable(toDisable);
     }
 
     public void ResetAllFieldsButtonActionListener(ActionEvent actionEvent) {
@@ -366,10 +379,18 @@ public class MachineConfigurationController {
     }
 
     public void SelecteReflectorActionListener(ActionEvent actionEvent) {
-        SetCodeConfButton.setDisable(false);
+        isCodeSelectedByUser.set(true);
+        isSelected.set(true);
+        showCodeDetails.set(true);
     }
 
     public void addMorePairsButtonOnAction(ActionEvent actionEvent) {
         setPlugBoardPairs();
+    }
+
+    public void removePlugBoardPairOnAction(ActionEvent actionEvent) {
+        firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
+        secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
+        numberOfPairs--;
     }
 }
