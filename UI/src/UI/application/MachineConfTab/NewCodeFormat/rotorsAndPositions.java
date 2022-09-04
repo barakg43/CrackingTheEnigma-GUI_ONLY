@@ -1,4 +1,4 @@
-package UI.NewCodeFormat;
+package UI.application.MachineConfTab.NewCodeFormat;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

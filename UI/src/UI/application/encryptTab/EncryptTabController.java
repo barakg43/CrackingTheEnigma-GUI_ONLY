@@ -1,8 +1,8 @@
-package UI.application.encryptTab;
+package UI.applicationGUI.encryptTab;
 
-import UI.SimpleCode.SimpleCodeController;
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
-import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
+import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
+import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
+import UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;

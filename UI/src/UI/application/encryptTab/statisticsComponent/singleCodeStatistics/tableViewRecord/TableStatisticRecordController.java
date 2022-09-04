@@ -1,4 +1,4 @@
-package UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord;
+package UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord;
 
 import dtoObjects.StatisticRecordDTO;
 import javafx.beans.property.*;
@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TableStatisticRecordController {

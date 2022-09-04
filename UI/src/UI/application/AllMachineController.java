@@ -1,18 +1,9 @@
-<<<<<<<< HEAD:UI/src/UI/application/AllMachineController.java
-package UI.application;
+package UI.applicationGUI;
 
-import UI.application.machineTab.machineConfiguration.MachineConfigurationController;
-import UI.application.fileLoaderComponent.FilePathController;
-========
-package UI.AllMachine;
-
-import UI.FIlePath.FilePathController;
-import UI.MachineConfTab.MachineConfigurationController;
->>>>>>>> Nikol:UI/src/UI/AllMachine/AllMachineController.java
+import UI.applicationGUI.FIlePathComponent.FilePathController;
+import UI.application.MachineConfTab.MachineConfigurationController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;

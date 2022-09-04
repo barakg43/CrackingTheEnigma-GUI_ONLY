@@ -1,14 +1,11 @@
-package UI.application.encryptTab.encryptComponent.automaticEncrypt;
+package UI.applicationGUI.encryptTab.encryptComponent.automaticEncrypt;
 
 
 
 
 
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
 import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;

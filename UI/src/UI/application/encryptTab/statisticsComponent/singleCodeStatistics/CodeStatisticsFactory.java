@@ -1,16 +1,15 @@
-package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
+package UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics;
 
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static UI.AllMachine.CommonResourcesPaths.SINGLE_CODE_STATISTICS_RESOURCE;
+import static UI.applicationGUI.CommonResourcesPaths.SINGLE_CODE_STATISTICS_RESOURCE;
 
 public class CodeStatisticsFactory {
 

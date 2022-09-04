@@ -1,6 +1,6 @@
-package UI.application.encryptTab.encryptComponent.manualEncrypt;
+package UI.applicationGUI.encryptTab.encryptComponent.manualEncrypt;
 
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
 import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;

@@ -1,14 +1,13 @@
-package UI.FIlePath;
+package UI.applicationGUI.FIlePathComponent;
 
 
-import UI.AllMachine.AllMachineController;
+import UI.applicationGUI.AllMachineController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

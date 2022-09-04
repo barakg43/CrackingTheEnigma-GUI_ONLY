@@ -1,16 +1,12 @@
-package UI.application.encryptTab.statisticsComponent;
+package UI.applicationGUI.encryptTab.statisticsComponent;
 
-import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
-import com.sun.corba.se.impl.presentation.rmi.StubInvocationHandlerImpl;
+import UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import dtoObjects.StatisticsDataDTO;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;

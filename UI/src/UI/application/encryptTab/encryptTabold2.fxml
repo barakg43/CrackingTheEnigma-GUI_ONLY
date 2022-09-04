@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<BorderPane prefHeight="611.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.encryptTab.EncryptTabController">
+<BorderPane prefHeight="611.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.applicationGUI.encryptTab.EncryptTabController">
    <top>
       <ScrollPane minHeight="105.0" BorderPane.alignment="CENTER">
          <content>
@@ -22,7 +22,7 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </Label>
-                  <fx:include fx:id="codeComponent" source="../../SimpleCode/simpleCodeVersion.fxml" />
+                  <fx:include fx:id="codeComponent" source="../generalComponents/codeFormat/SimpleCode/simpleCodeVersion.fxml" />
                </children>
             </HBox>
          </content>

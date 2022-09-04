@@ -1,8 +1,9 @@
-package UI.MachineConfTab;
+package UI.application.MachineConfTab;
 
-import UI.AllMachine.AllMachineController;
-import UI.SimpleCode.SimpleCodeController;
-import UI.NewCodeFormat.NewCodeFormatController;
+
+import UI.applicationGUI.AllMachineController;
+import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
+import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
@@ -15,46 +16,45 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.TextFlow;
 
 import java.util.*;
 
 public class MachineConfigurationController {
 
-    public AnchorPane MachineDetails;
-    public Label NumberOfRotors;
-    public Label numberOfReflectors;
-    public Label CipheredInputs;
-    public Pane MachineCodePane;
+   @FXML public AnchorPane MachineDetails;
+    @FXML  public Label NumberOfRotors;
+    @FXML  public Label numberOfReflectors;
+    @FXML  public Label CipheredInputs;
+    @FXML public Pane MachineCodePane;
 
-    public ComboBox SelectedReflectorComboBox;
-    public CheckBox WithPlugBoardPairs;
-    public Button SetCodeConfButton;
-    public TextFlow SelectedMachineCode;
-    public SimpleCodeController SelectedMachineCodeController;
+    @FXML public ComboBox SelectedReflectorComboBox;
+    @FXML  public CheckBox WithPlugBoardPairs;
+    @FXML public Button SetCodeConfButton;
+    @FXML public HBox SelectedMachineCode;
+    @FXML public SimpleCodeController SelectedMachineCodeController;
 
-    public NewCodeFormatController CurrentCodeComponentController;
-    public SimpleCodeController CurrentMachineCodeController;
-    public TextFlow CurrentMachineCode;
+    @FXML public NewCodeFormatController CurrentCodeComponentController;
+    @FXML   public SimpleCodeController CurrentMachineCodeController;
+    @FXML public HBox CurrentMachineCode;
 
-    public AnchorPane CurrentCodeConfigurationPane;
-    public HBox rotorsAndPositionsHBox;
+    @FXML public AnchorPane CurrentCodeConfigurationPane;
+    @FXML public HBox rotorsAndPositionsHBox;
     // Tab: plugBoard pairs
-    public HBox PairsHBox;
-    public VBox firstInputVBox;
-    public VBox secondInputVBox;
-    public Button AddMorePairsButton;
-    public Label configFirstLabel;
-    public NewCodeFormatController SelectedCodeComponentController;
-    public TabPane CodeConfTabPane;
-    public Label currentConfigurationLabel;
-    public ScrollPane selectedCodeScrollPane;
-    public ScrollPane selectedCodeConfiguration;
-    public Button removePlugBoardPairButton;
-    public ScrollPane currentCodeScrollPane;
-    public ScrollPane selectedCodeConfigScrollPane;
-    public Label selectedMachineCodeLabel;
-    public Label currentMachineLabel;
+    @FXML public HBox PairsHBox;
+    @FXML  public VBox firstInputVBox;
+    @FXML  public VBox secondInputVBox;
+    @FXML public Button AddMorePairsButton;
+    @FXML  public Label configFirstLabel;
+    @FXML  public NewCodeFormatController SelectedCodeComponentController;
+    @FXML public TabPane CodeConfTabPane;
+    @FXML public Label currentConfigurationLabel;
+    @FXML public ScrollPane selectedCodeScrollPane;
+    @FXML   public ScrollPane selectedCodeConfiguration;
+    @FXML public Button removePlugBoardPairButton;
+    @FXML  public ScrollPane currentCodeScrollPane;
+    @FXML  public ScrollPane selectedCodeConfigScrollPane;
+    @FXML  public Label selectedMachineCodeLabel;
+    @FXML  public Label currentMachineLabel;
 
 
     private Engine mEngine;
@@ -106,21 +106,21 @@ public class MachineConfigurationController {
     public void setMachineDetails() {
 
         showCodeDetails.set(false);
-        CurrentMachineCodeController.resetTextFlow();
-        SelectedMachineCodeController.resetTextFlow();
+        CurrentMachineCodeController.clearCurrentCodeView();
+        SelectedMachineCodeController.setCurrCodeController(SelectedCodeComponentController);
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
         if (machineData != null) {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse() + "/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
-            CipheredInputs.setText(String.valueOf(mEngine.getCipheredInputs()));
+            CipheredInputs.setText(String.valueOf(mEngine.getCipheredInputsAmount()));
             MachineDetails.setVisible(true);
         }
         if (mEngine.isCodeConfigurationIsSet()) {
             CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
-            SelectedMachineCodeController.setSelectedCode(selectedCode.toString());
+            SelectedMachineCodeController.setSelectedCode(selectedCode);
             CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
-            CurrentMachineCodeController.setSelectedCode(currentCode.toString());
+            CurrentMachineCodeController.setSelectedCode(currentCode);
             setVisibleCodeFields(true);
         } else {
             setVisibleCodeFields(false);
@@ -238,8 +238,8 @@ public class MachineConfigurationController {
                 mEngine.checkPlugBoardPairs(plugBoardPairs);
             }
 
-            CurrentMachineCodeController.resetTextFlow();
-            SelectedMachineCodeController.resetTextFlow();
+            CurrentMachineCodeController.clearCurrentCodeView();
+            SelectedMachineCodeController.clearCurrentCodeView();
 
             showAllCodes();
             isCodeSelectedByUser.set(false);
@@ -269,11 +269,11 @@ public class MachineConfigurationController {
         configFirstLabel.setVisible(false);
 
         SelectedCodeComponentController.SetCurrentCode(selectedCode,false);
-        SelectedMachineCodeController.setSelectedCode(selectedCode.toString());
+        SelectedMachineCodeController.setSelectedCode(selectedCode);
         CodeConfTabPane.getSelectionModel().select(0);
 
         CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
-        CurrentMachineCodeController.setSelectedCode(currentCode.toString());
+        CurrentMachineCodeController.setSelectedCode(currentCode);
         setVisibleCodeFields(true);
         CurrentCodeConfigurationPane.setVisible(true);
         CurrentCodeComponentController.SetCurrentCode(currentCode,true);
@@ -315,8 +315,8 @@ public class MachineConfigurationController {
         mEngine.setCodeAutomatically();
         showCodeDetails.set(true);
         isSelected.set(true);
-        CurrentMachineCodeController.resetTextFlow();
-        SelectedMachineCodeController.resetTextFlow();
+        CurrentMachineCodeController.clearCurrentCodeView();
+        SelectedMachineCodeController.clearCurrentCodeView();
         showAllCodes();
         disableAllFields(false);
     }
