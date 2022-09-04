@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TableStatisticRecordController {
@@ -24,13 +25,24 @@ public class TableStatisticRecordController {
 
     @FXML
     private TableColumn<StatisticRecordDTO, Long> processTimeColumn;
-
+    ObservableList<StatisticRecordDTO> statisticRecordListObs;
 
     public void addRecordsToStatisticTable(List<StatisticRecordDTO> statisticRecordList)
     {
-        ObservableList<StatisticRecordDTO> statisticRecordListObs = FXCollections.observableArrayList();
-        statisticRecordListObs.addAll(statisticRecordList);
-        statisticTable.setItems(statisticRecordListObs);
+
+        if(statisticRecordList==null) {
+            System.out.println("statisticRecordList is empty!");
+            return;
+        }
+        try {
+            statisticRecordListObs.setAll(statisticRecordList);
+            statisticTable.setItems(statisticRecordListObs);
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println(Thread.currentThread().getName());
+           e.printStackTrace();
+        }
     }
     @FXML
     private void initialize() {
@@ -42,6 +54,8 @@ public class TableStatisticRecordController {
                 new SimpleStringProperty(record.getValue().getOutput()));
         processTimeColumn.setCellValueFactory(record->
                  new SimpleLongProperty(record.getValue().getProcessingTime()).asObject());
+        statisticRecordListObs= FXCollections.observableArrayList();
+
 
 // or
 // idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));

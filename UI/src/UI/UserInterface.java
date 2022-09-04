@@ -340,7 +340,7 @@ public class UserInterface {
                         System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                         return false;
                     }
-                    mEngine.checkPlugBoardPairs(plugBoardPairsString);
+                    //mEngine.checkPlugBoardPairs(plugBoardPairsString);
 
                     res = true;
                 } catch (Exception e) {

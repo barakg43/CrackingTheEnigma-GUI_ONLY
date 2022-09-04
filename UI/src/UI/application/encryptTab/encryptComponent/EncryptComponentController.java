@@ -1,10 +1,12 @@
 package UI.application.encryptTab.encryptComponent;
 
+import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
 import enigmaEngine.Encryptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -27,9 +29,15 @@ public class EncryptComponentController {
     private Label outputString;
     private Encryptor encryptor;
     private ToggleGroup toggleGroupSelector;
+    private EncryptTabController parentComponentTab;
+
     public void resetCodeToInitialState(ActionEvent actionEvent) {
         encryptor.resetCodePosition();
         automaticComponentController.clearTextFieldInput(actionEvent);
+    }
+
+    public void setParentComponentTab(EncryptTabController parentComponentTab) {
+        this.parentComponentTab = parentComponentTab;
     }
 
     public void setEncryptor(Encryptor encryptor) {
@@ -37,9 +45,11 @@ public class EncryptComponentController {
         automaticComponentController.setEncryptor(encryptor);
         manualComponentController.setEncryptor(encryptor);
 
-
     }
-
+    public void doneProcessData()
+    {
+        parentComponentTab.doneProcessData();
+    }
     @FXML
     private void initialize() {
         //link toggle to group
@@ -55,6 +65,10 @@ public class EncryptComponentController {
         //link output label to model in controllers
         automaticComponentController.bindOutputPropertyFromParent(outputString.textProperty());
         manualComponentController.bindOutputPropertyFromParent(outputString.textProperty());
+
+        //link child controller to parent
+        automaticComponentController.setEncryptComponentController(this);
+        manualComponentController.setEncryptComponentController(this);
 
 
     }
