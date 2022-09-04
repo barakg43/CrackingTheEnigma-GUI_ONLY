@@ -2,7 +2,7 @@ package UI;
 
 
 
-import UI.AllMachine.CommonResourcesPaths;
+import UI.applicationGUI.CommonResourcesPaths;
 
 
 import javafx.application.Application;

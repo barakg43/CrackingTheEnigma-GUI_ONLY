@@ -1,7 +1,7 @@
-package UI.NewCodeFormat;
+package UI.application.MachineConfTab.NewCodeFormat;
 
-import UI.SimpleCode.SimpleCodeController;
-import UI.MachineConfTab.MachineConfigurationController;
+import UI.application.MachineConfTab.MachineConfigurationController;
+import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -10,21 +10,21 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.TextFlow;
 
 public class NewCodeFormatController {
 
-    public TableColumn RotorIDColumn;
-    public TableColumn PositionColumn;
-    public Label NoPlubBoardPairsLabel;
-    public Pane CurrentCodePane;
-    public Label rotorsCurrCode;
-    public Label positionCurrLabel;
-    public TextFlow currCode;
-    public SimpleCodeController currCodeController;
-    public Pane currentCodePane;
-    private MachineConfigurationController machineConfController;
+    @FXML public TableColumn RotorIDColumn;
+    @FXML public TableColumn PositionColumn;
+    @FXML public Label NoPlubBoardPairsLabel;
+    @FXML public Pane CurrentCodePane;
+    @FXML public Label rotorsCurrCode;
+    @FXML public Label positionCurrLabel;
+    @FXML public HBox currCode;
+    @FXML  public SimpleCodeController currCodeController;
+    @FXML  public Pane currentCodePane;
+    @FXML   private MachineConfigurationController machineConfController;
     @FXML
     private Label SelectedReflectorLabel;
 
@@ -62,7 +62,7 @@ public class NewCodeFormatController {
     public void SetCurrentCode(CodeFormatDTO currentCode,boolean isCurrentCode) {
 
 
-        currCodeController.resetTextFlow();
+        currCodeController.clearCurrentCodeView();
         SelectedReflector.setText(currentCode.getReflectorID());
         RotorInfoDTO[] SelectedRotors=currentCode.getRotorInfo();
         ObservableList<rotorsAndPositions> rotorsAndPositions = FXCollections.observableArrayList();
@@ -107,8 +107,8 @@ public class NewCodeFormatController {
     {
         SelectedReflector.setText("");
         RotorsAndPositionsTable.getItems().clear();
-        PairsListView.getItems().clear();S
-        currCodeController.resetTextFlow();
+        PairsListView.getItems().clear();
+        currCodeController.clearCurrentCodeView();
 
     }
 }

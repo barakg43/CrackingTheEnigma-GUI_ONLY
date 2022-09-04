@@ -1,9 +1,8 @@
-package UI.application.TEST;
-
-import UI.SimpleCode.SimpleCodeController;
-import UI.application.encryptTab.EncryptTabController;
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
-import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
+package UI.TEST_GUI;
+import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
+import UI.applicationGUI.encryptTab.EncryptTabController;
+import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
+import UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -22,16 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static UI.AllMachine.CommonResourcesPaths.*;
+import static UI.applicationGUI.CommonResourcesPaths.*;
 
 
 //video: 100189 - FXML Hello World [JAD, JavaFX] | Powered by SpeaCode
-public class HelloFxmlMain extends Application{
+public class HelloFxmlMain2 extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        startTester(primaryStage);
+//        start1(primaryStage);
 
-         start1(primaryStage);
 //         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
@@ -41,127 +41,138 @@ public class HelloFxmlMain extends Application{
 
 
     }
-     private void start1(Stage primaryStage) throws IOException {
+    private void start1(Stage primaryStage) throws IOException {
 
-          FXMLLoader fxmlLoader = new FXMLLoader();
+        FXMLLoader fxmlLoader = new FXMLLoader();
 
-          URL url = getClass().getClassLoader().getResource("UI/application/encryptTab/encryptTab.fxml");
-          System.out.println("before 1");
-          fxmlLoader.setLocation(url);
-          System.out.println("before 2");
-          assert url != null;
-          System.out.println("before 2.5:"+url);
-          Parent load = fxmlLoader.load(url.openStream());
-          System.out.println("before 3");
+        URL url = getClass().getClassLoader().getResource("UI/application/encryptTab/encryptTab.fxml");
+        System.out.println("before 1");
+        fxmlLoader.setLocation(url);
+        System.out.println("before 2");
+        assert url != null;
+        System.out.println("before 2.5:"+url);
+        Parent load = fxmlLoader.load(url.openStream());
+        System.out.println("before 3");
 //        TableStatisticRecordController controller= fxmlLoader.getController();
-          EncryptTabController controller= fxmlLoader.getController();
-          System.out.println("before 4");
-          List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          System.out.println("before 7");
+        EncryptTabController controller= fxmlLoader.getController();
+        System.out.println("before 4");
+        List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
+        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        System.out.println("before 7");
 //        controller.addRecordsToStatisticTable(statisticRecordDTOList);
-          Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory= new HashMap<>();
-          RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[2];
-          List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
-          CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          rotorInfoDTOS[0]=new RotorInfoDTO(1,5,'A');
-          rotorInfoDTOS[1]=new RotorInfoDTO(2,10,'N');
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
-          plugboardPairDTOList=new ArrayList<>();
-          plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
-          plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
+        Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory= new HashMap<>();
+        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[2];
+        List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+        CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        rotorInfoDTOS[0]=new RotorInfoDTO(1,5,'A');
+        rotorInfoDTOS[1]=new RotorInfoDTO(2,10,'N');
+        codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
+        plugboardPairDTOList=new ArrayList<>();
+        plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
+        plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticRecordDTOList=new ArrayList<>();
+        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
 
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList.add(new StatisticRecordDTO("rrr","aaa",600));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticRecordDTOList=new ArrayList<>();
+        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
+        statisticRecordDTOList=new ArrayList<>();
+        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticRecordDTOList.add(new StatisticRecordDTO("rrr","aaa",600));
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
 
 
-          //controller.updateCodeStatisticsView(statisticsDataHistory);
+        //controller.updateCodeStatisticsView(statisticsDataHistory);
 
-          System.out.println("before 8");
-          Scene scene = new Scene(load,800,600);
-          System.out.println("before 9");
-         primaryStage.setScene(scene);
-         controller.bindComponentsWidthToScene(scene.widthProperty(),scene.heightProperty());
-          primaryStage.show();
+        System.out.println("before 8");
+        Scene scene = new Scene(load,800,600);
+        System.out.println("before 9");
+        primaryStage.setScene(scene);
+        controller.bindComponentsWidthToScene(scene.widthProperty(),scene.heightProperty());
+        primaryStage.show();
 
-     }
-     private void start3(Stage primaryStage) throws IOException, InterruptedException {
+    }
+    private void start3(Stage primaryStage) throws IOException, InterruptedException {
 
-          FXMLLoader fxmlLoader = new FXMLLoader();
+        FXMLLoader fxmlLoader = new FXMLLoader();
 
-          URL url = getClass().getClassLoader().getResource(SIMPLE_CODE_FORMAT);
-          fxmlLoader.setLocation(url);
-          assert url != null;
-          Parent load = fxmlLoader.load(url.openStream());
+        URL url = getClass().getClassLoader().getResource(SIMPLE_CODE_FORMAT);
+        fxmlLoader.setLocation(url);
+        assert url != null;
+        Parent load = fxmlLoader.load(url.openStream());
 
-          Scene scene = new Scene(load);
-          primaryStage.setScene(scene);
-          primaryStage.show();
+        Scene scene = new Scene(load);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 //        TableStatisticRecordController controller= fxmlLoader.getController();
-          SimpleCodeController controller= fxmlLoader.getController();
+        SimpleCodeController controller= fxmlLoader.getController();
 
-          RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[2];
-          List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
-          rotorInfoDTOS[0]=new RotorInfoDTO(1,5,'A');
-          rotorInfoDTOS[1]=new RotorInfoDTO(2,10,'N');
-          CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
-         CodeFormatDTO finalCodeFormatDTO = codeFormatDTO;
-         Platform.runLater(()->{
-             controller.clearCurrentCodeView();
-             controller.setSelectedCode(finalCodeFormatDTO);
-         });
+        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[2];
+        List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+        rotorInfoDTOS[0]=new RotorInfoDTO(1,5,'A');
+        rotorInfoDTOS[1]=new RotorInfoDTO(2,10,'N');
+        CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
+        CodeFormatDTO finalCodeFormatDTO = codeFormatDTO;
+        Platform.runLater(()->{
+            controller.clearCurrentCodeView();
+            controller.setSelectedCode(finalCodeFormatDTO);
+        });
 
-         Thread.sleep(2000);
-          plugboardPairDTOList=new ArrayList<>();
-          plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
-          plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
-         CodeFormatDTO finalCodeFormatDTO2 = codeFormatDTO;
-         Platform.runLater(()->{
-             controller.clearCurrentCodeView();
-             controller.setSelectedCode(finalCodeFormatDTO2);
-         });
+        Thread.sleep(2000);
+        plugboardPairDTOList=new ArrayList<>();
+        plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
+        plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
+        CodeFormatDTO finalCodeFormatDTO2 = codeFormatDTO;
+        Platform.runLater(()->{
+            controller.clearCurrentCodeView();
+            controller.setSelectedCode(finalCodeFormatDTO2);
+        });
 
-         Thread.sleep(2000);
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
-         CodeFormatDTO finalCodeFormatDTO3 = codeFormatDTO;
-         Platform.runLater(()->{
-             controller.clearCurrentCodeView();
-             controller.setSelectedCode(finalCodeFormatDTO3);
-         });
-         Thread.sleep(2000);
-         plugboardPairDTOList=new ArrayList<>();
-         codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
-         Thread.sleep(2000);
+        Thread.sleep(2000);
+        codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
+        CodeFormatDTO finalCodeFormatDTO3 = codeFormatDTO;
+        Platform.runLater(()->{
+            controller.clearCurrentCodeView();
+            controller.setSelectedCode(finalCodeFormatDTO3);
+        });
+        Thread.sleep(2000);
+        plugboardPairDTOList=new ArrayList<>();
+        codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
+        Thread.sleep(2000);
 
-     }
-     private void start2(Stage primaryStage) throws IOException {
+    }
+    private void startTester(Stage primaryStage) throws IOException {
+        primaryStage.setTitle("Enigma Machine");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL url = getClass().getResource("UI/application/MachineConfTab/MachineConfig.fxml");
+        fxmlLoader.setLocation(url);
+        assert url != null;
+        Parent root = fxmlLoader.load(url.openStream());
+        Scene scene = new Scene(root, 1000, 900);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    private void start2(Stage primaryStage) throws IOException {
 
 
-          primaryStage.setTitle("Hello There in FXML");
+        primaryStage.setTitle("Hello There in FXML");
         FXMLLoader fxmlLoader = new FXMLLoader();
 
         URL url = getClass().getClassLoader().getResource("UI/application/encryptTab/statisticsComponent/statisticsCodeComponent.fxml");
@@ -198,7 +209,7 @@ public class HelloFxmlMain extends Application{
         statisticRecordDTOList=new ArrayList<>();
         statisticRecordDTOList.add(new StatisticRecordDTO("ddd","ccc",600));
         statisticRecordDTOList.add(new StatisticRecordDTO("lll","qqq",600));
-      statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
 
         plugboardPairDTOList=new ArrayList<>();
         plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
@@ -253,27 +264,27 @@ public class HelloFxmlMain extends Application{
 //                            throw new RuntimeException(e);
 //                        }
 //                        statisticsDataHistory.clear();
-                     System.out.println("Im Thread::"+Thread.currentThread().getName());
+                    System.out.println("Im Thread::"+Thread.currentThread().getName());
 //                     controller.updateCodeStatisticsView(statisticsDataHistory);
-                    }
-            ).start();
+                }
+        ).start();
 
         controller.updateCodeStatisticsView(statisticsDataHistory);
 
 
         Scene scene = new Scene(load,400,600);
-         controller.bindSizePropertyToParent(scene.widthProperty(),scene.heightProperty());
+        controller.bindSizePropertyToParent(scene.widthProperty(),scene.heightProperty());
         primaryStage.setScene(scene);
         primaryStage.show();
 
 
 
 
-     }
-     private void start4(Stage primaryStage) throws IOException {
+    }
+    private void start4(Stage primaryStage) throws IOException {
 
 
-          primaryStage.setTitle("Hello There in FXML");
+        primaryStage.setTitle("Hello There in FXML");
         FXMLLoader fxmlLoader = new FXMLLoader();
 
         URL url = getClass().getClassLoader().getResource("UI/application/encryptTab/encryptComponent/encryptComponent.fxml");
@@ -310,7 +321,7 @@ public class HelloFxmlMain extends Application{
         statisticRecordDTOList=new ArrayList<>();
         statisticRecordDTOList.add(new StatisticRecordDTO("ddd","ccc",600));
         statisticRecordDTOList.add(new StatisticRecordDTO("lll","qqq",600));
-      statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+        statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
 
         plugboardPairDTOList=new ArrayList<>();
         plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
@@ -365,24 +376,24 @@ public class HelloFxmlMain extends Application{
 //                            throw new RuntimeException(e);
 //                        }
 //                        statisticsDataHistory.clear();
-                     System.out.println("Im Thread::"+Thread.currentThread().getName());
+                    System.out.println("Im Thread::"+Thread.currentThread().getName());
 //                     controller.updateCodeStatisticsView(statisticsDataHistory);
-                    }
-            ).start();
+                }
+        ).start();
 
-      //  controller.updateCodeStatisticsView(statisticsDataHistory);
+        //  controller.updateCodeStatisticsView(statisticsDataHistory);
 
 
         Scene scene = new Scene(load,400,600);
-      //   controller.bindSizePropertyToParent(scene.widthProperty(),scene.heightProperty());
+        //   controller.bindSizePropertyToParent(scene.widthProperty(),scene.heightProperty());
         primaryStage.setScene(scene);
         primaryStage.show();
 
 
 
 
-     }
+    }
     public static void main(String[] args) {
-        launch(HelloFxmlMain.class);
+        launch(HelloFxmlMain2.class);
     }
 }

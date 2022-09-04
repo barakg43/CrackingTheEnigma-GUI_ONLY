@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.AllMachine.AllMachineController">
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.applicationGUI.AllMachineController">
 
    <content>
       <SplitPane dividerPositions="0.12722419928825623" minHeight="967.0" minWidth="1000.0" orientation="VERTICAL">
@@ -19,7 +19,7 @@
 
                <children>
                   <Label id="First-Load-File-Label" fx:id="FirstLoadFileLabel" layoutX="14.0" layoutY="70.0" stylesheets="@AllMachineCSS.css" text="You need first load the machine from file" />
-                  <fx:include fx:id="FilePathComponent" source="../FIlePath/filePathFX.fxml" />
+                  <fx:include fx:id="FilePathComponent" source="FIlePathComponent/filePathFX.fxml" />
 
                </children>
             </Pane>
@@ -29,7 +29,7 @@
                 <Tab text="Machine Configuration">
                      <content>
 
-                        <fx:include fx:id="MachineConfComponent" source="../MachineConfTab/MachineConfig.fxml" />
+                        <fx:include fx:id="MachineConfComponent" source="MachineConfTab/MachineConfig.fxml" />
 
                      </content>
                   </Tab>
