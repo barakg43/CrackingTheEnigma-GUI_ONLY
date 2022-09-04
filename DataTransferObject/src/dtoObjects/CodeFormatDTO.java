@@ -10,12 +10,12 @@ public class CodeFormatDTO implements Serializable {
     private final RotorInfoDTO[] rotorInfo;
     private final String reflectorID;
     private final List<PlugboardPairDTO> plugboardPairDTOList;
-
+    protected boolean isCurrentMachineCode;
     public CodeFormatDTO(RotorInfoDTO[] rotorInfo, String reflectorID, List<PlugboardPairDTO> plugboardPairDTOList) {
         this.rotorInfo = rotorInfo;
         this.reflectorID = reflectorID;
         this.plugboardPairDTOList =new ArrayList<>(plugboardPairDTOList);
-
+        isCurrentMachineCode=true;
 
     }
 
@@ -69,6 +69,11 @@ public class CodeFormatDTO implements Serializable {
         }
         return codeFormat.toString();
     }
+
+    public boolean isCurrentMachineCode() {
+        return isCurrentMachineCode;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;

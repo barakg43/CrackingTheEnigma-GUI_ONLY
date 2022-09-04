@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+
+<BorderPane prefHeight="611.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.encryptTab.EncryptTabController">
+   <top>
+      <ScrollPane minHeight="105.0" BorderPane.alignment="CENTER">
+         <content>
+            <HBox minHeight="100.0" minWidth="500.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="62.0" prefWidth="173.0" text="Current machine code:" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <fx:include fx:id="codeComponent" source="../../SimpleCode/simpleCodeVersion.fxml" />
+               </children>
+            </HBox>
+         </content>
+      </ScrollPane>
+   </top>
+   <bottom>
+      <FlowPane prefHeight="77.0" prefWidth="1232.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane />
+         </children>
+      </FlowPane>
+   </bottom>
+   <center>
+      <SplitPane dividerPositions="0.5" minHeight="420.0" prefHeight="600.0" prefWidth="1250.0">
+        <items>
+            <ScrollPane maxWidth="-Infinity" prefHeight="450.0" prefWidth="620.0">
+              <content>
+                <AnchorPane minHeight="275.0" minWidth="600.0">
+                     <children>
+                        <fx:include fx:id="encryptComponent" minHeight="280.0" minWidth="600.0" source="encryptComponent/encryptComponent.fxml" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+          <AnchorPane minHeight="410.0" minWidth="500.0" prefWidth="600.0">
+               <children>
+                  <fx:include fx:id="statisticsComponent" maxWidth="1.7976931348623157E308" minWidth="500.0" source="statisticsComponent/statisticsCodeComponent.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </center>
+</BorderPane>

@@ -10,7 +10,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 
+
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.NewCodeFormat.NewCodeFormatController">
+
    <content>
       <AnchorPane>
          <children>
@@ -25,7 +27,9 @@
             </TableView>
             <ListView fx:id="PairsListView" layoutX="180.0" layoutY="369.0" prefHeight="116.0" prefWidth="114.0" stylesheets="@NewCodeForamtCSS.css" visible="false" />
             <Label fx:id="PlugBoardPairsLabel" layoutX="23.0" layoutY="359.0" styleClass="currentPlugBoardPairs-button" text="PlugBoard Pairs:" />
+
             <Label fx:id="NoPlubBoardPairsLabel" layoutX="154.0" layoutY="359.0" styleClass="currentPlugBoardPairs-button" text="No plugBoard pairs" visible="false" />
+
             <Pane fx:id="CurrentCodePane" layoutX="1.0" layoutY="14.0" prefHeight="99.0" prefWidth="385.0">
                <children>
                   <Label fx:id="CurrentCodeLabel" layoutX="14.0" layoutY="14.0" styleClass="currentCode-Label" text="Current Code:" />

@@ -1,5 +1,6 @@
 package UI.application.encryptTab.encryptComponent.manualEncrypt;
 
+import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -16,11 +17,16 @@ public class ManualEncryptController {
         private StringProperty outputProperty;
         private Encryptor encryptor;
         private String input="";
+        private EncryptComponentController encryptComponentController;
+        public void setEncryptComponentController(EncryptComponentController encryptComponentController) {
+                this.encryptComponentController = encryptComponentController;
+        }
         @FXML
         private void doneGettingInput(ActionEvent event) {
-                System.out.println("press done!");
+               // System.out.println("press done!");
                 encryptor.addOutputStringToStatics(input,outputProperty.getValue());
                 input="";
+                encryptComponentController.doneProcessData(); //Pop up process done to parent
         }
 //        public void clearTextFieldInput(ActionEvent event) {
 //                textInputField.clear();

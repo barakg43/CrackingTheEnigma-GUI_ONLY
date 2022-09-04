@@ -1,17 +1,14 @@
-package UI;
+package UI.consoleUIold;
 
-import dtoObjects.CodeFormatDTO;
-import dtoObjects.MachineDataDTO;
-import dtoObjects.StatisticRecordDTO;
-import dtoObjects.StatisticsDataDTO;
+import dtoObjects.*;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import enigmaMachine.parts.Reflector;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static UI.UserInterface.OPTIONS.*;
+import static UI.consoleUIold.UserInterface.OPTIONS.*;
 
 public class UserInterface {
 
@@ -223,13 +220,14 @@ public class UserInterface {
     {
         historyData= mEngine.getStatisticDataDTO();
         Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsList=historyData.getStatisticsData();
-        String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)\n";
+        String formatStatistics = "  #. <%s> --> <%s> (%d nano-seconds)";
         for(CodeFormatDTO code:statisticsList.keySet())
         {
-            System.out.println(code);
+            System.out.println(code+(code.isCurrentMachineCode()?"*******":""));
             for(StatisticRecordDTO stat: statisticsList.get(code))
             {
                 System.out.format(formatStatistics,stat.getInput(),stat.getOutput(),stat.getProcessingTime());
+                System.out.println(stat.isLastMachineInput()?"<<<<<<<":"1");
             }
         }
     }
@@ -267,8 +265,8 @@ public class UserInterface {
                     System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
                 }
-
-                //mEngine.checkIfRotorsValid(rotors);
+                List<Integer> rotorList= rotorToList(rotors);
+                mEngine.checkIfRotorsValid(rotorList);
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
@@ -288,7 +286,8 @@ public class UserInterface {
                     System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                     return false;
                 }
-            //   mEngine.checkIfPositionsValid(positions);
+                List<Character> posList=positionToList(positions);
+              mEngine.checkIfPositionsValid(posList);
                 res = true;
             } catch (Exception e) {
                 System.out.println(e.getMessage()+"\nEnter Tab and enter to return to the menu or Enter valid input.");
@@ -331,6 +330,7 @@ public class UserInterface {
                                 "the letters in alphabet of the machine is below(without 'space','space' could be part of alphabet):" +
                                 "\n%s\n",machineData.getAlphabetString());
             boolean res = false;
+            List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
             while (!res) {
                 try {
                     String plugBoardPairsString = scanner.nextLine();
@@ -340,7 +340,8 @@ public class UserInterface {
                         System.out.println("You choose not complete the code configuration,revert to previous code configuration");
                         return false;
                     }
-                    //mEngine.checkPlugBoardPairs(plugBoardPairsString);
+
+                    mEngine.checkPlugBoardPairs(plugboardPairDTOList(plugBoardPairsString));
 
                     res = true;
                 } catch (Exception e) {
@@ -348,9 +349,67 @@ public class UserInterface {
 
                 }
             }
+
             return true;
 
     }
+
+
+    public List<Integer> rotorToList(String rotors) {
+      //  List<Integer> rotorList=new ArrayList<>();
+       // List<String> arrayString = Arrays.asList(rotors.split(","));
+
+        return Arrays.asList(rotors.split(",")).stream().map(s -> Integer.parseInt(s.trim())).collect(Collectors.toList());
+        //
+
+//        selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
+//        tempSelectedRotorsID=new ArrayList<>(enigmaMachine.getRotorNumberInUse());
+//        int rotorNum;
+//        if (arrayString.size() != enigmaMachine.getRotorNumberInUse())
+//            throw new RuntimeException("You need to enter " + enigmaMachine.getRotorNumberInUse() + " rotors with comma between them.");
+//
+//        for (int j = arrayString.size() - 1; j >= 0; j--) {
+//            try {
+//                rotorNum = Integer.parseInt(arrayString.get(j));
+//            } catch (Exception ex) {
+//                tempSelectedRotorsID=null;
+//                throw new RuntimeException("The number " +arrayString.get(j)+ " you entered isn't integer.");
+//            }
+//            if (rotorNum > enigmaMachine.getNumberOfRotors() || rotorNum < 1)
+//                throw new RuntimeException("There is no such rotors with "+rotorNum+ " id.");
+//            if (tempSelectedRotorsID.contains(rotorNum))
+//                throw new RuntimeException("You select the same rotor twice.");
+//            tempSelectedRotorsID.add(rotorNum);
+//
+//        }
+//        //  return selectedRotorID.stream().mapToInt(Integer::intValue).toArray();
+////        enigmaMachine.setSelectedRotors(selectedRotors);
+
+    }
+
+
+    public List<Character> positionToList(String positions) {
+     return positions.toUpperCase().chars()
+                .mapToObj(e -> (char) e).collect(Collectors.toList());
+
+
+    }
+
+    public List<PlugboardPairDTO> plugboardPairDTOList(String pairs)  {
+        pairs=pairs.toUpperCase();
+       List<PlugboardPairDTO> tempPlugBoardPairs=new ArrayList<>();
+        if(pairs.length()%2!=0)
+            throw new RuntimeException("There is a character that has no pair.must be even number in input string.");
+
+
+        for(int i=0;i<pairs.length()-1;i+=2) {
+
+                tempPlugBoardPairs.add(new PlugboardPairDTO(pairs.charAt(i),pairs.charAt(i+1)));
+        }
+        return tempPlugBoardPairs;
+    }
+
+
 
     private void machineConfAutomatically()
     {
@@ -397,8 +456,6 @@ public class UserInterface {
                 System.out.println(e.getMessage()+"\nPlease try again...");
 
             }
-
-
 
     }
 }

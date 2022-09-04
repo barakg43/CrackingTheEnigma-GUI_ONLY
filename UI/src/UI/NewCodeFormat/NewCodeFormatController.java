@@ -48,9 +48,11 @@ public class NewCodeFormatController {
 
     @FXML
     public void initialize() {
+
         if (currCodeController != null) {
             currCodeController.setCurrCodeController(this);
         }
+
     }
 
     public void SetMachineConfController(MachineConfigurationController machineConfigurationController) {
@@ -59,10 +61,9 @@ public class NewCodeFormatController {
 
     public void SetCurrentCode(CodeFormatDTO currentCode,boolean isCurrentCode) {
 
+
         currCodeController.resetTextFlow();
-
         SelectedReflector.setText(currentCode.getReflectorID());
-
         RotorInfoDTO[] SelectedRotors=currentCode.getRotorInfo();
         ObservableList<rotorsAndPositions> rotorsAndPositions = FXCollections.observableArrayList();
         for (RotorInfoDTO rotor:SelectedRotors) {
@@ -93,7 +94,8 @@ public class NewCodeFormatController {
            // CurrentCodePane.setLayoutY(PlugBoardPairsLabel.getLayoutY()+30);
         }
 
-        currCodeController.setSelectedCode(currentCode.toString());
+
+        currCodeController.setSelectedCode(currentCode);
 
         if(isCurrentCode)
             CurrentCodeLabel.setText("Current Code");
@@ -105,7 +107,8 @@ public class NewCodeFormatController {
     {
         SelectedReflector.setText("");
         RotorsAndPositionsTable.getItems().clear();
-        PairsListView.getItems().clear();
+        PairsListView.getItems().clear();S
         currCodeController.resetTextFlow();
+
     }
 }

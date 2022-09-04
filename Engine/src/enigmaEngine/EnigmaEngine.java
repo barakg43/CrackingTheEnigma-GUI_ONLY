@@ -10,6 +10,7 @@ import jaxb.CTERotor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,10 +31,10 @@ public class EnigmaEngine implements Engine , Serializable {
     private char[] selectedPositions;
     private Rotor[] selectedRotors;
     private int cipheredInputsAmount;
-    private CodeFormatDTO initialCodeFormat;
+    private CodeFormat initialCodeFormat;
     private  char[] tempSelectedInitPositions;
     private  int tempSelectedReflectorID;
-    private  List<Integer> tempSelectedRotorsID;
+    private List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
     private long sumProcessingTime=0;
     @Override
@@ -77,7 +78,6 @@ public class EnigmaEngine implements Engine , Serializable {
     public void loadXMLFile(String filePath) {
         filePath=filePath.replaceAll("\"","");//for case user enter with " "
 
-        File file = new File(filePath);
 
         try {
             InputStream inputStream = new FileInputStream(filePath);
@@ -148,8 +148,7 @@ public class EnigmaEngine implements Engine , Serializable {
             output.append(processDataInput(dataInput.charAt(i)));
         }
         //System.out.println("output:" + output);
-
-
+        addOutputStringToStatics(dataInput,output.toString());
         return output.toString();
     }
 
@@ -167,11 +166,11 @@ public class EnigmaEngine implements Engine , Serializable {
 
     @Override
     public void addOutputStringToStatics(String input,String output) {
-        statisticsData.addCipheredDataToStats(getCodeFormat(true),input, output, sumProcessingTime);
+        statisticsData.addCipheredDataToStats(initialCodeFormat,input, output, sumProcessingTime);
         cipheredInputsAmount++;
     }
 
-    private CodeFormatDTO createCodeFormat(boolean isCalcDistanceFromInitWindow)
+    private CodeFormat createCodeFormat(boolean isCalcDistanceFromInitWindow)
     {
         int rotorID;
         int distanceToWindow;
@@ -184,7 +183,7 @@ public class EnigmaEngine implements Engine , Serializable {
             rotorInfoArray[i]=new RotorInfoDTO(rotorID,distanceToWindow,initPositionLetter);
 
         }
-        return new CodeFormatDTO(rotorInfoArray,selectedReflector.getReflectorIdName(),plugBoardPairs);
+        return new CodeFormat(rotorInfoArray,selectedReflector.getReflectorIdName(),plugBoardPairs);
 
 
     }
@@ -245,15 +244,26 @@ public class EnigmaEngine implements Engine , Serializable {
         //withPlugBoardPairs=true;
         List<Character> alreadyExistLetter=new ArrayList<>();
         Set<Character> letterSet=new HashSet<>(plugBoardPairs.size());
-        for(int i=0;i<plugBoardPairs.size();i++) {
-            if(letterSet.contains(plugBoardPairs.get(i).getFirstLetter()) )
-                alreadyExistLetter.add(plugBoardPairs.get(i).getFirstLetter());
-            if(letterSet.contains(plugBoardPairs.get(i).getSecondLetter()))
-                alreadyExistLetter.add(plugBoardPairs.get(i).getSecondLetter());
-            else
-            {
-                letterSet.add(plugBoardPairs.get(i).getFirstLetter());
-                letterSet.add(plugBoardPairs.get(i).getSecondLetter());
+
+ //       for(int i=0;i<plugBoardPairs.size();i++) {
+  //          if(letterSet.contains(plugBoardPairs.get(i).getFirstLetter()) )
+  //              alreadyExistLetter.add(plugBoardPairs.get(i).getFirstLetter());
+  //          if(letterSet.contains(plugBoardPairs.get(i).getSecondLetter()))
+   //             alreadyExistLetter.add(plugBoardPairs.get(i).getSecondLetter());
+   //         else
+   //         {
+   //             letterSet.add(plugBoardPairs.get(i).getFirstLetter());
+  //              letterSet.add(plugBoardPairs.get(i).getSecondLetter());
+
+        for (PlugboardPairDTO plugBoardPair : plugBoardPairs) {
+            if (letterSet.contains(plugBoardPair.getFirstLetter()))
+                alreadyExistLetter.add(plugBoardPair.getFirstLetter());
+            if (letterSet.contains(plugBoardPair.getSecondLetter()))
+                alreadyExistLetter.add(plugBoardPair.getSecondLetter());
+            else {
+                letterSet.add(plugBoardPair.getFirstLetter());
+                letterSet.add(plugBoardPair.getSecondLetter());
+
             }
         }
         if(alreadyExistLetter.size()!=0)
@@ -278,6 +288,7 @@ public class EnigmaEngine implements Engine , Serializable {
 //        tempPlugBoardPairs.addAll(plugBoardPairs);
 //        setMachineConfigurationByUser();
 //    }
+
     public void setMachineConfigurationByUser()
     {
         resetSelected();
@@ -338,11 +349,11 @@ public class EnigmaEngine implements Engine , Serializable {
         setRandomPositions();
         setRandomPlugboardPairs();
         setInitialCode();
-
     }
 
     private void setInitialCode() {
         initialCodeFormat = createCodeFormat(true);
+        statisticsData.addNewCodeToListIfAbsent(initialCodeFormat);
     }
 
     @Override
@@ -427,15 +438,6 @@ public class EnigmaEngine implements Engine , Serializable {
             return alphabet.charAt(ThreadLocalRandom.current().nextInt(alphabet.length()));
         }
 
-
-        private Rotor findRotorByIdInSelectedRotors ( int rotorNum)
-        {
-            for (Rotor rotor : selectedRotors) {
-                if (rotor != null && rotor.getRotorID() == rotorNum)
-                    return rotor;
-            }
-            return null;
-        }
 
 
 
