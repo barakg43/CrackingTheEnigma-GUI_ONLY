@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<HBox fx:id="hboxCodeFormat" alignment="CENTER" fillHeight="false" stylesheets="@simpleCodeCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController">
+   <children>
+      <GridPane id="Rotors-text" alignment="CENTER" minWidth="65.0" prefHeight="60.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Rotors-text" text="&lt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+                  <TextFlow fx:id="rotorIDsList" textAlignment="CENTER" />
+                  <Text id="prefixRotorsFormat" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Rotors-text" text="&gt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
+            <Label alignment="CENTER" contentDisplay="CENTER" minWidth="65.0" prefHeight="20.0" text="Rotor IDs" textAlignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <GridPane id="Positions-text" alignment="CENTER" minWidth="115.0" prefHeight="60.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="30.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Positions-text" text="&lt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+                  <TextFlow fx:id="positionDistance" />
+                  <Text id="prefixRotorsFormat" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Positions-text" text="&gt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
+            <Label alignment="CENTER" contentDisplay="CENTER" minWidth="115.0" prefHeight="20.0" prefWidth="115.0" text="Position(Distance)" textAlignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <GridPane id="Reflector-text" alignment="CENTER" minWidth="85.0" prefHeight="60.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Reflector-text" text="&lt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="reflectorIDtext" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Reflector-text">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+                  <Text id="prefixRotorsFormat" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Reflector-text" text="&gt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
+            <Label alignment="CENTER" contentDisplay="CENTER" minWidth="75.0" prefHeight="20.0" text="Reflector ID" textAlignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <GridPane id="PlugBoardPairs-text" fx:id="plugboardGridComp" alignment="CENTER" minWidth="115.0" prefHeight="60.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="PlugBoardPairs-text" text="&lt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+                  <TextFlow fx:id="plugboardPairsList">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     </children></TextFlow>
+                  <Text id="prefixRotorsFormat" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="PlugBoardPairs-text" text="&gt;" wrappingWidth="100.26123046875">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
+            <Label alignment="CENTER" cache="true" contentDisplay="CENTER" minWidth="115.0" prefHeight="20.0" text="Plugboard Pairs" textAlignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+   </children>
+</HBox>
+
