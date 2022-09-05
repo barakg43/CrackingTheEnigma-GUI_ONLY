@@ -31,7 +31,7 @@ public class CodeCalculatorFactory {
         return getNextCodeIndexOffset(currentCode, 1);
     }
 
-    public CodeFormatDTO getNextCodeIndexOffset(CodeFormatDTO initialCode,int offset)
+    public CodeFormatDTO getNextCodeIndexOffset(CodeFormatDTO initialCode,int offset)//TODO:fix the calculation,for edge cae
     {
         RotorInfoDTO[] rotorInfoDTOS=initialCode.getRotorInfo();
         int leftestRotorIndex = offset /letterSize;
