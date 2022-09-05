@@ -24,15 +24,12 @@ public class MachineDataDTO implements Serializable {
     }
 
 
-    public MachineDataDTO(int numOfRotorsInUse, int[] rotorsIdArray, List<String> reflectorList, String alphabet, Set<String> dictionaryList,
-                          List<Character> excludeChars, int agents) {
+    public MachineDataDTO(int numOfRotorsInUse, int[] rotorsIdArray, List<String> reflectorList, String alphabet) {
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
         this.reflectorList=reflectorList;
         this.alphabet=new String(alphabet);
-        this.dictionaryList=dictionaryList;
-        this.excludeChars=excludeChars;
-        this.numberOfAgents=agents;
+
 
     }
 

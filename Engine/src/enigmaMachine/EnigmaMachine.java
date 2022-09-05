@@ -4,6 +4,10 @@ import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Plugboard;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
+import jaxb.CTEPositioning;
+import jaxb.CTEReflect;
+import jaxb.CTEReflector;
+import jaxb.CTERotor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,7 +100,7 @@ public class EnigmaMachine implements Serializable {
         }
     }
 
-    private void setRotorTable(List<CTEPositioning> ctePos,Rotor rotor) {
+    private void setRotorTable(List<CTEPositioning> ctePos, Rotor rotor) {
         for(CTEPositioning pos:ctePos)
                 rotor.addMapLetterToRotor(pos.getLeft().charAt(0), pos.getRight().charAt(0));
 
