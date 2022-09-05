@@ -1,10 +1,11 @@
 package UI.application.encryptTab.encryptComponent;
 
-
+import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
-import UI.application.encryptTab.EncryptTabController;
-import enigmaEngine.Engine;
+import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
+import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
+import enigmaEngine.Encryptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,7 +14,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 public class EncryptComponentController {
-    @FXML public Label alphabetString;
     @FXML
     private AutomaticEncryptController automaticComponentController;
     @FXML
@@ -28,23 +28,20 @@ public class EncryptComponentController {
     private RadioButton manualToggle;
     @FXML
     private Label outputString;
-    @FXML
-    private Label inputString;
-    private Engine encryptor;
+    private Encryptor encryptor;
     private ToggleGroup toggleGroupSelector;
     private EncryptTabController parentComponentTab;
 
     public void resetCodeToInitialState(ActionEvent actionEvent) {
         encryptor.resetCodePosition();
-        clearAllData();
+        automaticComponentController.clearTextFieldInput(actionEvent);
     }
 
     public void setParentComponentTab(EncryptTabController parentComponentTab) {
         this.parentComponentTab = parentComponentTab;
     }
 
-    public void setEncryptor(Engine encryptor) {
-        alphabetString.setText(encryptor.getMachineData().getAlphabetString());
+    public void setEncryptor(Encryptor encryptor) {
         this.encryptor = encryptor;
         automaticComponentController.setEncryptor(encryptor);
         manualComponentController.setEncryptor(encryptor);
@@ -53,20 +50,6 @@ public class EncryptComponentController {
     public void doneProcessData()
     {
         parentComponentTab.doneProcessData();
-
-    }
-    public void clearAllData()
-    {
-        automaticComponentController.clearTextFieldInput(new ActionEvent());
-        manualComponentController.clearTextField();
-        clearInputOutputLabel();
-
-    }
-    @FXML
-    public void clearInputOutputLabel(){
-
-        outputString.setText("");
-        inputString.setText("");
     }
     @FXML
     private void initialize() {
@@ -81,12 +64,8 @@ public class EncryptComponentController {
         manualLayout.disableProperty().bind(manualToggle.selectedProperty().not());
         manualLayout.visibleProperty().bind(manualToggle.selectedProperty());
         //link output label to model in controllers
-        automaticComponentController.bindInputOutputPropertyFromParent(inputString.textProperty(),outputString.textProperty());
-        manualComponentController.bindInputOutputPropertyFromParent(inputString.textProperty(),outputString.textProperty());
-        //clear output and input when switching between automatic and manual
-        automaticToggle.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            clearInputOutputLabel();
-        });
+        automaticComponentController.bindOutputPropertyFromParent(outputString.textProperty());
+        manualComponentController.bindOutputPropertyFromParent(outputString.textProperty());
 
         //link child controller to parent
         automaticComponentController.setEncryptComponentController(this);

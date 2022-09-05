@@ -4,10 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
 <BorderPane fx:id="mainPaneTab" prefHeight="611.0" prefWidth="1232.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.encryptTab.EncryptTabController">
    <top>
-      <ScrollPane minHeight="70.0" minWidth="600.0" prefHeight="93.0" prefWidth="1152.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="currentCodeScrollPane" disable="true" minHeight="70.0" minWidth="600.0" prefHeight="93.0" prefWidth="1152.0" BorderPane.alignment="CENTER">
          <content>
             <HBox>
                <children>
@@ -30,14 +34,14 @@
       </FlowPane>
    </bottom>
    <center>
-      <SplitPane dividerPositions="0.5" prefHeight="423.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="encryptSplitPane" disable="true" dividerPositions="0.5" prefHeight="423.0" BorderPane.alignment="CENTER">
         <items>
             <ScrollPane maxWidth="-Infinity" minWidth="500.0" prefWidth="620.0">
                <content>
                   <fx:include fx:id="encryptComponent" source="encryptComponent/encryptComponent.fxml" />
                </content>
             </ScrollPane>
-            <fx:include fx:id="statisticsComponent" maxWidth="1.7976931348623157E308" minWidth="450.0" source="statisticsComponent/statisticsCodeComponent.fxml" />
+            <fx:include fx:id="statisticsComponent" source="statisticsComponent/statisticsCodeComponent.fxml" />
         </items>
       </SplitPane>
    </center>

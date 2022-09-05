@@ -67,7 +67,7 @@ public class SimpleCodeController {
 
 
        //<starting letter leftest,...,starting letter rightest> = <A(2)O(5)!(20)>
-       for(int i=rotorInfo.length-1;i>=0;i--) {
+       for(int i=rotorInfo.length-1;i>0;i--) {
            temp=new Text(
                    String.format(
                            "%c(%d)",rotorInfo[i].getStatingLetter(),rotorInfo[i].getDistanceToWindow()
@@ -75,6 +75,12 @@ public class SimpleCodeController {
            temp.getStyleClass().add("Positions-text");
            positionDistance.getChildren().add(temp);
        }
+       temp=new Text(
+               String.format(
+                       "%c(%d)",rotorInfo[0].getStatingLetter(),rotorInfo[0].getDistanceToWindow()
+               ));
+       temp.getStyleClass().add("Positions-text");
+       positionDistance.getChildren().add(temp);
        //<reflector id> = <III>
        reflectorIDtext.setText(currCode.getReflectorID());
        plugboardGridComp.setVisible(!plugboardPairDTOList.isEmpty());

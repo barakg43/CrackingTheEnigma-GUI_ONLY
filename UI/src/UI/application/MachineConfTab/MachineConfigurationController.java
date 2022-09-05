@@ -1,10 +1,9 @@
 package UI.application.MachineConfTab;
 
 
-import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
-import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import UI.application.AllMachineController;
-
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
@@ -16,13 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MachineConfigurationController {
 
@@ -61,7 +56,6 @@ public class MachineConfigurationController {
     @FXML  public Label selectedMachineCodeLabel;
     @FXML  public Label currentMachineLabel;
 
-
     private Engine mEngine;
     private MachineDataDTO machineData;
     private AllMachineController mainAppController;
@@ -81,14 +75,18 @@ public class MachineConfigurationController {
             SelectedCodeComponentController.SetMachineConfController(this);
             SelectedMachineCodeController.SetMachineConfController(this);
             CurrentMachineCodeController.SetMachineConfController(this);
+
         }
 
         SetCodeConfButton.disableProperty().bind(isCodeSelectedByUser.not());
-        selectedCodeConfigScrollPane.visibleProperty().bind(showCodeDetails);
-        currentCodeScrollPane.visibleProperty().bind(showCodeDetails);
+        selectedCodeConfigScrollPane.disableProperty().bind(showCodeDetails.not());
+        selectedCodeConfigScrollPane.visibleProperty().bind(isSelected);
+        currentCodeScrollPane.disableProperty().bind(showCodeDetails.not());
+        currentCodeScrollPane.visibleProperty().bind(isSelected);
         selectedMachineCodeLabel.visibleProperty().bind(showCodeDetails);
         currentMachineLabel.visibleProperty().bind(showCodeDetails);
-
+        selectedCodeConfiguration.disableProperty().bind(showCodeDetails.not());
+        CurrentCodeConfigurationPane.disableProperty().bind(isSelected.not());
 
     }
     public MachineConfigurationController()
@@ -99,6 +97,10 @@ public class MachineConfigurationController {
         showCodeDetails=new SimpleBooleanProperty(false);
     }
 
+    public SimpleBooleanProperty getIsSelected()
+    {
+        return isSelected;
+    }
     public Engine getmEngine() {
         return mEngine;
     }
@@ -109,7 +111,8 @@ public class MachineConfigurationController {
     }
 
     public void setMachineDetails() {
-
+        isSelected.set(false);
+        mainAppController.resetCurrentCode();
         showCodeDetails.set(false);
         CurrentMachineCodeController.clearCurrentCodeView();
         SelectedMachineCodeController.setCurrCodeController(SelectedCodeComponentController);
@@ -119,7 +122,7 @@ public class MachineConfigurationController {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse() + "/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
             CipheredInputs.setText(String.valueOf(mEngine.getCipheredInputsAmount()));
-            MachineDetails.setVisible(true);
+            MachineDetails.setDisable(false);
         }
         if (mEngine.isCodeConfigurationIsSet()) {
             CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
@@ -134,9 +137,6 @@ public class MachineConfigurationController {
 
     private void setVisibleCodeFields(boolean toVisible) {
         SelectedMachineCode.setVisible(toVisible);
-       // currentCodeScrollPane.setVisible(true);
-        //selectedCodeConfigScrollPane.setVisible(true);
-
     }
 
     public void setInitializeConfiguration() {
@@ -146,7 +146,7 @@ public class MachineConfigurationController {
         currentConfigurationLabel.setVisible(false);
         configFirstLabel.setVisible(true);
         MachineCodePane.setVisible(true);
-        selectedCodeConfiguration.setVisible(true);
+        showCodeDetails.set(true);
         selectedCodeScrollPane.setVisible(false);
         currentConfigurationLabel.setVisible(false);
         int numberOfRotorsInUse = machineData.getNumberOfRotorsInUse();
@@ -280,9 +280,9 @@ public class MachineConfigurationController {
         CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
         CurrentMachineCodeController.setSelectedCode(currentCode);
         setVisibleCodeFields(true);
-        CurrentCodeConfigurationPane.setVisible(true);
+       // CurrentCodeConfigurationPane.setVisible(true);
         CurrentCodeComponentController.SetCurrentCode(currentCode,true);
-
+        mainAppController.setCurrentCode(currentCode);
     }
 
     private ChoiceBox<Character> SetPairsChoiceBox(String alphabet) {
@@ -305,6 +305,10 @@ public class MachineConfigurationController {
         firstInputVBox.setSpacing(10);
         secondInputVBox.setSpacing(10);
         numberOfPairs++;
+        if(numberOfPairs==alphabet.length()/2)
+            AddMorePairsButton.setDisable(true);
+        else
+            AddMorePairsButton.setDisable(false);
     }
     public void WithPlugBoardCheckedAction(javafx.event.ActionEvent actionEvent) {
 
@@ -360,11 +364,11 @@ public class MachineConfigurationController {
         firstInputs.getChildren().clear();;
         secondInputs.getChildren().clear();
 
-        CurrentCodeComponentController.resetFields();
+        //CurrentCodeComponentController.resetFields();
         SelectedCodeComponentController.resetFields();
         CodeConfTabPane.getSelectionModel().select(0);
         setInitializeConfiguration();
-        isSelected.set(false);
+       // isSelected.set(false);
         isCodeSelectedByUser.set(false);
     }
 
@@ -394,6 +398,10 @@ public class MachineConfigurationController {
     }
 
     public void removePlugBoardPairOnAction(ActionEvent actionEvent) {
+        if(numberOfPairs==0)
+            removePlugBoardPairButton.setDisable(true);
+        else
+            removePlugBoardPairButton.setDisable(false);
         firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
         secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
         numberOfPairs--;

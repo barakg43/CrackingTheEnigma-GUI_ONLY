@@ -1,5 +1,6 @@
 package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import javafx.fxml.FXMLLoader;

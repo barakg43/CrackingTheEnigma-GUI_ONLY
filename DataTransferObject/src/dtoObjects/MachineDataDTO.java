@@ -1,8 +1,7 @@
 package dtoObjects;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MachineDataDTO implements Serializable {
 
@@ -10,22 +9,32 @@ public class MachineDataDTO implements Serializable {
     private final int[] rotorsId;
     private String alphabet;
     private final List<String> reflectorList;
+    private Set<String> dictionaryList;
+    private List<Character> excludeChars;
+
+    private int numberOfAgents;
+
 
     public MachineDataDTO() {
         numberOfRotorsInUse = 0;
         rotorsId = null;
         reflectorList = null;
+        dictionaryList=new HashSet<>();
+        excludeChars=new ArrayList<>();
     }
 
 
-    public MachineDataDTO( int numOfRotorsInUse, int[] rotorsIdArray,List<String> reflectorList,String alphabet) {
+    public MachineDataDTO(int numOfRotorsInUse, int[] rotorsIdArray, List<String> reflectorList, String alphabet, Set<String> dictionaryList,
+                          List<Character> excludeChars, int agents) {
         this.numberOfRotorsInUse =numOfRotorsInUse;
         rotorsId =rotorsIdArray;
         this.reflectorList=reflectorList;
         this.alphabet=new String(alphabet);
+        this.dictionaryList=dictionaryList;
+        this.excludeChars=excludeChars;
+        this.numberOfAgents=agents;
+
     }
-
-
 
     public int getNumberOfReflectors() {
         assert reflectorList != null;
