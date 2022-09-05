@@ -19,6 +19,7 @@ public class SingleCodeStatisticsViewController {
     private TableStatisticRecordController tableRecordLayoutController;
     public void createCodeStatisticsView(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList)
     {
+        System.out.println(Thread.currentThread().getName()+ ": createCodeStatisticsView");
         codeLayoutController.setSelectedCode(codeFormatDTO);
         tableRecordLayoutController.addRecordsToStatisticTable(statisticRecordDTOList);
 

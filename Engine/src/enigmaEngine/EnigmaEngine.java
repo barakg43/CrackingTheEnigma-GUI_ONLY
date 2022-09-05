@@ -4,8 +4,6 @@ import dtoObjects.*;
 import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import jaxb.CTEEnigma;
-import jaxb.CTERotor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

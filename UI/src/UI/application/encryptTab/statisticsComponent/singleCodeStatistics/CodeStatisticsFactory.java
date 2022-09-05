@@ -20,13 +20,13 @@ public class CodeStatisticsFactory {
 
     }
 
-    public synchronized GridPane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {
-
+    public GridPane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {
+        System.out.println(Thread.currentThread().getName()+ ": loading FXML");
         GridPane loadedStatisticsNode;
         FXMLLoader fxmlLoader  = new FXMLLoader();
-        fxmlLoader.setLocation(url);
         try {
-             loadedStatisticsNode = fxmlLoader.load(url.openStream());
+        fxmlLoader.setLocation(url);
+        loadedStatisticsNode = fxmlLoader.load(url.openStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -49,7 +49,7 @@ public class SimpleCodeController {
    public void setSelectedCode(CodeFormatDTO currCode)
    {
        hboxCodeFormat.setVisible(true);
-
+       System.out.println(Thread.currentThread().getName()+ ": setSelectedCode");
       RotorInfoDTO[] rotorInfo=currCode.getRotorInfo();
        List<PlugboardPairDTO> plugboardPairDTOList = currCode.getPlugboardPairDTOList();
        //example:<45,27,94><A(2)O(5)!(20)><III><A|Z,D|E>
