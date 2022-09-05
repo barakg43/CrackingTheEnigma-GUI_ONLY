@@ -1,7 +1,6 @@
-package UI.applicationGUI.FIlePathComponent;
+package UI.application.FIlePathComponent;
 
-
-import UI.applicationGUI.AllMachineController;
+import UI.application.AllMachineController;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,11 +25,13 @@ public class FilePathController {
         mainAppController=MainController;
     }
     public FilePathController(){
-        selectedFileProperty = new SimpleStringProperty();
-        isFileSelected= new SimpleBooleanProperty();
+     //   selectedFileProperty = new SimpleStringProperty();
+       // isFileSelected= new SimpleBooleanProperty();
     }
     @FXML
     private void initialize(){
+        selectedFileProperty = new SimpleStringProperty();
+        isFileSelected= new SimpleBooleanProperty();
         SelectedFilePath.textProperty().bind(selectedFileProperty);
     }
     @FXML
@@ -50,12 +51,18 @@ public class FilePathController {
             try {
                 mEngine.loadXMLFile(absolutePath);
                 mEngine.resetAllData();
+                System.out.println("before set");
                 selectedFileProperty.set(absolutePath);
+                System.out.println("after set1");
                 mainAppController.setmEngine(mEngine);
+                System.out.println("after set");
                 mainAppController.setMachineDetails();
+                System.out.println("after set2");
                 mainAppController.setConfPanel();
+                System.out.println("after set3");
                 //mainAppController.setInitializeCodeConf();
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
+                System.out.println("after set4");
                 isFileSelected.set(true);
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);

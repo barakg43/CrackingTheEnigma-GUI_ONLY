@@ -479,7 +479,8 @@ public class EnigmaEngine implements Engine , Serializable {
     @Override
     public char processDataInput(char charInput) {
         long startTime=System.nanoTime();
-
+        charInput= Character.toUpperCase(charInput);
+       // System.out.println("char is:"+charInput);
 
         boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
         //the row input after moving in plug board

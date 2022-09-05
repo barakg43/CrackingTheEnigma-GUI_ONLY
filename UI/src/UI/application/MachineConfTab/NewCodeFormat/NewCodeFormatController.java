@@ -1,14 +1,17 @@
 package UI.application.MachineConfTab.NewCodeFormat;
 
 import UI.application.MachineConfTab.MachineConfigurationController;
-import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;

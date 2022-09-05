@@ -1,8 +1,8 @@
-package UI.applicationGUI.encryptTab;
+package UI.application.encryptTab;
 
-import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
-import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
-import UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController;
+import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
@@ -55,6 +55,12 @@ public class EncryptTabController {
     public void doneProcessData()
     {
         statisticsComponentController.updateCodeStatisticsView(enigmaEngine.getStatisticDataDTO());
+    }
+    public void clearAllData() {
+        encryptComponentController.clearAllData();
+        codeComponentController.clearCurrentCodeView();
+        statisticsComponentController.clearAllData();
+
     }
     @FXML
     private void initialize() {
