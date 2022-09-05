@@ -1,8 +1,10 @@
 package UI.TEST_GUI;
-import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
-import UI.applicationGUI.encryptTab.EncryptTabController;
-import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
-import UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController;
+
+import UI.application.encryptTab.EncryptTabController;
+import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
+
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static UI.applicationGUI.CommonResourcesPaths.*;
+import static UI.application.CommonResourcesPaths.SIMPLE_CODE_FORMAT;
 
 
 //video: 100189 - FXML Hello World [JAD, JavaFX] | Powered by SpeaCode

@@ -1,6 +1,6 @@
-package UI.applicationGUI.encryptTab.statisticsComponent;
+package UI.application.encryptTab.statisticsComponent;
 
-import UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import dtoObjects.StatisticsDataDTO;
@@ -43,10 +43,13 @@ public class StatisticsComponentController {
         mainContainer.prefHeightProperty().bind(heightProperty);
 
     }
+    public void clearAllData(){
+        statisticsCodeScrollPane.setContent(new VBox());
+
+    }
     public void updateCodeStatisticsView(Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory) {
         //run the task on new tread,may be heavy I/O loading file 'createNewCodeStatisticsNode'
-   //     threadExecutorService.execute(() -> {
-
+        statisticsNodeMangerService.execute(() -> {
             VBox vboxCodeStaticsNode=new VBox();
             vboxCodeStaticsNode.setPrefSize(VBox.USE_COMPUTED_SIZE,VBox.USE_COMPUTED_SIZE);
              vboxCodeStaticsNode.setMaxWidth(Double.MAX_VALUE);
@@ -57,26 +60,24 @@ public class StatisticsComponentController {
                 statisticsCodeScrollPane.widthProperty().
                         subtract(vboxCodeStaticsNode.widthProperty()).divide(2)
                     );
-
-            Pane statisticsCodeRecordsNode = null;
-            System.out.println(Thread.currentThread().getName()+ ": before load component");
+           // System.out.println(Thread.currentThread().getName()+ ": before load component");
             for (CodeFormatDTO code : statisticsDataHistory.keySet()) {
-                System.out.println("Current code:"+code);
-                if(statisticsDataHistory.get(code).isEmpty())
-                    System.out.println("List is Empty");
+//                System.out.println("Current code:"+code);
+
 //                System.out.println("before factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
-                statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
+                Pane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
                 vboxCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
 //                System.out.println("after factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
+
             }
-            System.out.println(Thread.currentThread().getName()+ ": after create component");
+           // System.out.println(Thread.currentThread().getName()+ ": after create component");
             Platform.runLater(//update UI without blocking JAT
                     () -> {
-                        System.out.println(Thread.currentThread().getName()+ ": update component");
+                      //  System.out.println(Thread.currentThread().getName()+ ": update component");
                         statisticsCodeScrollPane.setContent(vboxCodeStaticsNode);
 
                     });
-//        });
+        });
        }
     public void updateCodeStatisticsView(StatisticsDataDTO statisticsDataDTO) {
         updateCodeStatisticsView(statisticsDataDTO.getStatisticsData());

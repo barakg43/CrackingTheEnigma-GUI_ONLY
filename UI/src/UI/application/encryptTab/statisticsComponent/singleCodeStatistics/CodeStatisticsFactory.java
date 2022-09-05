@@ -1,4 +1,4 @@
-package UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics;
+package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static UI.applicationGUI.CommonResourcesPaths.SINGLE_CODE_STATISTICS_RESOURCE;
+import static UI.application.CommonResourcesPaths.SINGLE_CODE_STATISTICS_RESOURCE;
 
 public class CodeStatisticsFactory {
 
@@ -17,6 +17,7 @@ public class CodeStatisticsFactory {
     private URL url;
     public CodeStatisticsFactory() {
         url=getClass().getClassLoader().getResource(SINGLE_CODE_STATISTICS_RESOURCE);
+
     }
 
     public synchronized Pane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {

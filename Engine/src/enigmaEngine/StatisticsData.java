@@ -38,7 +38,6 @@ public class StatisticsData extends StatisticsDataDTO implements Serializable
                 .orElse(null);
         if (prevCodeFormatDTO != null)//convert the key from map back to inherent object to access function of inherent
         {
-            System.out.println("convert key " + prevCodeFormatDTO + " back to CodeFormat");
             prevCodeConfigurationInMachine = ((CodeFormat) prevCodeFormatDTO);
             prevCodeConfigurationInMachine.setIsCurrentCode(true);
 

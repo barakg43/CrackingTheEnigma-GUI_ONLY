@@ -3,7 +3,6 @@ package UI.consoleUIold;
 import dtoObjects.*;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import enigmaMachine.parts.Reflector;
 
 import java.util.*;
 import java.util.stream.Collectors;

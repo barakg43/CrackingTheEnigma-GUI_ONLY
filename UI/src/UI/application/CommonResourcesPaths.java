@@ -1,4 +1,4 @@
-package UI.applicationGUI;
+package UI.application;
 
 public class CommonResourcesPaths {
 
