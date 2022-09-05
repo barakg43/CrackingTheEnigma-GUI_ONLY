@@ -1,9 +1,12 @@
 package enigmaEngine;
 
+import decryptionManager.DecryptionManager;
+import decryptionManager.components.Dictionary;
 import dtoObjects.*;
 import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
+import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -34,7 +37,9 @@ public class EnigmaEngine implements Engine , Serializable {
     private  int tempSelectedReflectorID;
     private List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
+    private DecryptionManager decryptionManager;
     private long sumProcessingTime=0;
+
     @Override
     public boolean isMachineLoaded()
     {
@@ -46,6 +51,7 @@ public class EnigmaEngine implements Engine , Serializable {
         statisticsData=new StatisticsData();
         cipheredInputsAmount =0;
         initialCodeFormat=null;
+
     }
 
     public void resetAllData()
@@ -90,6 +96,7 @@ public class EnigmaEngine implements Engine , Serializable {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+
     }
 
     @Override
@@ -455,19 +462,25 @@ public class EnigmaEngine implements Engine , Serializable {
             tempEnigmaMachine.setRotorsInUse(eng.getCTEMachine().getRotorsCount());
             tempEnigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
             tempEnigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
-            enigmaMachine= tempEnigmaMachine;
+
             initialCodeFormat=null;
 
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
             int numberOfAgents=eng.getCTEDecipher().getAgents();
             List<Character> excludeChars=copyExcludeChars(eng.getCTEDecipher().getCTEDictionary().getExcludeChars());
-            Set<String> dictionary=getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars);
+
+            if(numberOfAgents<1||numberOfAgents>50)
+                throw  new RuntimeException("Invalid number of agents "+numberOfAgents+" number need to between 2 to 50");
+            decryptionManager=new DecryptionManager(numberOfAgents);
+
+            decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
 
             machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
                                              enigmaMachine.getReflectorIDList(),
-                                             enigmaMachine.getAlphabet(),dictionary,excludeChars,numberOfAgents);
-
+                                             enigmaMachine.getAlphabet());
+            enigmaMachine= tempEnigmaMachine;
+            decryptionManager.setEngine(this);
         }
 
     private List<Character> copyExcludeChars(String excludeChars) {
@@ -478,37 +491,7 @@ public class EnigmaEngine implements Engine , Serializable {
         return excludeCharsList;
     }
 
-    private Set<String> getValidDictionaryWords(String words,List<Character> excludeCharsList) {
-        Set<String> wordsSet = new HashSet<>();
-        words = words.toUpperCase();
-        String alphabet=enigmaMachine.getAlphabet();
-        List<String> wordsArray = Arrays.asList((words.trim().split(" ")));
-        wordsSet.addAll(wordsArray);
 
-      //  System.out.println("number of words before: " + wordsSet.size());
-
-        for (String word:wordsArray) {
-           // word.toUpperCase();
-            for (Character character:excludeCharsList) {
-                if(word.contains(character.toString()))
-                {
-                    wordsSet.remove(word);
-                    word = word.replace(character.toString(),"");
-                    wordsSet.add(word);
-                }
-            }
-            for (int i = 0; i < word.length(); i++) {
-              Character character=word.charAt(i);
-              if(!alphabet.contains(character.toString()))
-              {
-                  wordsSet.remove(word);
-              }
-            }
-          //  System.out.println(word);
-        }
-       // System.out.println("number of words after" + wordsSet.size());
-        return wordsSet;
-    }
 
     private int[] copyRotorsID (List < CTERotor > rotorsArray)
         {
