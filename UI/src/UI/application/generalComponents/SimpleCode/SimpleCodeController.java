@@ -1,4 +1,4 @@
-package UI.applicationGUI.generalComponents.codeFormat.SimpleCode;
+package UI.application.generalComponents.SimpleCode;
 
 
 import UI.application.MachineConfTab.MachineConfigurationController;

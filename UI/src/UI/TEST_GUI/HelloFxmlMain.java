@@ -1,9 +1,9 @@
 package UI.TEST_GUI;
 
-import UI.applicationGUI.generalComponents.codeFormat.SimpleCode.SimpleCodeController;
-import UI.applicationGUI.encryptTab.EncryptTabController;
-import UI.applicationGUI.encryptTab.encryptComponent.EncryptComponentController;
-import UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController;
+import UI.application.encryptTab.EncryptTabController;
+import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static UI.applicationGUI.CommonResourcesPaths.*;
+import static UI.application.CommonResourcesPaths.SIMPLE_CODE_FORMAT;
 
 
 //video: 100189 - FXML Hello World [JAD, JavaFX] | Powered by SpeaCode
@@ -31,8 +31,8 @@ public class HelloFxmlMain extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-         start1(primaryStage);
-//         start2(primaryStage);
+//         start1(primaryStage);
+         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
 
@@ -186,10 +186,10 @@ public class HelloFxmlMain extends Application{
         CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"1",plugboardPairDTOList);
 
         List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
-        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//        statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+//        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//        statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
         statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
 
         plugboardPairDTOList=new ArrayList<>();

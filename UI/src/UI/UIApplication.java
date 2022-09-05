@@ -1,10 +1,7 @@
 package UI;
 
 
-
-import UI.applicationGUI.CommonResourcesPaths;
-
-
+import UI.application.CommonResourcesPaths;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

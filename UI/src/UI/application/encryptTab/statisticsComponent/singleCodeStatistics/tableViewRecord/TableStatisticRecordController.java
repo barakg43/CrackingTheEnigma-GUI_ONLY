@@ -1,7 +1,8 @@
-package UI.applicationGUI.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord;
+package UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord;
 
 import dtoObjects.StatisticRecordDTO;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
