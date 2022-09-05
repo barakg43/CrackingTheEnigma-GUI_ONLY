@@ -457,17 +457,62 @@ public class EnigmaEngine implements Engine , Serializable {
             tempEnigmaMachine.setRotorsInUse(eng.getCTEMachine().getRotorsCount());
             tempEnigmaMachine.setReflectors(eng.getCTEMachine().getCTEReflectors().getCTEReflector());
             tempEnigmaMachine.setRotors(eng.getCTEMachine().getCTERotors().getCTERotor());
-            int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
             enigmaMachine= tempEnigmaMachine;
             initialCodeFormat=null;
+
+            int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
+            int numberOfAgents=eng.getCTEDecipher().getAgents();
+            List<Character> excludeChars=copyExcludeChars(eng.getCTEDecipher().getCTEDictionary().getExcludeChars());
+            Set<String> dictionary=getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars);
+
             machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
                                              enigmaMachine.getReflectorIDList(),
-                                             enigmaMachine.getAlphabet());
+                                             enigmaMachine.getAlphabet(),dictionary,excludeChars,numberOfAgents);
 
         }
 
-        private int[] copyRotorsID (List < CTERotor > rotorsArray)
+    private List<Character> copyExcludeChars(String excludeChars) {
+        List<Character> excludeCharsList= new ArrayList<>();
+        for (int i = 0; i < excludeChars.length(); i++) {
+            excludeCharsList.add(excludeChars.charAt(i));
+        }
+        return excludeCharsList;
+    }
+
+    private Set<String> getValidDictionaryWords(String words,List<Character> excludeCharsList) {
+        Set<String> wordsSet = new HashSet<>();
+        words = words.toUpperCase();
+        String alphabet=enigmaMachine.getAlphabet();
+        List<String> wordsArray = Arrays.asList((words.trim().split(" ")));
+        wordsSet.addAll(wordsArray);
+
+      //  System.out.println("number of words before: " + wordsSet.size());
+
+        for (String word:wordsArray) {
+           // word.toUpperCase();
+            for (Character character:excludeCharsList) {
+                if(word.contains(character.toString()))
+                {
+                    wordsSet.remove(word);
+                    word = word.replace(character.toString(),"");
+                    wordsSet.add(word);
+                }
+            }
+            for (int i = 0; i < word.length(); i++) {
+              Character character=word.charAt(i);
+              if(!alphabet.contains(character.toString()))
+              {
+                  wordsSet.remove(word);
+              }
+            }
+          //  System.out.println(word);
+        }
+       // System.out.println("number of words after" + wordsSet.size());
+        return wordsSet;
+    }
+
+    private int[] copyRotorsID (List < CTERotor > rotorsArray)
         {
             int[] rotorsID = new int[rotorsArray.size()];
             for (int i = 0; i < rotorsArray.size(); i++) {
