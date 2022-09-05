@@ -7,11 +7,9 @@ import dtoObjects.StatisticsDataDTO;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.util.List;
 import java.util.Map;
@@ -44,38 +42,37 @@ public class StatisticsComponentController {
 
     }
     public void clearAllData(){
-        statisticsCodeScrollPane.setContent(new VBox());
+        statisticsCodeScrollPane.setContent(new FlowPane());
 
     }
     public void updateCodeStatisticsView(Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory) {
         //run the task on new tread,may be heavy I/O loading file 'createNewCodeStatisticsNode'
         statisticsNodeMangerService.execute(() -> {
-            VBox vboxCodeStaticsNode=new VBox();
-            vboxCodeStaticsNode.setPrefSize(VBox.USE_COMPUTED_SIZE,VBox.USE_COMPUTED_SIZE);
-             vboxCodeStaticsNode.setMaxWidth(Double.MAX_VALUE);
-             vboxCodeStaticsNode.setAlignment(Pos.CENTER);
-
+            FlowPane flowPaneCodeStaticsNode=new FlowPane();
+            flowPaneCodeStaticsNode.setPrefSize(FlowPane.USE_COMPUTED_SIZE,FlowPane.USE_COMPUTED_SIZE);
+            flowPaneCodeStaticsNode.setMaxWidth(Double.MAX_VALUE);
+            flowPaneCodeStaticsNode.setMaxHeight(Double.MAX_VALUE);
+//            flowPaneCodeStaticsNode.setAlignment(Pos.CENTER);
+            flowPaneCodeStaticsNode.prefWidthProperty().bind( statisticsCodeScrollPane.widthProperty());
+            flowPaneCodeStaticsNode.prefHeightProperty().bind( statisticsCodeScrollPane.heightProperty());
              //using this bind to center all statics code node+table
-        vboxCodeStaticsNode.translateXProperty().bind(
-                statisticsCodeScrollPane.widthProperty().
-                        subtract(vboxCodeStaticsNode.widthProperty()).divide(2)
-                    );
+//            flowPaneCodeStaticsNode.translateXProperty().bind(
+//                statisticsCodeScrollPane.widthProperty().
+//                        subtract(flowPaneCodeStaticsNode.widthProperty()).divide(2)
+//                    );
            // System.out.println(Thread.currentThread().getName()+ ": before load component");
             for (CodeFormatDTO code : statisticsDataHistory.keySet()) {
 //                System.out.println("Current code:"+code);
-
 //                System.out.println("before factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
-                Pane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
-                vboxCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
+                GridPane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
+                flowPaneCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
 //                System.out.println("after factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
-
             }
            // System.out.println(Thread.currentThread().getName()+ ": after create component");
             Platform.runLater(//update UI without blocking JAT
                     () -> {
                       //  System.out.println(Thread.currentThread().getName()+ ": update component");
-                        statisticsCodeScrollPane.setContent(vboxCodeStaticsNode);
-
+                        statisticsCodeScrollPane.setContent(flowPaneCodeStaticsNode);
                     });
         });
        }

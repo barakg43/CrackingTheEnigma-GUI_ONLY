@@ -3,7 +3,7 @@ package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,9 +20,9 @@ public class CodeStatisticsFactory {
 
     }
 
-    public synchronized Pane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {
+    public synchronized GridPane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {
 
-        Pane loadedStatisticsNode;
+        GridPane loadedStatisticsNode;
         FXMLLoader fxmlLoader  = new FXMLLoader();
         fxmlLoader.setLocation(url);
         try {
