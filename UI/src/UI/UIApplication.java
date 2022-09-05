@@ -1,6 +1,7 @@
 package UI;
 
 
+import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,8 @@ public class UIApplication extends Application {
             assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
             Scene scene = new Scene(root,1000,900);
+            AllMachineController mainController=fxmlLoader.getController();
+            mainController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
             primaryStage.show();
         }

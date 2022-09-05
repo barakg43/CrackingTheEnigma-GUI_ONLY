@@ -1,7 +1,7 @@
 package UI.application.MachineConfTab.NewCodeFormat;
 
-import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import UI.application.MachineConfTab.MachineConfigurationController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;

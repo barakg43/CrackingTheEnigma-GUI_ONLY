@@ -31,8 +31,8 @@ public class HelloFxmlMain extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-//         start1(primaryStage);
-         start2(primaryStage);
+         start1(primaryStage);
+//         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
 

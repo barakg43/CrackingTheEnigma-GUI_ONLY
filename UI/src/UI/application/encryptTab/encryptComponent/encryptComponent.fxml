@@ -84,12 +84,12 @@
                <children>
                   <Pane fx:id="automaticLayout" prefHeight="200.0" prefWidth="200.0" visible="false">
                      <children>
-                        <fx:include fx:id="automaticComponent" source="./automaticEncrypt/automaticEncrypt.fxml" />
+                        <fx:include fx:id="automaticComponent" source="automaticEncrypt/automaticEncrypt.fxml" />
                      </children>
                   </Pane>
                   <Pane fx:id="manualLayout" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <fx:include fx:id="manualComponent" source="./manualEncrypt/manualEncrypt.fxml" />
+                        <fx:include fx:id="manualComponent" source="manualEncrypt/manualEncrypt.fxml" />
                      </children>
                   </Pane>
                </children>

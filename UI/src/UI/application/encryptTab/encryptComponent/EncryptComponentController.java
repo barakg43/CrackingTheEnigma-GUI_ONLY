@@ -1,10 +1,9 @@
 package UI.application.encryptTab.encryptComponent;
 
 
-import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
-import enigmaEngine.Encryptor;
+import UI.application.encryptTab.EncryptTabController;
 import enigmaEngine.Engine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

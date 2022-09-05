@@ -2,10 +2,11 @@ package UI.application;
 
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
-
 import UI.application.encryptTab.EncryptTabController;
+
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -32,6 +33,8 @@ public class AllMachineController {
         mEngine=new EnigmaEngine();
     }
 
+    private ReadOnlyDoubleProperty sceneWidthProperty;
+    private ReadOnlyDoubleProperty sceneHeightProperty;
     public Engine getmEngine() {
         return mEngine;
     }
@@ -40,6 +43,12 @@ public class AllMachineController {
         encryptionTabComponentController.setEnigmaEngine(mEngine);
     }
 
+    public void setSceneWidthHeightProperties(ReadOnlyDoubleProperty widthProperty,ReadOnlyDoubleProperty heightProperty)
+    {
+        sceneHeightProperty=heightProperty;
+        sceneWidthProperty=widthProperty;
+        encryptionTabComponentController.bindComponentsWidthToScene( sceneWidthProperty,sceneHeightProperty);
+    }
     public Label getFirstLoadFileLabel()
     {
         return FirstLoadFileLabel;
@@ -50,6 +59,7 @@ public class AllMachineController {
      //   encryptionTab.setDisable(true);
        // machineConfTab.setDisable(true);
         //automaticEncryptionTab.setDisable(true);
+
         if(FilePathComponentController!=null && MachineConfComponentController!=null)
         {
             FilePathComponentController.setMainAppController(this);

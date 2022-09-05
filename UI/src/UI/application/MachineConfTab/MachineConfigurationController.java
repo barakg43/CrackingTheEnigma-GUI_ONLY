@@ -1,10 +1,10 @@
 package UI.application.MachineConfTab;
 
 
-import UI.application.AllMachineController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
-
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import UI.application.AllMachineController;
+
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
