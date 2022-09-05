@@ -279,7 +279,7 @@ public class EnigmaEngine implements Engine , Serializable {
 //        for(int i=0;i<plugBoardPairs.size();i+=2)
 //        {
 //            tempPlugBoardPairs.add(new PlugboardPairDTO(plugBoardPairs.get(i).getFirstLetter(),plugBoardPairs.get(i).getSecondLetter()));
-////            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));TODO:move to new func
+////            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));
 //
 //        }
 
