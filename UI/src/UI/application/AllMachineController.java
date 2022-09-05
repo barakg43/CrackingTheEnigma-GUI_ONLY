@@ -2,8 +2,10 @@ package UI.application;
 
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
+import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import UI.application.encryptTab.EncryptTabController;
 
+import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -47,7 +49,7 @@ public class AllMachineController {
     {
         sceneHeightProperty=heightProperty;
         sceneWidthProperty=widthProperty;
-        encryptionTabComponentController.bindComponentsWidthToScene( sceneWidthProperty,sceneHeightProperty);
+        encryptionTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
     }
     public Label getFirstLoadFileLabel()
     {
@@ -60,10 +62,11 @@ public class AllMachineController {
        // machineConfTab.setDisable(true);
         //automaticEncryptionTab.setDisable(true);
 
-        if(FilePathComponentController!=null && MachineConfComponentController!=null)
+        if(FilePathComponentController!=null && MachineConfComponentController!=null && encryptionTabComponentController!=null)
         {
             FilePathComponentController.setMainAppController(this);
             MachineConfComponentController.setMainAppController(this);
+            encryptionTabComponentController.setMainAppController(this);
         }
 
 
@@ -77,5 +80,18 @@ public class AllMachineController {
     }
     public void setInitializeCodeConf() {
         MachineConfComponentController.setInitializeConfiguration();
+    }
+
+    public void setEncrypteTab() {
+        encryptionTabComponentController.setEnigmaEngine(mEngine);
+        encryptionTabComponentController.bindTabDisable(MachineConfComponentController.getIsSelected());
+    }
+    public void setCurrentCode(CodeFormatDTO currentCode)
+    {
+        encryptionTabComponentController.setSimpleCurrentCode(currentCode);
+    }
+
+    public void resetCurrentCode() {
+        encryptionTabComponentController.resetSimpleCurrCode();
     }
 }

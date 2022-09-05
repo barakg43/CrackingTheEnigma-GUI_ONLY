@@ -1,7 +1,8 @@
 package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 
-import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord.TableStatisticRecordController;
+
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord.TableStatisticRecordController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import javafx.fxml.FXML;
