@@ -4,10 +4,6 @@ import enigmaMachine.parts.Keyboard;
 import enigmaMachine.parts.Plugboard;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import jaxb.CTEPositioning;
-import jaxb.CTEReflect;
-import jaxb.CTEReflector;
-import jaxb.CTERotor;
 
 import java.io.Serializable;
 import java.util.ArrayList;

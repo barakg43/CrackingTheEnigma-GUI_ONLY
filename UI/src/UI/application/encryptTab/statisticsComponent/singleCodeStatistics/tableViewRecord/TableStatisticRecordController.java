@@ -30,14 +30,14 @@ public class TableStatisticRecordController {
     StatisticRecordDTO lastInputRecord;
 
     public void addRecordsToStatisticTable(List<StatisticRecordDTO> statisticRecordList) {
-
+        System.out.println(Thread.currentThread().getName()+ ": addRecordsToStatisticTable");
         if (statisticRecordList == null) {
             System.out.println("statisticRecordList is empty!");
             return;
         }
         statisticRecordListObs.setAll(statisticRecordList);
         statisticTable.setItems(statisticRecordListObs);
-        Optional<StatisticRecordDTO> last = statisticRecordList.stream()//overwrite only in found
+        Optional<StatisticRecordDTO> last = statisticRecordList.stream()//search a
                 .filter(StatisticRecordDTO::isLastMachineInput)
                 .findFirst();
         if (last.isPresent()) {
