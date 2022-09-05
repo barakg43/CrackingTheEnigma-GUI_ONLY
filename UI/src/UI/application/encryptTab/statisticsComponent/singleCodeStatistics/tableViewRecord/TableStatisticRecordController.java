@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TableStatisticRecordController {
 
@@ -26,24 +27,27 @@ public class TableStatisticRecordController {
     @FXML
     private TableColumn<StatisticRecordDTO, Long> processTimeColumn;
     ObservableList<StatisticRecordDTO> statisticRecordListObs;
+    StatisticRecordDTO lastInputRecord;
 
-    public void addRecordsToStatisticTable(List<StatisticRecordDTO> statisticRecordList)
-    {
+    public void addRecordsToStatisticTable(List<StatisticRecordDTO> statisticRecordList) {
 
-        if(statisticRecordList==null) {
+        if (statisticRecordList == null) {
             System.out.println("statisticRecordList is empty!");
             return;
         }
-        try {
-            statisticRecordListObs.setAll(statisticRecordList);
-            statisticTable.setItems(statisticRecordListObs);
-        }
-        catch (NullPointerException e)
-        {
-            System.out.println(Thread.currentThread().getName());
-           e.printStackTrace();
+        statisticRecordListObs.setAll(statisticRecordList);
+        statisticTable.setItems(statisticRecordListObs);
+        Optional<StatisticRecordDTO> last = statisticRecordList.stream()//overwrite only in found
+                .filter(StatisticRecordDTO::isLastMachineInput)
+                .findFirst();
+        if (last.isPresent()) {
+            statisticTable.getSelectionModel().select(last.get());
+            statisticTable.getSelectionModel().focus(statisticTable.getSelectionModel().getSelectedIndex());
         }
     }
+
+
+
     @FXML
     private void initialize() {
         statisticTable.setPlaceholder(
@@ -55,7 +59,7 @@ public class TableStatisticRecordController {
         processTimeColumn.setCellValueFactory(record->
                  new SimpleLongProperty(record.getValue().getProcessingTime()).asObject());
         statisticRecordListObs= FXCollections.observableArrayList();
-
+        //statisticTable.getFocusModel().
 
 // or
 // idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));

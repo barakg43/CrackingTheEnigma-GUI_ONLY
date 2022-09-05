@@ -25,6 +25,7 @@ public class StatisticsComponentController {
     private GridPane mainContainer;
     private final ExecutorService statisticsNodeMangerService;
     private final CodeStatisticsFactory codeStatisticsFactory;
+    private GridPane codeForAnimation;
 
     public StatisticsComponentController() {
         codeStatisticsFactory = new CodeStatisticsFactory();
@@ -65,6 +66,7 @@ public class StatisticsComponentController {
 //                System.out.println("Current code:"+code);
 //                System.out.println("before factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
                 GridPane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
+
                 flowPaneCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
 //                System.out.println("after factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
             }
