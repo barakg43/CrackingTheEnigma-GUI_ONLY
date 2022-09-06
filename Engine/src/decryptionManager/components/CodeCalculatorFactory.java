@@ -39,9 +39,12 @@ public class CodeCalculatorFactory {
             return null;
 
         int initialIndex = letter2Index.get(rotorInfoDTOS[leftestRotorIndex].getStatingLetter());
-        int indexNextLetter= initialIndex + offset %letterSize;
-        if(indexNextLetter>=rotorInfoDTOS.length)
+        int innerIndexLetter = initialIndex + offset %letterSize;
+        leftestRotorIndex+=innerIndexLetter/letterSize;//for case innerIndexLetter overflow to next index position
+        if(leftestRotorIndex >=rotorInfoDTOS.length)
             return null;
+
+        innerIndexLetter=innerIndexLetter%letterSize;//for case innerIndexLetter is greater then letterSize
         //set all previous rotor to last letter in alphabet
         for(int i=0;i<leftestRotorIndex;i++)
             rotorInfoDTOS[i]=new RotorInfoDTO(rotorInfoDTOS[i].getId(),
@@ -49,7 +52,7 @@ public class CodeCalculatorFactory {
                         index2letter[letterSize-1]);
         rotorInfoDTOS[leftestRotorIndex]=new RotorInfoDTO(rotorInfoDTOS[leftestRotorIndex].getId(),
                 (rotorInfoDTOS[leftestRotorIndex].getDistanceToWindow()+offset)%letterSize,
-                index2letter[indexNextLetter]);
+                index2letter[innerIndexLetter]);
         return new CodeFormatDTO(rotorInfoDTOS, initialCode.getReflectorID(), initialCode.getPlugboardPairDTOList());
     }
 
