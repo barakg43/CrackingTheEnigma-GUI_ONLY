@@ -94,6 +94,7 @@ public class EnigmaEngine implements Engine , Serializable {
             e.printStackTrace();
             throw new RuntimeException("Error on parsing xml file!");
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
 
@@ -471,16 +472,16 @@ public class EnigmaEngine implements Engine , Serializable {
 
             if(numberOfAgents<1||numberOfAgents>50)
                 throw  new RuntimeException("Invalid number of agents "+numberOfAgents+" number need to between 2 to 50");
-            decryptionManager=new DecryptionManager(numberOfAgents);
+          //  decryptionManager=new DecryptionManager(numberOfAgents,this);
 
-            decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
+            //decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
 
-            machineData = new MachineDataDTO(eng.getCTEMachine().getRotorsCount(),
+            machineData = new MachineDataDTO( eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
-                                             enigmaMachine.getReflectorIDList(),
-                                             enigmaMachine.getAlphabet());
+                                            tempEnigmaMachine.getReflectorIDList(),
+                                            tempEnigmaMachine.getAlphabet());
             enigmaMachine= tempEnigmaMachine;
-            decryptionManager.setEngine(this);
+
         }
 
     private List<Character> copyExcludeChars(String excludeChars) {

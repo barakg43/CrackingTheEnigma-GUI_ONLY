@@ -4,6 +4,7 @@ import dtoObjects.*;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class UserInterface {
     private final Scanner scanner;
     private Engine mEngine;
     private MachineDataDTO machineData;
-
+    private byte[] engineCopyBytes;
     private StatisticsDataDTO historyData;
   //  private Set<Integer> selectedOptions;
     protected enum  OPTIONS{
@@ -230,6 +231,32 @@ public class UserInterface {
             }
         }
     }
+    private void saveEngineCopy()
+    {
+
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream(  bos);
+            os.writeObject(mEngine);
+            engineCopyBytes= bos.toByteArray();
+            os.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private Engine createNewEngineCopy()  {
+        ObjectInputStream oInputStream = null;
+        Engine copyEngine=null;
+        try {
+            oInputStream = new ObjectInputStream(new ByteArrayInputStream(engineCopyBytes));
+            copyEngine= (Engine) oInputStream.readObject();
+            oInputStream.close();
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return copyEngine;
+    }
 
 
     private void machineConfByUser() // case 3
@@ -424,6 +451,7 @@ public class UserInterface {
         System.out.println("Please enter the full file(without extension) to save the file:");
         String path = scanner.nextLine();
         mEngine.saveMachineStateToFile(path);
+
         System.out.println("The data saved successfully.");
     }
 
@@ -434,7 +462,9 @@ public class UserInterface {
         try {
 
         mEngine= EnigmaEngine.loadMachineStateFromFile(path);
+
         System.out.println("The data was loaded successfully.");
+
             machineData = mEngine.getMachineData();
             historyData = mEngine.getStatisticDataDTO();
         } catch (RuntimeException e) {

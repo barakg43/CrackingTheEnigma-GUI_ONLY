@@ -3,6 +3,8 @@ package Test;
 
 
 
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
+import decryptionManager.components.CodeCalculatorFactory;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 
@@ -13,7 +15,6 @@ public class TestErrorMain {
         public static void main(String[] args) {
             // Creates an array in which we will store the names of files and directories
             String[] fileNames;
-
             // Creates a new File instance by converting the given pathname string
 
             String folderPath="C:\\temp\\Error Files\\" ;//replace with your own folder path
