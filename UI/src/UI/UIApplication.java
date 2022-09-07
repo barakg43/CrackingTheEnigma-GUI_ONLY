@@ -23,7 +23,7 @@ public class UIApplication extends Application {
             fxmlLoader.setLocation(url);
             assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
-            Scene scene = new Scene(root,1000,900);
+            Scene scene = new Scene(root,1020,905);
             primaryStage.setScene(scene);
             primaryStage.show();
         }

@@ -6,6 +6,7 @@ import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
 import dtoObjects.TaskFinishDataDTO;
 import enigmaEngine.Engine;
+import sun.nio.cs.Surrogate;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class DecryptionManager {
     private Dictionary dictionary;
     private Engine engine;
     private int taskSize;
+    private List<int[]> allPossibleRotors;
 
     private CodeCalculatorFactory codeCalculatorFactory;
     public void setTaskSize(int taskSize) {
@@ -39,6 +41,7 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 engine.getMachineData().getNumberOfRotorsInUse());
         agents=new AgentsThreadPool(2,numberOfAgents,5, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
+        allPossibleRotors=new ArrayList<>();
 
     }
     private void saveEngineCopy()
@@ -119,7 +122,6 @@ public class DecryptionManager {
         List<Integer> rotorId=new ArrayList<>();
         for(RotorInfoDTO rotorInfo:codeFormatDTO.getRotorInfo())
             rotorId.add(rotorInfo.getId());
-
 
         currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfo(),codeFormatDTO.getReflectorID(), new ArrayList<>());
         createTaskEasyLevel(currentCode);
