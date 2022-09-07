@@ -3,6 +3,7 @@ package decryptionManager;
 import decryptionManager.components.*;
 import dtoObjects.*;
 import enigmaEngine.Engine;
+import sun.nio.cs.Surrogate;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class DecryptionManager {
     private Dictionary dictionary;
     private Engine engine;
     private int taskSize;
+    private List<int[]> allPossibleRotors;
 
     private CodeCalculatorFactory codeCalculatorFactory;
     public void setTaskSize(int taskSize) {
@@ -37,6 +39,7 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
         agents=new AgentsThreadPool(2,numberOfAgents,5, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
+        allPossibleRotors=new ArrayList<>();
 
     }
     private void saveEngineCopy()
@@ -179,6 +182,7 @@ public class DecryptionManager {
                 rotorIdSet[i] = rotorIdSet[i - 1] + 1;
             }
         }
+
 
 
 

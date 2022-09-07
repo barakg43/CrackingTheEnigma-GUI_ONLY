@@ -38,10 +38,11 @@ public class Dictionary {
     }
     public String removeExcludeCharacter(String input)
     {
-
-
-        for (Character character:excludeCharsList)
-            input=input.replaceAll(character.toString(),"");
+        for (Character character:excludeCharsList) {
+            if (input.contains(character.toString())) {
+                input = input.replace(character.toString(), "");
+            }
+        }
 
       return input;
     }
