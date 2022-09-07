@@ -31,8 +31,18 @@ public class HelloFxmlMain extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        List<int[]> generateList = generate(5, 4);
 
-         start1(primaryStage);
+        for(int[] array:generateList)
+        {
+            System.out.print("[");
+            for (int j : array) {
+                System.out.format("%d,",j);
+            }
+            System.out.println("]");
+        }
+
+        //start1(primaryStage);
 //         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
@@ -41,6 +51,32 @@ public class HelloFxmlMain extends Application{
 
 
 
+    }
+
+    public List<int[]> generate(int rotorNumberInSystem, int rotorNumberInUsed) {
+        List<int[]> combinations = new ArrayList<>();
+        int[] combination = new int[rotorNumberInUsed];
+
+        // initialize with lowest lexicographic combination
+        for (int i = 0; i < rotorNumberInUsed; i++) {
+            combination[i] = i;
+        }
+
+        while (combination[rotorNumberInUsed - 1] < rotorNumberInSystem) {
+            combinations.add(combination.clone());
+
+            // generate next combination in lexicographic order
+            int t = rotorNumberInUsed - 1;
+            while (t != 0 && combination[t] == rotorNumberInSystem - rotorNumberInUsed + t) {
+                t--;
+            }
+            combination[t]++;
+            for (int i = t + 1; i < rotorNumberInUsed; i++) {
+                combination[i] = combination[i - 1] + 1;
+            }
+        }
+
+        return combinations;
     }
      private void start1(Stage primaryStage) throws IOException {
 

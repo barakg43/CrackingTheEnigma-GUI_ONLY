@@ -1,10 +1,7 @@
 package decryptionManager;
 
 import decryptionManager.components.*;
-import dtoObjects.CodeFormatDTO;
-import dtoObjects.PlugboardPairDTO;
-import dtoObjects.RotorInfoDTO;
-import dtoObjects.TaskFinishDataDTO;
+import dtoObjects.*;
 import enigmaEngine.Engine;
 
 import java.io.*;
@@ -23,7 +20,7 @@ public class DecryptionManager {
     public void setTaskSize(int taskSize) {
         this.taskSize = taskSize;
     }
-
+    private MachineDataDTO machineData;
     BlockingQueue<Runnable> taskQueue;
     private ConcurrentLinkedQueue<TaskFinishDataDTO> successfulDecryrtion;
      private AgentsThreadPool agents;
@@ -35,9 +32,10 @@ public class DecryptionManager {
         taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
         successfulDecryrtion=new ConcurrentLinkedQueue<>();
         this.engine = engine;
+        machineData=engine.getMachineData();
         saveEngineCopy();
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
-                engine.getMachineData().getNumberOfRotorsInUse());
+                machineData.getNumberOfRotorsInUse());
         agents=new AgentsThreadPool(2,numberOfAgents,5, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
 
     }
@@ -99,7 +97,7 @@ public class DecryptionManager {
     }
     public void createTaskMiddleLevel(CodeFormatDTO codeFormatDTO)
     {
-        List<String> reflectorIdList = engine.getMachineData().getReflectorIdList();
+        List<String> reflectorIdList = machineData.getReflectorIdList();
         CodeFormatDTO currentCode=codeFormatDTO;
         for(String reflector:reflectorIdList)
         {
@@ -112,17 +110,76 @@ public class DecryptionManager {
 
     public void createTaskHardLevel(CodeFormatDTO codeFormatDTO)
     {
-        List<String> reflectorIdList = engine.getMachineData().getReflectorIdList();
+        List<String> reflectorIdList = machineData.getReflectorIdList();
         CodeFormatDTO currentCode=codeFormatDTO;
 
+        int rotorUsedNumber=machineData.getNumberOfRotorsInUse();
+        Permuter permuterFactory=new Permuter(rotorUsedNumber);
+        int[] rotorId=new int[ rotorUsedNumber];
+        for (int i = 0; i <rotorUsedNumber ; i++) {
+            rotorId[i]=codeFormatDTO.getRotorInfo()[i].getId();
+        }
+        int[] currentPermutationIndex=permuterFactory.getNext();;
 
-        List<Integer> rotorId=new ArrayList<>();
-        for(RotorInfoDTO rotorInfo:codeFormatDTO.getRotorInfo())
-            rotorId.add(rotorInfo.getId());
+        while (currentPermutationIndex!=null)
+        {
+            RotorInfoDTO[] currentRotorInfo=codeFormatDTO.getRotorInfo();
+            System.out.print("[");
+            for (int i = 0; i < rotorUsedNumber; i++) {
+                int indexPermute=currentPermutationIndex[i];
+                int rotorID=currentRotorInfo[indexPermute].getId();
+                currentRotorInfo[i]=new RotorInfoDTO(rotorID,
+                                                    currentRotorInfo[indexPermute].getDistanceToWindow(),
+                                                    currentRotorInfo[indexPermute].getStatingLetter());
+                System.out.format("%d,",rotorID);
+            }
+            System.out.println("]");
+            currentCode=new CodeFormatDTO(currentRotorInfo,codeFormatDTO.getReflectorID(), new ArrayList<>());
+            createTaskEasyLevel(currentCode);
+            currentPermutationIndex=permuterFactory.getNext();
+        }
 
 
-        currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfo(),codeFormatDTO.getReflectorID(), new ArrayList<>());
-        createTaskEasyLevel(currentCode);
+    }
+
+
+    public void createTaskImpossibleLevel() {
+
+       // List<int[]> combinations = new ArrayList<>();
+        int rotorNumberInSystem=machineData.getNumberOfRotorInSystem();
+        int rotorNumberInUsed=machineData.getNumberOfRotorsInUse();
+
+
+
+        int[] rotorIdSet = new int[rotorNumberInUsed];
+
+        // initialize with the lowest lexicographic rotorIdSet
+        for (int i = 0; i < rotorNumberInUsed; i++) {
+            rotorIdSet[i] = i;
+        }
+
+        while (rotorIdSet[rotorNumberInUsed - 1] < rotorNumberInSystem) {
+            RotorInfoDTO[] rotorInfoDTO=new RotorInfoDTO[rotorNumberInUsed];
+            for (int i = 0; i <rotorNumberInUsed ; i++) {
+                rotorInfoDTO[i]=new RotorInfoDTO(rotorIdSet[i]+1,0,
+                                        codeCalculatorFactory.getFirstLetter());
+            }
+
+            CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTO,
+                    machineData.getReflectorIdList().get(0),new ArrayList<>());
+            createTaskHardLevel(codeFormatDTO);
+
+            // generate next rotorIdSet in lexicographic order
+            int temp = rotorNumberInUsed - 1;
+            while (temp != 0 && rotorIdSet[temp] == rotorNumberInSystem - rotorNumberInUsed + temp) {
+                temp--;
+            }
+            rotorIdSet[temp]++;
+            for (int i = temp + 1; i < rotorNumberInUsed; i++) {
+                rotorIdSet[i] = rotorIdSet[i - 1] + 1;
+            }
+        }
+
 
 
 
