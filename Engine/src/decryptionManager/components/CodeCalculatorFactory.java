@@ -95,7 +95,7 @@ public class CodeCalculatorFactory {
         return numberInLetterSizeBase;
     }
     public double remainCodeConfTask(CodeFormatDTO initialCode) {
-        return MAX_VALUE_OFFSET-convertCodePositionToNumber(initialCode.getRotorInfo());
+        return MAX_VALUE_OFFSET-convertCodePositionToNumber(initialCode.getRotorInfo())-1;
     }
 
 

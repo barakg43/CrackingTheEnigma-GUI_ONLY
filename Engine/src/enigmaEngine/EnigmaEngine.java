@@ -101,14 +101,32 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public void checkIfRotorsValid( List<Integer> rotors) {
+    public void setCodeManually(CodeFormatDTO codeConfiguration) {
+        RotorInfoDTO[] rotorInfoDTO=codeConfiguration.getRotorInfo();
+        List<Integer> rotorIds=new ArrayList<>();
+        List<Character> positions=new ArrayList<>();
+
+        for (RotorInfoDTO rotorInfo: rotorInfoDTO) {
+            rotorIds.add(rotorInfo.getId());
+            positions.add(rotorInfo.getStatingLetter());
+        }
+
+         checkIfRotorsValid(rotorIds);
+         checkIfPositionsValid(positions);
+         checkIfReflectorNumValid(codeConfiguration.getReflectorID());
+         checkPlugBoardPairs(codeConfiguration.getPlugboardPairDTOList()) ;
+
+    }
+
+    @Override
+    public void checkIfRotorsValid( List<Integer> arrayInteger) {
         tempSelectedRotorsID = new ArrayList<>(enigmaMachine.getRotorNumberInUse());
          int rotorNum;
-        if (rotors.size() != enigmaMachine.getRotorNumberInUse())
+        if (arrayInteger.size() != enigmaMachine.getRotorNumberInUse())
             throw new RuntimeException("You need to choose " + enigmaMachine.getRotorNumberInUse() + " rotors.");
 
-        for (int j = rotors.size() - 1; j >= 0; j--) {
-            rotorNum=rotors.get(j);
+        for (int j = arrayInteger.size() - 1; j >= 0; j--) {
+            rotorNum= arrayInteger.get(j);
             if (tempSelectedRotorsID.contains(rotorNum))
                 throw new RuntimeException("You select the same rotor twice.");
             tempSelectedRotorsID.add(rotorNum);
@@ -124,23 +142,17 @@ public class EnigmaEngine implements Engine , Serializable {
 
     @Override
     public void checkIfPositionsValid(List<Character> positions) {
-//        positions = positions.toUpperCase();
-         tempSelectedInitPositions = new char[enigmaMachine.getRotorNumberInUse()];
-//        int i = enigmaMachine.getRotorNumberInUse()-1;
-//        if (positions.length() != enigmaMachine.getRotorNumberInUse())
-//            throw new RuntimeException("You need to give position for each rotor.");
-//        for (char ch : positions.toCharArray()) {
-//            if (enigmaMachine.getAlphabet().indexOf(ch) == -1)
-//                throw new RuntimeException("This position is not exist in the machine.");
-//            tempSelectedInitPositions[i--] = ch;
-//        }
+        if (positions.size() != enigmaMachine.getRotorNumberInUse())
+            throw new RuntimeException("You need to give position for each rotor.");
+        tempSelectedInitPositions = new char[enigmaMachine.getRotorNumberInUse()];
+        int i =enigmaMachine.getRotorNumberInUse()-1 ;
+       for(Character chPos:positions)
+       { char ch= Character.toUpperCase(chPos);
+            if (enigmaMachine.getAlphabet().indexOf(ch) == -1)
+                throw new RuntimeException("This position is not exist in the machine.");
+            tempSelectedInitPositions[i--] = ch;
 
-        int i = enigmaMachine.getRotorNumberInUse()-1;
-        for (int j = positions.size()-1; j >=0; j--) {
-            Character ch=positions.get(j);
-            tempSelectedInitPositions[i--]=ch;
         }
-
     }
 
     @Override

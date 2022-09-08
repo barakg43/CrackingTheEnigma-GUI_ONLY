@@ -31,18 +31,18 @@ public class HelloFxmlMain extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        List<int[]> generateList = generate(5, 4);
-
-        for(int[] array:generateList)
-        {
-            System.out.print("[");
-            for (int j : array) {
-                System.out.format("%d,",j);
-            }
-            System.out.println("]");
-        }
-
-        //start1(primaryStage);
+//        List<int[]> generateList = generate(5, 4);
+//
+//        for(int[] array:generateList)
+//        {
+//            System.out.print("[");
+//            for (int j : array) {
+//                System.out.format("%d,",j);
+//            }
+//            System.out.println("]");
+//        }
+//
+        start1(primaryStage);
 //         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
@@ -104,7 +104,7 @@ public class HelloFxmlMain extends Application{
           RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
           List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
           CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
-         CodeCalculatorFactory codeCalculatorFactory=new CodeCalculatorFactory("ABCDEF",rotorInfoDTOS.length);
+         CodeCalculatorFactory codeCalculatorFactory=new CodeCalculatorFactory("AB",rotorInfoDTOS.length);
           statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
           rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
           rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
@@ -114,7 +114,7 @@ public class HelloFxmlMain extends Application{
          for (int i = 0; i < 27&&currentCode!=null; i++) {
              System.out.println("current Code::"+currentCode);
              System.out.println("remain code work::"+codeCalculatorFactory.remainCodeConfTask(currentCode));
-             currentCode=codeCalculatorFactory.getNextCode(currentCode);
+             currentCode=codeCalculatorFactory.getNextCodeIndexOffset(currentCode,1);
              System.out.println("after calc  ::"+currentCode);
 
          }

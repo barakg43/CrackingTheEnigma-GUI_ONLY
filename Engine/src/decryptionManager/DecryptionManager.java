@@ -3,7 +3,6 @@ package decryptionManager;
 import decryptionManager.components.*;
 import dtoObjects.*;
 import enigmaEngine.Engine;
-import sun.nio.cs.Surrogate;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class DecryptionManager {
     }
     private MachineDataDTO machineData;
     BlockingQueue<Runnable> taskQueue;
-    private ConcurrentLinkedQueue<TaskFinishDataDTO> successfulDecryrtion;
+    private BlockingQueue<TaskFinishDataDTO> successfulDecryption;
      private AgentsThreadPool agents;
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
@@ -32,7 +31,7 @@ public class DecryptionManager {
         this.numberOfAgents = numberOfAgents;
         dictionary=new Dictionary();
         taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-        successfulDecryrtion=new ConcurrentLinkedQueue<>();
+        successfulDecryption =new LinkedBlockingDeque<>();
         this.engine = engine;
         machineData=engine.getMachineData();
         saveEngineCopy();
@@ -81,7 +80,7 @@ public class DecryptionManager {
         currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfo(),codeFormatDTO.getReflectorID(),new ArrayList<>());
         for (double i = 0; i < numberOftask; i++) {
             try {
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),taskSize));
+                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),taskSize, successfulDecryption));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -91,7 +90,7 @@ public class DecryptionManager {
         double remainTask=codeCalculatorFactory.getCodeConfAmount()%taskSize;
         if(remainTask>0) {
             try {
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),remainTask));
+                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),remainTask,successfulDecryption));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
