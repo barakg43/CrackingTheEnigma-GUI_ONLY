@@ -3,20 +3,17 @@ package dtoObjects;
 public class TaskFinishDataDTO {
 
     private long timeProcessing;
-    private int agentID;
+    private String agentID;
     CodeFormatDTO codeConf;
 
-    public TaskFinishDataDTO(long timeProcessing, int agentID, CodeFormatDTO codeConf) {
-        this.timeProcessing = timeProcessing;
+    public TaskFinishDataDTO( String agentID, CodeFormatDTO codeConf) {
         this.agentID = agentID;
         this.codeConf = codeConf;
     }
 
-    public long getTimeProcessing() {
-        return timeProcessing;
-    }
 
-    public int getAgentID() {
+
+    public String getAgentID() {
         return agentID;
     }
 

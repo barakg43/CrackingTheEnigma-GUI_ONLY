@@ -7,7 +7,7 @@ import enigmaEngine.EnigmaEngine;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import java.util.Collection;
 import static UI.consoleUIold.UserInterface.OPTIONS.*;
 
 public class UserInterface {
@@ -415,10 +415,10 @@ public class UserInterface {
 
 
     public List<Character> positionToList(String positions) {
-     return positions.toUpperCase().chars()
-                .mapToObj(e -> (char) e).collect(Collectors.toList());
-
-
+      List<Character> res=positions.toUpperCase().chars()
+              .mapToObj(e -> (char) e).collect(Collectors.toList());
+           //  Collections.reverse(res);
+        return res;
     }
 
     public List<PlugboardPairDTO> plugboardPairDTOList(String pairs)  {
