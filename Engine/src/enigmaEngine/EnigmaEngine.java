@@ -6,6 +6,8 @@ import dtoObjects.*;
 import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import jaxb.*;
 
 import javax.xml.bind.JAXBContext;
@@ -39,6 +41,9 @@ public class EnigmaEngine implements Engine , Serializable {
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
     private DecryptionManager decryptionManager;
     private long sumProcessingTime=0;
+    Dictionary dictionary;
+    private CodeFormatDTO codeFormatBF;
+
 
     @Override
     public boolean isMachineLoaded()
@@ -179,16 +184,26 @@ public class EnigmaEngine implements Engine , Serializable {
     private CodeFormat createCodeFormat(boolean isCalcDistanceFromInitWindow)
     {
         int rotorID;
+        SimpleStringProperty rotorIDProperty = new SimpleStringProperty();
         int distanceToWindow;
+        SimpleStringProperty distanceToWindowProperty=new SimpleStringProperty();
         char initPositionLetter;
+        SimpleStringProperty initPositionProperty=new SimpleStringProperty();
+        SimpleStringProperty reflectorProperty=new SimpleStringProperty();
+        reflectorProperty.set(selectedReflector.getReflectorIdName());
         RotorInfoDTO[] rotorInfoArray=new RotorInfoDTO[enigmaMachine.getRotorNumberInUse()];
+       // RotorInfoDTO.RotorInfoPropertyDTO[] rotorsIDProperty=new RotorInfoDTO.RotorInfoPropertyDTO[enigmaMachine.getRotorNumberInUse()];
         for (int i = 0; i < rotorInfoArray.length; i++) {
             rotorID=selectedRotors[i].getRotorID();
+            rotorIDProperty.set(String.valueOf(rotorID));
             distanceToWindow=selectedRotors[i].calculateDistanceFromNotchToWindows(isCalcDistanceFromInitWindow);
+            distanceToWindowProperty.set(String.valueOf(distanceToWindow));
             initPositionLetter=isCalcDistanceFromInitWindow? selectedPositions[i ]: selectedRotors[i].getLetterInWindowPosition();
+            initPositionProperty.set(initPositionProperty.toString());
             rotorInfoArray[i]=new RotorInfoDTO(rotorID,distanceToWindow,initPositionLetter);
-
+            //rotorsIDProperty[i]=new RotorInfoDTO.RotorInfoPropertyDTO(rotorIDProperty,distanceToWindowProperty,initPositionProperty);
         }
+        //codeFormatProperty=new CodeFormatDTO.CodeFormatPropertyDTO(rotorsIDProperty,reflectorProperty,plugBoardPairsProperty);
         return new CodeFormat(rotorInfoArray,selectedReflector.getReflectorIdName(),plugBoardPairs);
 
 
@@ -308,8 +323,16 @@ public class EnigmaEngine implements Engine , Serializable {
         }
         selectedReflector=enigmaMachine.getReflectorById(tempSelectedReflectorID);
         plugBoardPairs=tempPlugBoardPairs;
+        int i=0;
+       //plugBoardPairsProperty=new PlugboardPairDTO.PlugBoardPairProperty[tempPlugBoardPairs.size()];
       for(PlugboardPairDTO pair:tempPlugBoardPairs)
+      {
           enigmaMachine.getPlugBoard().addMappedInputOutput(pair.getFirstLetter(),pair.getSecondLetter());
+          SimpleStringProperty firstInputProperty=new SimpleStringProperty(String.valueOf(pair.getFirstLetter()));
+          SimpleStringProperty secondInputProperty=new SimpleStringProperty(String.valueOf(pair.getSecondLetter()));
+        //  plugBoardPairsProperty[i]=new PlugboardPairDTO.PlugBoardPairProperty(firstInputProperty,secondInputProperty);
+          i++;
+      }
 
         setInitialCode();
 
@@ -472,15 +495,19 @@ public class EnigmaEngine implements Engine , Serializable {
 
             if(numberOfAgents<1||numberOfAgents>50)
                 throw  new RuntimeException("Invalid number of agents "+numberOfAgents+" number need to between 2 to 50");
-          //  decryptionManager=new DecryptionManager(numberOfAgents,this);
 
-            //decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
+            dictionary=new Dictionary();
+            dictionary.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
+//            decryptionManager=new DecryptionManager(numberOfAgents,  this);
+//
+//            decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
 
             machineData = new MachineDataDTO( eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
                                             tempEnigmaMachine.getReflectorIDList(),
                                             tempEnigmaMachine.getAlphabet());
             enigmaMachine= tempEnigmaMachine;
+
 
         }
 
@@ -505,9 +532,9 @@ public class EnigmaEngine implements Engine , Serializable {
 
     @Override
     public char processDataInput(char charInput) {
-        long startTime=System.nanoTime();
-        charInput= Character.toUpperCase(charInput);
-       // System.out.println("char is:"+charInput);
+        long startTime = System.nanoTime();
+        charInput = Character.toUpperCase(charInput);
+        // System.out.println("char is:"+charInput);
 
         boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
         //the row input after moving in plug board
@@ -524,9 +551,38 @@ public class EnigmaEngine implements Engine , Serializable {
             currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
         }
 
-        sumProcessingTime+=System.nanoTime()-startTime;
+        sumProcessingTime += System.nanoTime() - startTime;
 
         return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
+    }
+
+    public void bruteForce(CodeFormatDTO codeFormatDTO,bruteForceLevel BFLevel)
+    {
+        this.decryptionManager=null;
+        decryptionManager=new DecryptionManager(2,this);
+        decryptionManager.setDictionary(dictionary);
+        decryptionManager.setTaskSize(500);
+        codeFormatBF=codeFormatDTO;
+        switch (BFLevel)
+        {
+            case easyLevel:
+                decryptionManager.createTaskEasyLevel(codeFormatDTO);
+                break;
+            case middleLevel:
+                decryptionManager.createTaskMiddleLevel(codeFormatDTO);
+                break;
+            case hardLevel:
+                decryptionManager.createTaskHardLevel(codeFormatDTO);
+                break;
+            case impossibleLevel:
+                decryptionManager.createTaskImpossibleLevel();
+                break;
+        }
+    }
+
+    public CodeFormatDTO getBFCodeFormat()
+    {
+        return codeFormatBF;
     }
 
     public int getCipheredInputsAmount()
@@ -546,5 +602,6 @@ public class EnigmaEngine implements Engine , Serializable {
                 ", \ncipheredInputs=" + cipheredInputsAmount +
                 '}';
     }
+
 
 }

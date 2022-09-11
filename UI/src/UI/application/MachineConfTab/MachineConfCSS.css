@@ -30,3 +30,7 @@
 .rotors-text {
     -fx-text-fill: RED;
 }
+.currentCode-Label{
+    -fx-font-size: 18;
+    -fx-font-weight: BOLD;
+    -fx-background-color: #d0f6c1;}

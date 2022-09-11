@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class DecryptionManager {
+import static java.lang.Thread.sleep;
+
+public class DecryptionManager implements Serializable{
 
     private final int numberOfAgents;
     private Dictionary dictionary;
@@ -28,6 +30,7 @@ public class DecryptionManager {
      private AgentsThreadPool agents;
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
+    private CodeFormatDTO saveTempCode;
     public DecryptionManager(int numberOfAgents,Engine engine) {
         this.numberOfAgents = numberOfAgents;
         dictionary=new Dictionary();
@@ -36,9 +39,10 @@ public class DecryptionManager {
         this.engine = engine;
         machineData=engine.getMachineData();
         saveEngineCopy();
+
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
-        agents=new AgentsThreadPool(2,numberOfAgents,5, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
+        agents=new AgentsThreadPool(2,numberOfAgents,20, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
         allPossibleRotors=new ArrayList<>();
 
     }
@@ -69,46 +73,88 @@ public class DecryptionManager {
         return copyEngine;
     }
 
+    public  RotorInfoDTO[] getRotorsInfoWithoutPositions(RotorInfoDTO[] rotorsInfo)
+    {
+        RotorInfoDTO[] tempRotorsInfo=rotorsInfo;
+        for(int i=0;i<rotorsInfo.length;i++)
+        {
+            tempRotorsInfo[i]=new RotorInfoDTO(rotorsInfo[i].getId(),-1, ' ');
+        }
+        return tempRotorsInfo;
+    }
+
     public void getValidDictionaryWords(String words, List<Character> excludeCharsList, String alphabet)
     {
         dictionary.getValidDictionaryWords(words,excludeCharsList,alphabet);
     }
 
+    public void setDictionary(Dictionary dictionary)
+    {
+        this.dictionary=dictionary;
+    }
+
     public void createTaskEasyLevel(CodeFormatDTO codeFormatDTO)
     {
-        CodeFormatDTO currentCode =codeFormatDTO;
+        CodeFormatDTO currentCode;
         double numberOftask=codeCalculatorFactory.getCodeConfAmount()/taskSize;
         currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfo(),codeFormatDTO.getReflectorID(),new ArrayList<>());
-        for (double i = 0; i < numberOftask; i++) {
+        codeCalculatorFactory.addLettersToCal(machineData.getAlphabetString());
+        agents.prestartAllCoreThreads();
+        for (double i = 0; i < numberOftask && currentCode!=null; i++) {
             try {
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),taskSize));
+                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),taskSize,"german poland leg else",dictionary));
+
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+               throw new RuntimeException(e);
             }
-            System.out.println("Task number:"+i);
-          //  currentCode=codeCalculatorFactory.getNextCode(currentCode);
+            System.out.println("Task number:"+(int)i);
+            System.out.println("\n");
+           currentCode=codeCalculatorFactory.getNextCode(currentCode);
+            System.out.println("current code  " + currentCode);
         }
         double remainTask=codeCalculatorFactory.getCodeConfAmount()%taskSize;
         if(remainTask>0) {
             try {
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),remainTask));
+                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),remainTask,"aaaaaaa leg",dictionary));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
 
     }
-    public void createTaskMiddleLevel(CodeFormatDTO codeFormatDTO)
-    {
+    public void createTaskMiddleLevel(CodeFormatDTO codeFormatDTO){
+        saveTempCode= engine.getBFCodeFormat();
         List<String> reflectorIdList = machineData.getReflectorIdList();
-        CodeFormatDTO currentCode=codeFormatDTO;
+        CodeFormatDTO currentCode;
+        System.out.println("Starting code: " + codeFormatDTO);
         for(String reflector:reflectorIdList)
         {
-            currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfo(),reflector, new ArrayList<>());
+            codeFormatDTO=engine.getBFCodeFormat();
+            System.out.println("reflector " + reflector);
+            currentCode=copyCodeData(codeFormatDTO,reflector);
+            System.out.println("After new reflector: " + currentCode);
             createTaskEasyLevel(currentCode);
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
 
+    }
+
+    private CodeFormatDTO copyCodeData(CodeFormatDTO codeFormatDTO,String reflector) {
+        CodeFormatDTO newCodeFormat;
+        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[codeFormatDTO.getRotorInfo().length];
+        for (int i = 0; i < codeFormatDTO.getRotorInfo().length; i++) {
+            int distance=codeFormatDTO.getRotorInfo()[i].getDistanceToWindow();
+            char positionLetter=codeFormatDTO.getRotorInfo()[i].getStatingLetter();
+            rotorInfoDTOS[i]=new RotorInfoDTO(codeFormatDTO.getRotorInfo()[i].getId(),distance,positionLetter);
+        }
+
+        newCodeFormat=new CodeFormatDTO(rotorInfoDTOS,reflector,new ArrayList<>());
+        return newCodeFormat;
     }
 
     public void createTaskHardLevel(CodeFormatDTO codeFormatDTO)
@@ -130,7 +176,7 @@ public class DecryptionManager {
             System.out.print("[");
             for (int i = 0; i < rotorUsedNumber; i++) {
                 int indexPermute=currentPermutationIndex[i];
-                int rotorID=currentRotorInfo[indexPermute].getId();
+                int rotorID=rotorId[indexPermute];
                 currentRotorInfo[i]=new RotorInfoDTO(rotorID,
                                                     currentRotorInfo[indexPermute].getDistanceToWindow(),
                                                     currentRotorInfo[indexPermute].getStatingLetter());
@@ -138,7 +184,7 @@ public class DecryptionManager {
             }
             System.out.println("]");
             currentCode=new CodeFormatDTO(currentRotorInfo,codeFormatDTO.getReflectorID(), new ArrayList<>());
-            createTaskEasyLevel(currentCode);
+            createTaskMiddleLevel(currentCode);
             currentPermutationIndex=permuterFactory.getNext();
         }
 

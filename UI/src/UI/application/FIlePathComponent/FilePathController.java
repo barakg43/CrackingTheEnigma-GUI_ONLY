@@ -1,6 +1,11 @@
 package UI.application.FIlePathComponent;
 
 import UI.application.AllMachineController;
+import decryptionManager.components.CodeCalculatorFactory;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.PlugboardPairDTO;
+import dtoObjects.RotorInfoDTO;
+import dtoObjects.bruteForceLevel;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,6 +17,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilePathController {
 
@@ -65,6 +72,7 @@ public class FilePathController {
                 System.out.println("after set4");
                 mainAppController.setEncrypteTab();
                 System.out.println("after set5");
+
                 isFileSelected.set(true);
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);

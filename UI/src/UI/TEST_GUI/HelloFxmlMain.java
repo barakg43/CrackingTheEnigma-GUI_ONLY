@@ -1,5 +1,7 @@
 package UI.TEST_GUI;
 
+import UI.application.AllMachineController;
+import UI.application.CommonResourcesPaths;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
@@ -9,6 +11,8 @@ import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
 import dtoObjects.StatisticRecordDTO;
+import enigmaEngine.Engine;
+import enigmaEngine.EnigmaEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -31,17 +35,18 @@ public class HelloFxmlMain extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        List<int[]> generateList = generate(5, 4);
+//        List<int[]> generateList = generate(5, 4);
+//
+//        for(int[] array:generateList)
+//        {
+//            System.out.print("[");
+//            for (int j : array) {
+//                System.out.format("%d,",j);
+//            }
+//            System.out.println("]");
+//        }
 
-        for(int[] array:generateList)
-        {
-            System.out.print("[");
-            for (int j : array) {
-                System.out.format("%d,",j);
-            }
-            System.out.println("]");
-        }
-
+        start5(primaryStage);
         //start1(primaryStage);
 //         start2(primaryStage);
 //        start3(primaryStage);
@@ -77,6 +82,20 @@ public class HelloFxmlMain extends Application{
         }
 
         return combinations;
+    }
+
+
+    private void start5(Stage primaryStage) throws IOException {
+        FXMLLoader fxmlLoader=new FXMLLoader();
+        URL url=getClass().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
+        fxmlLoader.setLocation(url);
+        assert url != null;
+        Parent root=fxmlLoader.load(url.openStream());
+        Scene scene = new Scene(root,1020,905);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+
     }
      private void start1(Stage primaryStage) throws IOException {
 

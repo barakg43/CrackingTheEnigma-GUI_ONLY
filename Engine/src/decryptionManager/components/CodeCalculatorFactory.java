@@ -3,10 +3,11 @@ package decryptionManager.components;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.RotorInfoDTO;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CodeCalculatorFactory {
+public class CodeCalculatorFactory implements Serializable {
 
     private Map<Character,Integer> letter2Index =null;
     private char[] index2letter =null;
@@ -25,7 +26,7 @@ public class CodeCalculatorFactory {
     {
         return MAX_VALUE_OFFSET;
     }
-    private void addLettersToCal(String alphabet)
+    public void addLettersToCal(String alphabet)
     {
         letter2Index=new HashMap<>();
         letterSize=alphabet.length();
@@ -45,10 +46,13 @@ public class CodeCalculatorFactory {
     {
         RotorInfoDTO[] rotorInfoDTOS=initialCode.getRotorInfo();
         int codeOffset=offset+convertCodePositionToNumber(rotorInfoDTOS);
-        System.out.println("offset:"+codeOffset+" max offset:"+Math.pow(letterSize,rotorInfoDTOS.length));
 
         if(codeOffset >=MAX_VALUE_OFFSET)
             return null;
+
+        System.out.println("offset:"+codeOffset+" max offset:"+Math.pow(letterSize,rotorInfoDTOS.length));
+
+
 //        System.out.println("after calc");
 
         for(int i=0;i<numberOfPositions;i++)

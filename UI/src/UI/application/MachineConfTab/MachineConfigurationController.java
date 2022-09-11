@@ -4,18 +4,19 @@ package UI.application.MachineConfTab;
 import UI.application.AllMachineController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
-import dtoObjects.CodeFormatDTO;
-import dtoObjects.MachineDataDTO;
-import dtoObjects.PlugboardPairDTO;
+import dtoObjects.*;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -28,7 +29,6 @@ public class MachineConfigurationController {
     @FXML public Pane MachineCodePane;
 
     @FXML public ComboBox SelectedReflectorComboBox;
-    @FXML  public CheckBox WithPlugBoardPairs;
     @FXML public Button SetCodeConfButton;
     @FXML public HBox SelectedMachineCode;
     @FXML public SimpleCodeController SelectedMachineCodeController;
@@ -55,15 +55,28 @@ public class MachineConfigurationController {
     @FXML  public ScrollPane selectedCodeConfigScrollPane;
     @FXML  public Label selectedMachineCodeLabel;
     @FXML  public Label currentMachineLabel;
+    public ScrollPane ConfPane;
+    public SplitPane machineConfSplitPane;
+    public AnchorPane selectedCodeAnchorePane;
+    public SplitPane currentCodeConfSplitPane;
+    public HBox ButtonsPane;
 
     private Engine mEngine;
     private MachineDataDTO machineData;
     private AllMachineController mainAppController;
     private int numberOfPairs;
+    SplitPane AllMachineSplitPane;
 
     private SimpleBooleanProperty isCodeSelectedByUser;
     private SimpleBooleanProperty isSelected;
     private SimpleBooleanProperty showCodeDetails;
+    //private SimpleStringProperty selectedReflectorProperty;
+   // private SimpleStringProperty currentReflectorProperty;
+   // private SimpleListProperty<Integer> selectedRotorsIDProperty;
+    private ObservableList<SimpleStringProperty> selectedRotorsIDProperty;
+    private ObservableList<SimpleStringProperty> currentRotorsIDProperty;
+    private ObservableList<SimpleStringProperty> selectedPlugBoardPairsProperty;
+
 
 
     @FXML
@@ -88,13 +101,49 @@ public class MachineConfigurationController {
         selectedCodeConfiguration.disableProperty().bind(showCodeDetails.not());
         CurrentCodeConfigurationPane.disableProperty().bind(isSelected.not());
 
+       // SelectedMachineCodeController.getReflectorIDtext().textProperty().bind(selectedReflectorProperty);
+
+      //  CurrentMachineCodeController.getReflectorIDtext().textProperty().bind(currentReflectorProperty);
+       // SelectedCodeComponentController.currCodeController.getReflectorIDtext().textProperty().bind(selectedReflectorProperty);
+       // CurrentCodeComponentController.currCodeController.getReflectorIDtext().textProperty().bind(currentReflectorProperty);
     }
+
+    public void bindComponentsWidthToScene(ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty)
+    {
+        ConfPane.prefWidthProperty().bind(widthProperty);
+        ConfPane.prefHeightProperty().bind(heightProperty);
+        MachineDetails.prefWidthProperty().bind(ConfPane.widthProperty());
+        machineConfSplitPane.prefWidthProperty().bind(ConfPane.widthProperty());
+        machineConfSplitPane.prefHeightProperty().bind(ConfPane.heightProperty());
+        selectedCodeAnchorePane.prefWidthProperty().bind(machineConfSplitPane.widthProperty());
+        selectedCodeConfiguration.prefWidthProperty().bind(selectedCodeAnchorePane.widthProperty());
+        currentCodeConfSplitPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
+        currentCodeConfSplitPane.prefHeightProperty().bind(selectedCodeConfiguration.widthProperty());
+
+        CurrentCodeConfigurationPane.prefWidthProperty().bind(currentCodeConfSplitPane.widthProperty());
+
+    }
+    public SimpleCodeController getCurrentMachineCodeController()
+    {
+        return CurrentMachineCodeController;
+    }
+
+//    public SimpleStringProperty getSelectedReflector() {
+//        return selectedReflectorProperty;
+//    }
+
+
     public MachineConfigurationController()
     {
         numberOfPairs=0;
         isCodeSelectedByUser=new SimpleBooleanProperty();
         isSelected=new SimpleBooleanProperty(false);
         showCodeDetails=new SimpleBooleanProperty(false);
+      //  selectedReflectorProperty=new SimpleStringProperty();
+      //  currentReflectorProperty=new SimpleStringProperty();
+        selectedRotorsIDProperty=FXCollections.observableArrayList();
+        currentRotorsIDProperty=FXCollections.observableArrayList();
+        selectedPlugBoardPairsProperty=FXCollections.observableArrayList();
     }
 
     public SimpleBooleanProperty getIsSelected()
@@ -108,11 +157,15 @@ public class MachineConfigurationController {
     public void setMainAppController(AllMachineController MainController) {
         mainAppController = MainController;
         mEngine = new EnigmaEngine();
+      //  mainAppController.bindEncryptionTabComponents(currentReflectorProperty,currentRotorsIDProperty);
     }
 
     public void setMachineDetails() {
+
         isSelected.set(false);
-        mainAppController.resetCurrentCode();
+        for (SimpleStringProperty rotorid: currentRotorsIDProperty) {
+            rotorid.set("");
+        }
         showCodeDetails.set(false);
         CurrentMachineCodeController.clearCurrentCodeView();
         SelectedMachineCodeController.setCurrCodeController(SelectedCodeComponentController);
@@ -198,6 +251,7 @@ public class MachineConfigurationController {
     @FXML
     public void SetCodeConfActionListener(javafx.event.ActionEvent actionEvent) {
 
+
         List<Integer> selectedRotorsID = new ArrayList<>();
         List<Character> selectedPositions =new ArrayList<>();
         try {
@@ -223,31 +277,41 @@ public class MachineConfigurationController {
                 throw new Exception("You need to select reflector.");
             String selectedReflector = (String) SelectedReflectorComboBox.getValue();
             mEngine.setReflector(selectedReflector);
+         //   selectedReflectorProperty.set(selectedReflector);
 
-            boolean withPlugBoardPairs = WithPlugBoardPairs.isSelected();
             List<PlugboardPairDTO> plugBoardPairs=new ArrayList<>();
-            if (withPlugBoardPairs) {
 
-                for(int i=0;i<numberOfPairs;i++)
-                {
-                    if(((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
-                        throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
-                    Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                    if(((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
-                        throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
-                    Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                    plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
-                }
-                mEngine.checkPlugBoardPairs(plugBoardPairs);
-            } else {
-                mEngine.checkPlugBoardPairs(plugBoardPairs);
+
+            for(int i=0;i<numberOfPairs;i++)
+            {
+                if(((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                    throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
+                Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                if(((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                    throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
+                Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
             }
+            mEngine.checkPlugBoardPairs(plugBoardPairs);
 
             CurrentMachineCodeController.clearCurrentCodeView();
             SelectedMachineCodeController.clearCurrentCodeView();
 
+
             showAllCodes();
             isCodeSelectedByUser.set(false);
+
+//            RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
+//            List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+//            rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
+//            rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
+//            rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
+//            CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
+//
+//            System.out.println("starting brute force");
+//            mainAppController.startBF(codeFormatDTO, bruteForceLevel.easyLevel);
+//            System.out.println("After brute force");
+
 
         }catch (Exception ex)
         {
@@ -266,7 +330,6 @@ public class MachineConfigurationController {
 
     private void showAllCodes()
     {
-
         selectedCodeScrollPane.setVisible(true);
         CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
 
@@ -280,7 +343,7 @@ public class MachineConfigurationController {
         CodeFormatDTO currentCode = mEngine.getCodeFormat(false);
         CurrentMachineCodeController.setSelectedCode(currentCode);
         setVisibleCodeFields(true);
-       // CurrentCodeConfigurationPane.setVisible(true);
+        // CurrentCodeConfigurationPane.setVisible(true);
         CurrentCodeComponentController.SetCurrentCode(currentCode,true);
         mainAppController.setCurrentCode(currentCode);
     }
@@ -310,12 +373,6 @@ public class MachineConfigurationController {
         else
             AddMorePairsButton.setDisable(false);
     }
-    public void WithPlugBoardCheckedAction(javafx.event.ActionEvent actionEvent) {
-
-        if(WithPlugBoardPairs.isSelected())
-              setPlugBoardPairs();
-    }
-
 
     public void GetRandomButtonActionListener(ActionEvent actionEvent) {
         resetAllFields();
@@ -328,6 +385,17 @@ public class MachineConfigurationController {
         SelectedMachineCodeController.clearCurrentCodeView();
         showAllCodes();
         disableAllFields(false);
+
+        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
+        List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+        rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
+        rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
+        rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
+        CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
+
+        System.out.println("starting brute force");
+        mainAppController.startBF(codeFormatDTO, bruteForceLevel.easyLevel);
+        System.out.println("After brute force");
     }
 
     public void resetAllFields()
@@ -347,7 +415,6 @@ public class MachineConfigurationController {
         rotorsAndPositionsHBox.getChildren().clear();
 
         SelectedReflectorComboBox.getItems().clear();
-        WithPlugBoardPairs.setSelected(false);
 
         VBox firstInputs=(VBox)PairsHBox.getChildren().get(0);
         VBox secondInputs=(VBox)PairsHBox.getChildren().get(1);
@@ -364,10 +431,22 @@ public class MachineConfigurationController {
         firstInputs.getChildren().clear();;
         secondInputs.getChildren().clear();
 
-        //CurrentCodeComponentController.resetFields();
+        CurrentCodeComponentController.resetFields();
         SelectedCodeComponentController.resetFields();
         CodeConfTabPane.getSelectionModel().select(0);
         setInitializeConfiguration();
+
+        if(mEngine.isCodeConfigurationIsSet())
+        {
+            mEngine.resetAllData();
+            mEngine.resetSelected();
+            isSelected.set(false);
+//
+//            CurrentMachineCodeController.setSelectedCode(mEngine.getCodeFormat(true));
+//            mainAppController.bindEncrypteCode();
+//            CurrentCodeComponentController.SetCurrentCode(mEngine.getCodeFormat(true),false);
+//            mEngine.resetCodePosition();
+        }
        // isSelected.set(false);
         isCodeSelectedByUser.set(false);
     }
@@ -377,7 +456,6 @@ public class MachineConfigurationController {
         rotorsAndPositionsHBox.setDisable(toDisable);
         PairsHBox.setDisable(toDisable);
         SelectedReflectorComboBox.setDisable(toDisable);
-        WithPlugBoardPairs.setDisable(toDisable);
         AddMorePairsButton.setDisable(toDisable);
         removePlugBoardPairButton.setDisable(toDisable);
     }
@@ -385,12 +463,6 @@ public class MachineConfigurationController {
     public void ResetAllFieldsButtonActionListener(ActionEvent actionEvent) {
         disableAllFields(false);
         resetAllFields();
-    }
-
-    public void SelecteReflectorActionListener(ActionEvent actionEvent) {
-        isCodeSelectedByUser.set(true);
-        isSelected.set(true);
-        showCodeDetails.set(true);
     }
 
     public void addMorePairsButtonOnAction(ActionEvent actionEvent) {
@@ -405,5 +477,16 @@ public class MachineConfigurationController {
         firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
         secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
         numberOfPairs--;
+    }
+
+    public void SelectedReflectorActionListener(ActionEvent actionEvent) {
+        isCodeSelectedByUser.set(true);
+        isSelected.set(true);
+        showCodeDetails.set(true);
+    }
+
+    public void updateCurrentCode() {
+        CodeFormatDTO currentCode= CurrentMachineCodeController.getCurrentCode();
+        CurrentCodeComponentController.SetCurrentCode(currentCode,true);
     }
 }

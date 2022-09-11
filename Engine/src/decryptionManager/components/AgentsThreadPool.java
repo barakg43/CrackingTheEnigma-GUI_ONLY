@@ -1,9 +1,10 @@
 package decryptionManager.components;
+import java.io.Serializable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-public class AgentsThreadPool extends ThreadPoolExecutor{
+public class AgentsThreadPool extends ThreadPoolExecutor {
 
     public AgentsThreadPool(int corePoolSize, int maximumPoolSize,
                             long keepAliveTime, TimeUnit unit,

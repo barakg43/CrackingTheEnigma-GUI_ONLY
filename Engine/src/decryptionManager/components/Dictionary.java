@@ -1,11 +1,12 @@
 package decryptionManager.components;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Dictionary {
+public class Dictionary implements Serializable {
 
 
     public Dictionary() {

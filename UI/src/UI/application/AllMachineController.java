@@ -5,20 +5,27 @@ import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import UI.application.encryptTab.EncryptTabController;
 
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
+import dtoObjects.bruteForceLevel;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 public class AllMachineController {
 
     @FXML public Pane FilePathComponent;
+
     @FXML  public ScrollPane MachineConfComponent;
     @FXML  public Tab encryptionTab;
     @FXML public Tab machineConfTab;
@@ -28,11 +35,14 @@ public class AllMachineController {
     @FXML private Label FirstLoadFileLabel;
     private Engine mEngine;
 
+    private SingleCodeStatisticsViewController singleCodeController;
+
     @FXML private BorderPane encryptionTabComponent;
     @FXML private EncryptTabController encryptionTabComponentController;
     public AllMachineController(){
 
         mEngine=new EnigmaEngine();
+        encryptionTabComponentController=new EncryptTabController();
     }
 
     private ReadOnlyDoubleProperty sceneWidthProperty;
@@ -49,7 +59,9 @@ public class AllMachineController {
     {
         sceneHeightProperty=heightProperty;
         sceneWidthProperty=widthProperty;
+
         encryptionTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
+        MachineConfComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
     }
     public Label getFirstLoadFileLabel()
     {
@@ -58,9 +70,6 @@ public class AllMachineController {
     @FXML
     public void initialize()
     {
-     //   encryptionTab.setDisable(true);
-       // machineConfTab.setDisable(true);
-        //automaticEncryptionTab.setDisable(true);
 
         if(FilePathComponentController!=null && MachineConfComponentController!=null && encryptionTabComponentController!=null)
         {
@@ -91,7 +100,20 @@ public class AllMachineController {
         encryptionTabComponentController.setSimpleCurrentCode(currentCode);
     }
 
-    public void resetCurrentCode() {
-        encryptionTabComponentController.resetSimpleCurrCode();
+    public void bindCurrentCode()
+    {
+        MachineConfComponentController.getCurrentMachineCodeController().setSelectedCode(encryptionTabComponentController.bindCodeComponentController().getCurrentCode());
+        MachineConfComponentController.updateCurrentCode();
     }
+
+    public void startBF(CodeFormatDTO codeFormatDTO, bruteForceLevel level)
+    {
+        mEngine.bruteForce(codeFormatDTO,level);
+    }
+
+    public void bindEncrypteCode()
+    {
+        encryptionTabComponentController.bindCodeComponentController().setSelectedCode(MachineConfComponentController.CurrentMachineCodeController.getCurrentCode());
+    }
+
 }

@@ -10,9 +10,9 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.AllMachineController">
 
    <content>
-      <SplitPane dividerPositions="0.12722419928825623" minHeight="967.0" minWidth="1000.0" orientation="VERTICAL">
+      <SplitPane id="AllMachineSplitPane" dividerPositions="0.12722419928825623" minHeight="967.0" minWidth="1000.0" orientation="VERTICAL">
         <items>
-            <Pane maxHeight="182.0" minHeight="86.0" minWidth="1017.0" prefHeight="182.0" prefWidth="1030.0">
+            <Pane maxHeight="120.0" minHeight="120.0" minWidth="1017.0">
                <children>
                   <Label id="First-Load-File-Label" fx:id="FirstLoadFileLabel" layoutX="14.0" layoutY="70.0" stylesheets="@AllMachineCSS.css" text="You need first load the machine from file" />
                   <fx:include fx:id="FilePathComponent" source="FIlePathComponent/filePathFX.fxml" />

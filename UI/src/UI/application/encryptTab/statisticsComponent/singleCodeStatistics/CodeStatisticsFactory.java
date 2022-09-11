@@ -3,8 +3,10 @@ package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +18,7 @@ public class CodeStatisticsFactory {
 
 
     private URL url;
+    private SingleCodeStatisticsViewController controller;
     public CodeStatisticsFactory() {
         url=getClass().getClassLoader().getResource(SINGLE_CODE_STATISTICS_RESOURCE);
 
@@ -33,8 +36,9 @@ public class CodeStatisticsFactory {
         }
 
 //        TableStatisticRecordController controller= fxmlLoader.getController();
-        SingleCodeStatisticsViewController controller= fxmlLoader.getController();
+        controller = fxmlLoader.getController();
         controller.createCodeStatisticsView(codeFormatDTO,statisticRecordDTOList);
+
         return loadedStatisticsNode;
 
     }

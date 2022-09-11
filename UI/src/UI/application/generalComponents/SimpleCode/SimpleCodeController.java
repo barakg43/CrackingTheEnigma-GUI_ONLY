@@ -6,12 +6,19 @@ import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SimpleCodeController {
@@ -20,12 +27,8 @@ public class SimpleCodeController {
     @FXML
     private HBox hboxCodeFormat;
 
-
-
     @FXML
     private TextFlow rotorIDsList;
-
-
 
     @FXML
     private TextFlow positionDistance;
@@ -40,14 +43,47 @@ public class SimpleCodeController {
     @FXML
     private TextFlow plugboardPairsList;
     private NewCodeFormatController currentCodeController;
-
     private MachineConfigurationController machineCodeController;
     public void setCurrCodeController(NewCodeFormatController currCodeController)
     {
         currentCodeController=currCodeController;
     }
-   public void setSelectedCode(CodeFormatDTO currCode)
+
+    @FXML
+    private void initialize() {
+        plugboardGridComp.disableProperty().bind(plugboardGridComp.visibleProperty().not());
+        plugboardGridComp.managedProperty().bind(plugboardGridComp.visibleProperty());
+        hboxCodeFormat.disableProperty().bind(hboxCodeFormat.visibleProperty());
+        hboxCodeFormat.managedProperty().bind(hboxCodeFormat.visibleProperty());
+
+    }
+
+    public TextFlow getRotorIDsList() {
+        return rotorIDsList;
+    }
+
+    public TextFlow getPositionDistance() {
+        return positionDistance;
+    }
+
+    public Text getReflectorIDtext() {
+        return reflectorIDtext;
+    }
+
+    public GridPane getPlugboardGridComp() {
+        return plugboardGridComp;
+    }
+
+    public TextFlow getPlugboardPairsList() {
+        return plugboardPairsList;
+    }
+    private CodeFormatDTO currentCode;
+
+    public void setSelectedCode(CodeFormatDTO currCode)
    {
+       currentCode=currCode;
+       clearCurrentCodeView();
+
        hboxCodeFormat.setVisible(true);
        System.out.println(Thread.currentThread().getName()+ ": setSelectedCode");
       RotorInfoDTO[] rotorInfo=currCode.getRotorInfo();
@@ -107,26 +143,23 @@ public class SimpleCodeController {
 
 
    }
+   public CodeFormatDTO getCurrentCode()
+   {
+       return currentCode;
+   }
+
     public void SetMachineConfController(MachineConfigurationController machineController)
     {
         machineCodeController=machineController;
     }
 
-    @FXML
-       private void initialize() {
-            plugboardGridComp.disableProperty().bind(plugboardGridComp.visibleProperty().not());
-            plugboardGridComp.managedProperty().bind(plugboardGridComp.visibleProperty());
-            hboxCodeFormat.disableProperty().bind(hboxCodeFormat.visibleProperty());
-            hboxCodeFormat.managedProperty().bind(hboxCodeFormat.visibleProperty());
 
-       }
 
     public void clearCurrentCodeView()
     {
         hboxCodeFormat.setVisible(false);
         rotorIDsList.getChildren().clear();
         positionDistance.getChildren().clear();
-        reflectorIDtext.setText("");
         plugboardPairsList.getChildren().clear();
     }
 }
