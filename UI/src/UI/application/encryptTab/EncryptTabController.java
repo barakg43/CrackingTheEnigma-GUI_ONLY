@@ -45,12 +45,12 @@ public class EncryptTabController {
 
     public void bindComponentsWidthToScene(ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty)
     {
-        System.out.println("before binding 1");
+
 //        statisticsComponent.prefHeightProperty().bind(heightProperty);
         mainPaneTab.prefWidthProperty().bind(widthProperty);
         mainPaneTab.prefHeightProperty().bind(heightProperty);
         statisticsComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
-        System.out.println("before binding 2");
+
 //        codeComponent.prefHeightProperty().bind(mainPaneTab.heightProperty());
         codeComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
 

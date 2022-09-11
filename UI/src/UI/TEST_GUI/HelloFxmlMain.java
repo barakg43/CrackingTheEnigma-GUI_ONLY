@@ -5,6 +5,7 @@ import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import decryptionManager.components.CodeCalculatorFactory;
+import decryptionManager.components.Permuter;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
@@ -41,8 +42,19 @@ public class HelloFxmlMain extends Application{
 //            }
 //            System.out.println("]");
 //        }
-//
-        start1(primaryStage);
+
+        Permuter test=new Permuter(5);
+        int[] arry;
+            while((arry= test.getNext())!=null)
+            {
+                System.out.print("[");
+            for (int j : arry) {
+                System.out.format("%d,",j);
+            }
+            System.out.println("]");
+            }
+        //
+//        start1(primaryStage);
 //         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
