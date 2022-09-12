@@ -3,10 +3,10 @@ package enigmaEngine;
 import decryptionManager.DecryptionManager;
 import decryptionManager.components.Dictionary;
 import dtoObjects.*;
+import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import jaxb.*;
 
@@ -568,7 +568,7 @@ public class EnigmaEngine implements Engine , Serializable {
         return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
     }
 
-    public void bruteForce(CodeFormatDTO codeFormatDTO,bruteForceLevel BFLevel)
+    public void bruteForce(CodeFormatDTO codeFormatDTO, BruteForceLevel BFLevel)
     {
         this.decryptionManager=null;
         decryptionManager=new DecryptionManager(2,this);

@@ -2,25 +2,20 @@ package UI.application;
 
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
-import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import UI.application.encryptTab.EncryptTabController;
 
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
-import dtoObjects.bruteForceLevel;
+import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 
 public class AllMachineController {
 
@@ -106,7 +101,7 @@ public class AllMachineController {
         MachineConfComponentController.updateCurrentCode();
     }
 
-    public void startBF(CodeFormatDTO codeFormatDTO, bruteForceLevel level)
+    public void startBF(CodeFormatDTO codeFormatDTO, BruteForceLevel level)
     {
         mEngine.bruteForce(codeFormatDTO,level);
     }

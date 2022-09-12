@@ -5,18 +5,16 @@ import UI.application.AllMachineController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.*;
+import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -394,7 +392,7 @@ public class MachineConfigurationController {
         CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
 
         System.out.println("starting brute force");
-        mainAppController.startBF(codeFormatDTO, bruteForceLevel.easyLevel);
+        mainAppController.startBF(codeFormatDTO, BruteForceLevel.easyLevel);
         System.out.println("After brute force");
     }
 

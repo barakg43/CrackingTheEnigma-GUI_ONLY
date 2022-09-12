@@ -1,46 +1,65 @@
 package decryptionManager.components;
 
 import dtoObjects.CodeFormatDTO;
+import dtoObjects.DmDTO.CandidateDTO;
+import dtoObjects.DmDTO.TaskFinishDataDTO;
 import enigmaEngine.Engine;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+
 
 public class DecryterTask implements Runnable {
 
 
-    private CodeFormatDTO initialCode;
-   // private BlockingDeque<String>
-    private Engine copyEngine;
-    private double taskSize;
-    private Dictionary dictionary;
-    private String chiperedString;
-    private CodeCalculatorFactory codeCalculatorFactory;
+    private final CodeFormatDTO initialCode;
 
-    public DecryterTask(CodeFormatDTO initialCode, Engine copyEngine, double taskSize,String chiperedString,Dictionary dictionary) {
+    private final Engine copyEngine;
+    private final double taskSize;
+    private Dictionary dictionary;
+    private List<CandidateDTO> possibleCandidates;
+    private final String cipheredString;
+    private CodeCalculatorFactory codeCalculatorFactory;
+    BlockingQueue<TaskFinishDataDTO> successfulDecryption;
+    public DecryterTask(CodeFormatDTO initialCode,String cipheredString,
+	Engine copyEngine, double taskSize, BlockingQueue<TaskFinishDataDTO> successfulDecryption,
+	Dictionary dictionary) {
         this.initialCode = initialCode;
         this.copyEngine = copyEngine;
         this.taskSize = taskSize;
-        this.chiperedString=chiperedString;
+		this.cipheredString=cipheredString;
         this.dictionary=dictionary;
-
-
-        codeCalculatorFactory=new CodeCalculatorFactory(copyEngine.getMachineData().getAlphabetString(),copyEngine.getMachineData().getNumberOfRotorsInUse());
-
-    }
+        this.successfulDecryption=successfulDecryption;
+        possibleCandidates=new ArrayList<>();
+	}
 
     @Override
     public void run() {
+        long startTime=System.nanoTime();
         CodeFormatDTO currentCode=initialCode;
+
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
-            String processedOutput = copyEngine.processDataInput(chiperedString);
-            if(dictionary.checkIfAllLetterInDic(processedOutput))
-            {
-                System.out.println(currentCode);
-                System.out.println("********************************************\nOutput " + processedOutput);
+                String processedOutput = copyEngine.processDataInput(cipheredString);
+                    if(dictionary.checkIfAllLetterInDic(processedOutput))
+                    {
 
-            }
+                        possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(false),processedOutput));
+                        System.out.println(currentCode);
+                        System.out.println("********************************************\nOutput " + processedOutput);
 
-                //TODO:enter to queue
-            currentCode= codeCalculatorFactory.getNextCode(currentCode);
-        }
+
+
+                    }
+                    currentCode= codeCalculatorFactory.getNextCode(currentCode);
+                }
+
+                   try {
+        successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),
+                System.nanoTime()-startTime));
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);}
+
 
     }
 
