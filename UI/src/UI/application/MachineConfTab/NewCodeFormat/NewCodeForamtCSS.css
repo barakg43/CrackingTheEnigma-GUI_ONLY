@@ -36,3 +36,8 @@
 {
     -fx-text-fill: #ff6600;
 }
+
+.currentCode-Label {
+    -fx-font-size: 18;
+    -fx-font-weight: BOLD;
+}

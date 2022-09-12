@@ -50,6 +50,8 @@ public class EncryptComponentController {
     public void doneProcessData()
     {
         parentComponentTab.doneProcessData();
+        parentComponentTab.getCodeComponentController().setSelectedCode(parentComponentTab.getEnigmaEngine().getCodeFormat(false));
+        parentComponentTab.getMainController().bindCurrentCode();
     }
     @FXML
     private void initialize() {
@@ -70,6 +72,7 @@ public class EncryptComponentController {
         //link child controller to parent
         automaticComponentController.setEncryptComponentController(this);
         manualComponentController.setEncryptComponentController(this);
+
 
 
     }

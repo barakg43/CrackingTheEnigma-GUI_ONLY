@@ -1,5 +1,7 @@
 package dtoObjects;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.Serializable;
 
 public class PlugboardPairDTO implements Serializable {
@@ -11,6 +13,35 @@ public class PlugboardPairDTO implements Serializable {
         this.firstLetter = firstLetter;
         this.secondLetter = secondLetter;
     }
+
+//    static public class PlugBoardPairProperty
+//    {
+//        SimpleStringProperty firstLetterProperty;
+//
+//        public String getFirstLetterProperty() {
+//            return firstLetterProperty.get();
+//        }
+//
+//        public SimpleStringProperty firstLetterPropertyProperty() {
+//            return firstLetterProperty;
+//        }
+//
+//        public String getSecondLetterProperty() {
+//            return secondLetterProperty.get();
+//        }
+//
+//        public SimpleStringProperty secondLetterPropertyProperty() {
+//            return secondLetterProperty;
+//        }
+//
+//        SimpleStringProperty secondLetterProperty;
+//
+//        public PlugBoardPairProperty(SimpleStringProperty firstLetterProperty, SimpleStringProperty secondLetterProperty)
+//        {
+//            this.firstLetterProperty=firstLetterProperty;
+//            this.secondLetterProperty=secondLetterProperty;
+//        }
+//    }
 
     public char getFirstLetter() {
         return firstLetter;

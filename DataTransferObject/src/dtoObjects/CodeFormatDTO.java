@@ -1,5 +1,7 @@
 package dtoObjects;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +20,37 @@ public class CodeFormatDTO implements Serializable {
         isCurrentMachineCode=true;
 
     }
+//    public static class CodeFormatPropertyDTO {
+//
+//        RotorInfoDTO.RotorInfoPropertyDTO[] rotorInfo;
+//        SimpleStringProperty reflectorID;
+//        PlugboardPairDTO.PlugBoardPairProperty[] plugboardPairs;
+//
+//        public CodeFormatPropertyDTO(RotorInfoDTO.RotorInfoPropertyDTO[] rotorInfo,SimpleStringProperty reflectorID,PlugboardPairDTO.PlugBoardPairProperty[] plugboardPairs)
+//        {
+//            this.plugboardPairs=plugboardPairs;
+//            this.reflectorID=reflectorID;
+//            this.rotorInfo=rotorInfo;
+//        }
+//
+//        public String getReflectorID() {
+//            return reflectorID.get();
+//        }
+//
+//        public PlugboardPairDTO.PlugBoardPairProperty[] getPlugboardPairs() {
+//            return plugboardPairs;
+//        }
+//        public RotorInfoDTO.RotorInfoPropertyDTO[] getRotorInfo() {
+//            return rotorInfo;
+//        }
+//
+//
+//    }
+
 
     public RotorInfoDTO[] getRotorInfo() {
         return rotorInfo;
     }
-
     public String getReflectorID() {
         return reflectorID;
     }

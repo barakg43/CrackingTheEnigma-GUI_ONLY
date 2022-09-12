@@ -15,9 +15,9 @@
    <content>
       <AnchorPane prefHeight="623.0" prefWidth="497.0">
          <children>
-            <Label fx:id="SelectedReflectorLabel" layoutX="23.0" layoutY="361.0" prefHeight="34.0" prefWidth="123.0" styleClass="currentReflector-button" text="Selected Reflector:" />
+            <Label fx:id="SelectedReflectorLabel" layoutX="23.0" layoutY="361.0" prefHeight="34.0" prefWidth="155.0" styleClass="currentReflector-button" text="Selected Reflector:" />
             <Label fx:id="SelectedReflector" layoutX="194.0" layoutY="358.0" prefHeight="41.0" prefWidth="202.0" styleClass="currentReflector-button" text="Label" />
-            <Label fx:id="RotorsAndPositionsLabel" layoutX="15.0" layoutY="169.0" prefHeight="27.0" prefWidth="171.0" styleClass="currentRotors-button" text="Rotors and Positions:" />
+            <Label fx:id="RotorsAndPositionsLabel" layoutX="15.0" layoutY="169.0" prefHeight="27.0" prefWidth="203.0" styleClass="currentRotors-button" text="Rotors and Positions:" />
             <TableView fx:id="RotorsAndPositionsTable" layoutX="248.0" layoutY="172.0" maxWidth="150.0" minWidth="150.0" prefHeight="173.0" prefWidth="146.0">
               <columns>
                 <TableColumn fx:id="RotorIDColumn" prefWidth="75.0" text="Rotor ID" />
@@ -31,7 +31,7 @@
 
             <Pane fx:id="CurrentCodePane" layoutX="17.0" layoutY="14.0" prefHeight="99.0" prefWidth="432.0">
                <children>
-                  <Label fx:id="CurrentCodeLabel" layoutY="4.0" prefHeight="21.0" prefWidth="305.0" styleClass="currentCode-Label" text="Current Code:" />
+                  <Label fx:id="CurrentCodeLabel" layoutY="4.0" prefHeight="21.0" prefWidth="145.0" styleClass="currentCode-Label" stylesheets="@NewCodeForamtCSS.css" text="Current Code:" />
                   <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="29.0" maxHeight="75.0" maxWidth="400.0" minHeight="60.0" minWidth="400.0" prefHeight="75.0" prefWidth="400.0">
                      <content>
                         <FlowPane prefHeight="104.0" prefWidth="410.0">

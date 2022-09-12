@@ -1,15 +1,18 @@
 package UI.application.encryptTab.statisticsComponent;
 
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
+import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import dtoObjects.StatisticsDataDTO;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,7 @@ public class StatisticsComponentController {
     private final ExecutorService statisticsNodeMangerService;
     private final CodeStatisticsFactory codeStatisticsFactory;
     private GridPane codeForAnimation;
+    private SimpleStringProperty reflector;
 
     public StatisticsComponentController() {
         codeStatisticsFactory = new CodeStatisticsFactory();
@@ -83,9 +87,9 @@ public class StatisticsComponentController {
         updateCodeStatisticsView(statisticsDataDTO.getStatisticsData());
     }
 
-    @FXML
-    private void initialize() {
-
+    public void selectedReflectorBind(SimpleStringProperty reflector)
+    {
+       this.reflector= reflector;
     }
 }
 

@@ -25,8 +25,10 @@ public class UIApplication extends Application {
             fxmlLoader.setLocation(url);
             assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
-            AllMachineController controller= fxmlLoader.getController();
-            Scene scene = new Scene(root,1020,905);
+
+            Scene scene = new Scene(root,1100,980);
+            AllMachineController machineController=fxmlLoader.getController();
+            machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
             controller.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.show();
