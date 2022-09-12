@@ -2,12 +2,15 @@ package decryptionManager;
 
 import decryptionManager.components.*;
 import dtoObjects.*;
+import dtoObjects.DmDTO.CandidateDTO;
+import dtoObjects.DmDTO.TaskFinishDataDTO;
 import enigmaEngine.Engine;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 import static java.lang.Thread.sleep;
 
@@ -101,21 +104,22 @@ public class DecryptionManager implements Serializable{
         agents.prestartAllCoreThreads();
         for (double i = 0; i < numberOftask && currentCode!=null; i++) {
             try {
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),taskSize,"german poland leg else",dictionary));
+                taskQueue.put(new DecryterTask(currentCode,"german poland leg else",createNewEngineCopy(),
+                        taskSize,successfulDecryption,dictionary));
 
             } catch (InterruptedException e) {
                throw new RuntimeException(e);
             }
             System.out.println("Task number:"+(int)i);
             System.out.println("\n");
-           currentCode=codeCalculatorFactory.getNextCode(currentCode);
+           currentCode=codeCalculatorFactory.getNextCodeIndexOffset(currentCode,taskSize);
             System.out.println("current code  " + currentCode);
         }
         double remainTask=codeCalculatorFactory.getCodeConfAmount()%taskSize;
         if(remainTask>0) {
             try {
-
-                taskQueue.put(new DecryterTask(currentCode,createNewEngineCopy(),remainTask,"aaaaaaa leg",dictionary));
+                taskQueue.put(new DecryterTask(currentCode,"aaaaaaa leg",createNewEngineCopy(),remainTask
+                        ,successfulDecryption,dictionary));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -143,7 +147,10 @@ public class DecryptionManager implements Serializable{
 
 
     }
-
+    Supplier<TaskFinishDataDTO> getFinishQueueSupplier()
+    {
+        return new TaskFinishSupplier(successfulDecryption);
+    }
     private CodeFormatDTO copyCodeData(CodeFormatDTO codeFormatDTO,String reflector) {
         CodeFormatDTO newCodeFormat;
         RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[codeFormatDTO.getRotorInfo().length];

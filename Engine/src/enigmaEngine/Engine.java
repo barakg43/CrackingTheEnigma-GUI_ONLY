@@ -1,6 +1,7 @@
 package enigmaEngine;
 
 import dtoObjects.*;
+import dtoObjects.DmDTO.BruteForceLevel;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface Engine extends Encryptor {
     void resetAllData();
     boolean isMachineLoaded();
     CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
-    public void bruteForce(CodeFormatDTO codeFormatDTO, bruteForceLevel BFLevel);
+    public void bruteForce(CodeFormatDTO codeFormatDTO, BruteForceLevel BFLevel);
     public CodeFormatDTO getBFCodeFormat();
 
 }
