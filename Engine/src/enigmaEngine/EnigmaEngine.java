@@ -527,10 +527,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
         }
 
-        public Dictionary getDictionary()
-        {
-            return dictionary;
-        }
+
         private List<Character> copyExcludeChars(String excludeChars) {
         List<Character> excludeCharsList= new ArrayList<>();
         for (int i = 0; i < excludeChars.length(); i++) {

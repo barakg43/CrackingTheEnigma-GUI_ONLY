@@ -60,10 +60,7 @@ public class DMcontroller {
     {
         return enigmaEngine;
     }
-    public Dictionary getDictionary()
-    {
-        return decryptionManager.getDictionary();
-    }
+
 
     public void setMainAppController(AllMachineController allMachineController) {
         mainAppController=allMachineController;

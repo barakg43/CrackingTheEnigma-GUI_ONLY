@@ -103,11 +103,11 @@ public class DecryptionManager {
         return copyEngine;
     }
     public void pause()  {
-        try {
-            taskCreator.checkAccess();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            taskCreator.checkAccess();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
     public void resume()  {
         taskCreator.notify();
@@ -280,19 +280,15 @@ public class DecryptionManager {
     }
 
     private CodeFormatDTO resetAllPositionToFirstPosition(CodeFormatDTO codeFormatDTO) {
-        RotorInfoDTO[] rotorInfoArray=codeFormatDTO.getRotorInfoArray();
+        RotorInfoDTO[] rotorInfoArray = codeFormatDTO.getRotorInfoArray();
         for (int i = 0; i < rotorInfoArray.length; i++) {
-            rotorInfoArray[i]=new RotorInfoDTO(rotorInfoArray[i].getId(),0,
+            rotorInfoArray[i] = new RotorInfoDTO(rotorInfoArray[i].getId(), 0,
                     codeCalculatorFactory.getFirstLetter());
         }
-        return new CodeFormatDTO(rotorInfoArray,codeFormatDTO.getReflectorID(),new ArrayList<>());
+        return new CodeFormatDTO(rotorInfoArray, codeFormatDTO.getReflectorID(), new ArrayList<>());
 
 
-    public Dictionary getDictionary()
-    {
-        return dictionary;
     }
-
 
 
     private double calculateEasyLevelTaskAmount()

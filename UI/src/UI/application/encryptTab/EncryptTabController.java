@@ -12,6 +12,7 @@ import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.transformation.FilteredList;
 
 import javafx.event.ActionEvent;
