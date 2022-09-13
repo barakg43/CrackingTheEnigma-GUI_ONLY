@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 public class EncryptComponentController {
+    public Label inputString;
     @FXML
     private AutomaticEncryptController automaticComponentController;
     @FXML
@@ -65,13 +66,14 @@ public class EncryptComponentController {
         manualLayout.visibleProperty().bind(manualToggle.selectedProperty());
         //link output label to model in controllers
         automaticComponentController.bindOutputPropertyFromParent(outputString.textProperty());
+        automaticComponentController.bindInputPropertyFromParent(inputString.textProperty());
+
         manualComponentController.bindOutputPropertyFromParent(outputString.textProperty());
+        manualComponentController.bindInputPropertyFromParent(inputString.textProperty());
 
         //link child controller to parent
         automaticComponentController.setEncryptComponentController(this);
         manualComponentController.setEncryptComponentController(this);
-
-
 
     }
 

@@ -26,6 +26,9 @@ public class UIApplication extends Application {
             AllMachineController machineController=fxmlLoader.getController();
             machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
+
+            machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
+
             primaryStage.show();
         }
 

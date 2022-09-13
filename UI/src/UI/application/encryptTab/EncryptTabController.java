@@ -11,7 +11,9 @@ import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleLongProperty;
+
+import javafx.collections.transformation.FilteredList;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -19,6 +21,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+
+import java.util.concurrent.atomic.AtomicLong;
+
 
 public class EncryptTabController {
 
@@ -58,17 +64,25 @@ public class EncryptTabController {
     {
         return enigmaEngine;
     }
+
+    FilteredList<String> filteredData;
+
     public void bindComponentsWidthToScene(ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty)
     {
 
 
+
+//        statisticsComponent.prefHeightProperty().bind(heightProperty);
         mainPaneTab.prefWidthProperty().bind(widthProperty);
         mainPaneTab.prefHeightProperty().bind(heightProperty);
         statisticsComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
+
+//        codeComponent.prefHeightProperty().bind(mainPaneTab.heightProperty());
+
+
         codeComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
+
         statisticsComponentController.bindSizePropertyToParent(mainPaneTab.widthProperty(),mainPaneTab.heightProperty());
-
-
     }
     public void bindTabDisable(SimpleBooleanProperty isCodeSelected)
     {

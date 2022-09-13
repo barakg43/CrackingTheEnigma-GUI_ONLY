@@ -1,8 +1,10 @@
 package decryptionManager;
 
 import decryptionManager.components.*;
+
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.BruteForceLevel;
+
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.RotorInfoDTO;
@@ -221,6 +223,7 @@ public class DecryptionManager {
 
 
     }
+
     private void createTaskMiddleLevel(CodeFormatDTO codeFormatDTO){
         List<String> reflectorIdList = machineData.getReflectorIdList();
         CodeFormatDTO currentCode;
@@ -284,7 +287,12 @@ public class DecryptionManager {
         }
         return new CodeFormatDTO(rotorInfoArray,codeFormatDTO.getReflectorID(),new ArrayList<>());
 
+
+    public Dictionary getDictionary()
+    {
+        return dictionary;
     }
+
 
 
     private double calculateEasyLevelTaskAmount()
@@ -337,6 +345,7 @@ public class DecryptionManager {
             }
 
     }
+
 }
 
 

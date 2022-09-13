@@ -2,10 +2,12 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.AllMachineController">
+
+
+<ScrollPane id="allMachineScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="1100.0" maxWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.AllMachineController">
 
    <content>
-      <SplitPane id="AllMachineSplitPane" dividerPositions="0.12722419928825623" minHeight="967.0" minWidth="1000.0" orientation="VERTICAL">
+      <SplitPane id="AllMachineSplitPane" dividerPositions="0.12722419928825623" orientation="VERTICAL">
         <items>
             <Pane maxHeight="120.0" minHeight="120.0" minWidth="1017.0">
                <children>
@@ -25,7 +27,10 @@
                           <fx:include fx:id="encryptionTabComponent" source="encryptTab/encryptTab.fxml" />
                       </content>
                   </Tab>
-                  <Tab fx:id="automaticEncryptionTab" text="Automatic Encrypt/Decrypt " />
+                  <Tab fx:id="automaticEncryptionTab" text="Automatic Encrypt/Decrypt ">
+                     <content>
+                        <fx:include fx:id="DMTabComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="DmTab/dm.fxml" />
+                     </content></Tab>
               </tabs>
             </TabPane>
         </items>

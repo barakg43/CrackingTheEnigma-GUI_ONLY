@@ -15,6 +15,7 @@ public class ManualEncryptController {
         @FXML
         private TextField textInputField;
         private StringProperty outputProperty;
+        private StringProperty inputProperty;
         private Encryptor encryptor;
         private String input="";
         private EncryptComponentController encryptComponentController;
@@ -25,6 +26,7 @@ public class ManualEncryptController {
         private void doneGettingInput(ActionEvent event) {
                // System.out.println("press done!");
                 encryptor.addOutputStringToStatics(input,outputProperty.getValue());
+                inputProperty.setValue(textInputField.getText().toUpperCase());
                 input="";
                 encryptComponentController.doneProcessData(); //Pop up process done to parent
         }
@@ -45,4 +47,7 @@ public class ManualEncryptController {
                 this.encryptor = encryptor;
         }
 
+        public void bindInputPropertyFromParent(StringProperty inputPropertyParent) {
+                inputProperty=inputPropertyParent;
+        }
 }

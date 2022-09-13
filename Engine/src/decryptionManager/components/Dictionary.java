@@ -61,4 +61,9 @@ public class Dictionary implements Serializable {
         return wordsSet.contains(word);
     }
 
+    public Set<String> getWordsSet()
+    {
+        return wordsSet;
+    }
+
 }

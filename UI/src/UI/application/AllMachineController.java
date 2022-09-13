@@ -1,5 +1,6 @@
 package UI.application;
 
+import UI.application.DmTab.DMcontroller;
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.encryptTab.EncryptTabController;
@@ -14,10 +15,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class AllMachineController {
 
     @FXML public Pane FilePathComponent;
+
+    @FXML public ScrollPane allMachineScrollPane;
+
+    @FXML
+    private ScrollPane DMTabComponent;
 
     @FXML  public ScrollPane MachineConfComponent;
     @FXML  public Tab encryptionTab;
@@ -25,11 +32,13 @@ public class AllMachineController {
     @FXML public Tab automaticEncryptionTab;
     @FXML private FilePathController FilePathComponentController;
     @FXML private MachineConfigurationController MachineConfComponentController;
+    @FXML private DMcontroller DMTabComponentController;
     @FXML private Label FirstLoadFileLabel;
     private Engine mEngine;
 
     private SingleCodeStatisticsViewController singleCodeController;
 
+    private CodeFormatDTO codeFormatBF;
     @FXML private BorderPane encryptionTabComponent;
     @FXML private EncryptTabController encryptionTabComponentController;
     public AllMachineController(){
@@ -46,6 +55,8 @@ public class AllMachineController {
     public void setmEngine(Engine mEngine) {
         this.mEngine = mEngine;
         encryptionTabComponentController.setEnigmaEngine(mEngine);
+        DMTabComponentController.setEnigmaEngine(mEngine);
+
     }
 
     public void setSceneWidthHeightProperties(ReadOnlyDoubleProperty widthProperty,ReadOnlyDoubleProperty heightProperty)
@@ -64,17 +75,20 @@ public class AllMachineController {
     public void initialize()
     {
 
-        if(FilePathComponentController!=null && MachineConfComponentController!=null && encryptionTabComponentController!=null)
+        if(FilePathComponentController!=null && MachineConfComponentController!=null && encryptionTabComponentController!=null
+        && DMTabComponentController!=null)
         {
             FilePathComponentController.setMainAppController(this);
             MachineConfComponentController.setMainAppController(this);
             encryptionTabComponentController.setMainAppController(this);
+            DMTabComponentController.setMainAppController(this);
         }
 
 
     }
     public void setMachineDetails(){
         MachineConfComponentController.setMachineDetails();
+        DMTabComponentController.setDictionaryList();
     }
 
     public void setConfPanel() {

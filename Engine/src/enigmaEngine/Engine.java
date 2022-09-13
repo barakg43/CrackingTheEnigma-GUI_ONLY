@@ -1,10 +1,12 @@
 package enigmaEngine;
 
 import decryptionManager.components.Dictionary;
+
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.StatisticsDataDTO;
+
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public interface Engine extends Encryptor {
     void resetAllData();
     boolean isMachineLoaded();
     CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
-
     Dictionary getDictionary();
+
 
 }

@@ -50,11 +50,7 @@ public class MachineConfigurationController {
     @FXML  public VBox firstInputVBox;
     @FXML  public VBox secondInputVBox;
     @FXML public Button AddMorePairsButton;
-    @FXML  public Label configFirstLabel;
-    @FXML  public NewCodeFormatController SelectedCodeComponentController;
     @FXML public TabPane CodeConfTabPane;
-    @FXML public Label currentConfigurationLabel;
-    @FXML public ScrollPane selectedCodeScrollPane;
     @FXML   public ScrollPane selectedCodeConfiguration;
     @FXML public Button removePlugBoardPairButton;
     @FXML  public ScrollPane currentCodeScrollPane;
@@ -88,10 +84,8 @@ public class MachineConfigurationController {
     @FXML
     public void initialize() {
 
-        if (CurrentCodeComponentController != null && SelectedCodeComponentController!=null
-        && CurrentMachineCodeController!=null && SelectedMachineCodeController!=null) {
+        if (CurrentCodeComponentController != null && CurrentMachineCodeController!=null && SelectedMachineCodeController!=null) {
             CurrentCodeComponentController.SetMachineConfController(this);
-            SelectedCodeComponentController.SetMachineConfController(this);
             SelectedMachineCodeController.SetMachineConfController(this);
             CurrentMachineCodeController.SetMachineConfController(this);
 
@@ -110,7 +104,6 @@ public class MachineConfigurationController {
        // SelectedMachineCodeController.getReflectorIDtext().textProperty().bind(selectedReflectorProperty);
 
       //  CurrentMachineCodeController.getReflectorIDtext().textProperty().bind(currentReflectorProperty);
-       // SelectedCodeComponentController.currCodeController.getReflectorIDtext().textProperty().bind(selectedReflectorProperty);
        // CurrentCodeComponentController.currCodeController.getReflectorIDtext().textProperty().bind(currentReflectorProperty);
     }
 
@@ -121,10 +114,10 @@ public class MachineConfigurationController {
         MachineDetails.prefWidthProperty().bind(ConfPane.widthProperty());
         machineConfSplitPane.prefWidthProperty().bind(ConfPane.widthProperty());
         machineConfSplitPane.prefHeightProperty().bind(ConfPane.heightProperty());
-        selectedCodeAnchorePane.prefWidthProperty().bind(machineConfSplitPane.widthProperty());
-        selectedCodeConfiguration.prefWidthProperty().bind(selectedCodeAnchorePane.widthProperty());
-        currentCodeConfSplitPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
-        currentCodeConfSplitPane.prefHeightProperty().bind(selectedCodeConfiguration.widthProperty());
+//        selectedCodeAnchorePane.prefWidthProperty().bind(machineConfSplitPane.widthProperty());
+//        selectedCodeConfiguration.prefWidthProperty().bind(selectedCodeAnchorePane.widthProperty());
+//        currentCodeConfSplitPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
+//        currentCodeConfSplitPane.prefHeightProperty().bind(selectedCodeConfiguration.widthProperty());
 
         CurrentCodeConfigurationPane.prefWidthProperty().bind(currentCodeConfSplitPane.widthProperty());
 
@@ -174,7 +167,6 @@ public class MachineConfigurationController {
         }
         showCodeDetails.set(false);
         CurrentMachineCodeController.clearCurrentCodeView();
-        SelectedMachineCodeController.setCurrCodeController(SelectedCodeComponentController);
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
         if (machineData != null) {
@@ -202,12 +194,8 @@ public class MachineConfigurationController {
 
         numberOfPairs=0;
         isCodeSelectedByUser.set(false);
-        currentConfigurationLabel.setVisible(false);
-        configFirstLabel.setVisible(true);
         MachineCodePane.setVisible(true);
         showCodeDetails.set(true);
-        selectedCodeScrollPane.setVisible(false);
-        currentConfigurationLabel.setVisible(false);
         int numberOfRotorsInUse = machineData.getNumberOfRotorsInUse();
         int[] rotorsId = machineData.getRotorsId();
         String positions = machineData.getAlphabetString();
@@ -257,6 +245,7 @@ public class MachineConfigurationController {
     @FXML
     public void SetCodeConfActionListener(javafx.event.ActionEvent actionEvent) {
 
+        isSelected.set(true);
 
         List<Integer> selectedRotorsID = new ArrayList<>();
         List<Character> selectedPositions =new ArrayList<>();
@@ -336,13 +325,8 @@ public class MachineConfigurationController {
 
     private void showAllCodes()
     {
-        selectedCodeScrollPane.setVisible(true);
         CodeFormatDTO selectedCode = mEngine.getCodeFormat(true);
 
-        currentConfigurationLabel.setVisible(true);
-        configFirstLabel.setVisible(false);
-
-        SelectedCodeComponentController.SetCurrentCode(selectedCode,false);
         SelectedMachineCodeController.setSelectedCode(selectedCode);
         CodeConfTabPane.getSelectionModel().select(0);
 
@@ -438,7 +422,6 @@ public class MachineConfigurationController {
         secondInputs.getChildren().clear();
 
         CurrentCodeComponentController.resetFields();
-        SelectedCodeComponentController.resetFields();
         CodeConfTabPane.getSelectionModel().select(0);
         setInitializeConfiguration();
 
@@ -451,8 +434,13 @@ public class MachineConfigurationController {
 //            CurrentMachineCodeController.setSelectedCode(mEngine.getCodeFormat(true));
 //            mainAppController.bindEncrypteCode();
 //            CurrentCodeComponentController.SetCurrentCode(mEngine.getCodeFormat(true),false);
-//            mEngine.resetCodePosition();
+ //           mEngine.resetCodePosition();
+
+            SelectedMachineCodeController.clearCurrentCodeView();
+            CurrentMachineCodeController.clearCurrentCodeView();
         }
+
+
        // isSelected.set(false);
         isCodeSelectedByUser.set(false);
     }
@@ -487,7 +475,7 @@ public class MachineConfigurationController {
 
     public void SelectedReflectorActionListener(ActionEvent actionEvent) {
         isCodeSelectedByUser.set(true);
-        isSelected.set(true);
+       // isSelected.set(true);
         showCodeDetails.set(true);
     }
 

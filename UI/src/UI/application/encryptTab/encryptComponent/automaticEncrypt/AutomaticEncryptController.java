@@ -1,5 +1,7 @@
 package UI.application.encryptTab.encryptComponent.automaticEncrypt;
 
+import UI.application.DmTab.DMencrypt.automaticEncrypteDMController;
+import UI.application.DmTab.DMencrypt.encryptTabDMController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
@@ -19,17 +21,31 @@ public class AutomaticEncryptController {
         @FXML
         private TextField stringInputTextField;
         private StringProperty outputProperty;
+        private StringProperty inputProperty;
 
 
 
     private EncryptComponentController encryptComponentController;
+    private automaticEncrypteDMController automaticEncrypteDMController;
     public void setEncryptComponentController(EncryptComponentController encryptComponentController) {
         this.encryptComponentController = encryptComponentController;
     }
+    public void setAutomaticEncrypteDMController(automaticEncrypteDMController encryptTabDMController)
+    {
+        this.automaticEncrypteDMController=encryptTabDMController;
+    }
+
         @FXML
         void processStringData(ActionEvent event) {
             outputProperty.setValue( encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
-            encryptComponentController.doneProcessData(); //Pop up process done to parent
+            inputProperty.setValue(stringInputTextField.getText().toUpperCase());
+            if(automaticEncrypteDMController!=null) {
+                automaticEncrypteDMController.doneProcessData();
+            }
+            else{
+                encryptComponentController.doneProcessData(); //Pop up process done to parent
+
+            }
         }
         @FXML public void clearTextFieldInput(ActionEvent event) {
             stringInputTextField.clear();
@@ -52,7 +68,10 @@ public class AutomaticEncryptController {
 
         }
 
+    public void bindInputPropertyFromParent(StringProperty inputPropertyParent) {
+        inputProperty=inputPropertyParent;
     }
+}
 
 
 

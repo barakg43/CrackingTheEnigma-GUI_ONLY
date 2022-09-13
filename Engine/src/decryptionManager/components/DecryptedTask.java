@@ -36,7 +36,10 @@ public class DecryptedTask implements Runnable {
         this.successfulDecryption=successfulDecryption;
         this.codeCalculatorFactory=codeCalculatorFactory;
         possibleCandidates=new ArrayList<>();
-	}
+
+        codeCalculatorFactory=new CodeCalculatorFactory(copyEngine.getMachineData().getAlphabetString(),copyEngine.getMachineData().getNumberOfRotorsInUse());
+
+    }
 
     @Override
     public void run() {
@@ -52,6 +55,7 @@ public class DecryptedTask implements Runnable {
                         possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(true),processedOutput));
                         System.out.println(currentCode);
                         System.out.println("********************************************\nOutput " + processedOutput);
+
                     }
                     currentCode= codeCalculatorFactory.getNextCode(currentCode);
                 }
