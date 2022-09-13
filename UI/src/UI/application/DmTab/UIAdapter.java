@@ -2,7 +2,6 @@ package UI.application.DmTab;
 
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
-
 import javafx.application.Platform;
 
 import java.util.function.Consumer;

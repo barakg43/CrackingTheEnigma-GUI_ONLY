@@ -1,7 +1,10 @@
 package enigmaEngine;
 
-import dtoObjects.*;
-import dtoObjects.DmDTO.BruteForceLevel;
+import decryptionManager.components.Dictionary;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.MachineDataDTO;
+import dtoObjects.PlugboardPairDTO;
+import dtoObjects.StatisticsDataDTO;
 
 import java.util.List;
 
@@ -12,7 +15,7 @@ public interface Engine extends Encryptor {
     void checkIfPositionsValid(List<Character> positions);
     void checkIfReflectorNumValid(String ReflectorNum);
     void checkPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs) ;
-    public void setReflector(String reflector);
+     void setReflector(String reflector);
     void setCodeManually(CodeFormatDTO codeConfiguration);
     StatisticsDataDTO getStatisticDataDTO();
     MachineDataDTO getMachineData();
@@ -27,7 +30,7 @@ public interface Engine extends Encryptor {
     void resetAllData();
     boolean isMachineLoaded();
     CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
-    public void bruteForce(CodeFormatDTO codeFormatDTO, BruteForceLevel BFLevel);
-    public CodeFormatDTO getBFCodeFormat();
+
+    Dictionary getDictionary();
 
 }

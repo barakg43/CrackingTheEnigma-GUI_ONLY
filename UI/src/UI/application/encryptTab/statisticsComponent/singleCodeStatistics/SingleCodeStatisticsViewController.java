@@ -2,13 +2,11 @@ package UI.application.encryptTab.statisticsComponent.singleCodeStatistics;
 
 
 import UI.application.AllMachineController;
-import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.tableViewRecord.TableStatisticRecordController;
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.text.Text;
 
 import java.util.List;
 

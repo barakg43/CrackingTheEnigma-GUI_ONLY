@@ -1,3 +1,5 @@
+package UI.application.encryptTab;
+
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.FloatBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -8,8 +10,6 @@ import javafx.beans.value.ObservableIntegerValue;
 import javafx.beans.value.ObservableLongValue;
 
 import static javafx.beans.binding.Bindings.*;
-
-import static javafx.beans.binding.Bindings.createFloatBinding;
 
    public class ConcurrentModel {
 
@@ -1487,6 +1487,6 @@ import static javafx.beans.binding.Bindings.createFloatBinding;
 
         }
 
-    }
+
 
 

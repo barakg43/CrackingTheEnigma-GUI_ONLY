@@ -7,7 +7,7 @@ import enigmaEngine.EnigmaEngine;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Collection;
+
 import static UI.consoleUIold.UserInterface.OPTIONS.*;
 
 public class UserInterface {
@@ -231,32 +231,7 @@ public class UserInterface {
             }
         }
     }
-    private void saveEngineCopy()
-    {
 
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(  bos);
-            os.writeObject(mEngine);
-            engineCopyBytes= bos.toByteArray();
-            os.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-    private Engine createNewEngineCopy()  {
-        ObjectInputStream oInputStream = null;
-        Engine copyEngine=null;
-        try {
-            oInputStream = new ObjectInputStream(new ByteArrayInputStream(engineCopyBytes));
-            copyEngine= (Engine) oInputStream.readObject();
-            oInputStream.close();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        return copyEngine;
-    }
 
 
     private void machineConfByUser() // case 3
@@ -382,34 +357,9 @@ public class UserInterface {
 
 
     public List<Integer> rotorToList(String rotors) {
-      //  List<Integer> rotorList=new ArrayList<>();
-       // List<String> arrayString = Arrays.asList(rotors.split(","));
+
 
         return Arrays.asList(rotors.split(",")).stream().map(s -> Integer.parseInt(s.trim())).collect(Collectors.toList());
-        //
-
-//        selectedRotors = new Rotor[enigmaMachine.getRotorNumberInUse()];
-//        tempSelectedRotorsID=new ArrayList<>(enigmaMachine.getRotorNumberInUse());
-//        int rotorNum;
-//        if (arrayString.size() != enigmaMachine.getRotorNumberInUse())
-//            throw new RuntimeException("You need to enter " + enigmaMachine.getRotorNumberInUse() + " rotors with comma between them.");
-//
-//        for (int j = arrayString.size() - 1; j >= 0; j--) {
-//            try {
-//                rotorNum = Integer.parseInt(arrayString.get(j));
-//            } catch (Exception ex) {
-//                tempSelectedRotorsID=null;
-//                throw new RuntimeException("The number " +arrayString.get(j)+ " you entered isn't integer.");
-//            }
-//            if (rotorNum > enigmaMachine.getNumberOfRotors() || rotorNum < 1)
-//                throw new RuntimeException("There is no such rotors with "+rotorNum+ " id.");
-//            if (tempSelectedRotorsID.contains(rotorNum))
-//                throw new RuntimeException("You select the same rotor twice.");
-//            tempSelectedRotorsID.add(rotorNum);
-//
-//        }
-//        //  return selectedRotorID.stream().mapToInt(Integer::intValue).toArray();
-////        enigmaMachine.setSelectedRotors(selectedRotors);
 
     }
 

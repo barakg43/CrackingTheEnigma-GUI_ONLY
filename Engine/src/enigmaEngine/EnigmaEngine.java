@@ -1,19 +1,17 @@
 package enigmaEngine;
 
-import decryptionManager.DecryptionManager;
 import decryptionManager.components.Dictionary;
 import dtoObjects.*;
-import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaMachine.EnigmaMachine;
 import enigmaMachine.parts.Reflector;
 import enigmaMachine.parts.Rotor;
 import javafx.beans.property.SimpleStringProperty;
-import jaxb.*;
+import jaxb.CTEEnigma;
+import jaxb.CTERotor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,10 +37,10 @@ public class EnigmaEngine implements Engine , Serializable {
     private  int tempSelectedReflectorID;
     private List<Integer> tempSelectedRotorsID;
     private  List<PlugboardPairDTO> tempPlugBoardPairs;
-    private DecryptionManager decryptionManager;
+
     private long sumProcessingTime=0;
-    Dictionary dictionary;
-    private CodeFormatDTO codeFormatBF;
+     private Dictionary dictionary;
+
 
 
     @Override
@@ -107,7 +105,7 @@ public class EnigmaEngine implements Engine , Serializable {
 
     @Override
     public void setCodeManually(CodeFormatDTO codeConfiguration) {
-        RotorInfoDTO[] rotorInfoDTO=codeConfiguration.getRotorInfo();
+        RotorInfoDTO[] rotorInfoDTO=codeConfiguration.getRotorInfoArray();
         List<Integer> rotorIds=new ArrayList<>();
         List<Character> positions=new ArrayList<>();
 
@@ -118,9 +116,15 @@ public class EnigmaEngine implements Engine , Serializable {
 
          checkIfRotorsValid(rotorIds);
          checkIfPositionsValid(positions);
-         checkIfReflectorNumValid(codeConfiguration.getReflectorID());
+         int reflectorId= Reflector.convertRomanIdToNumber(codeConfiguration.getReflectorID());
+         checkIfReflectorNumValid(String.valueOf(reflectorId));
          checkPlugBoardPairs(codeConfiguration.getPlugboardPairDTOList()) ;
 
+    }
+
+    @Override
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
     @Override
@@ -508,8 +512,8 @@ public class EnigmaEngine implements Engine , Serializable {
             if(numberOfAgents<1||numberOfAgents>50)
                 throw  new RuntimeException("Invalid number of agents "+numberOfAgents+" number need to between 2 to 50");
 
-            dictionary=new Dictionary();
-            dictionary.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
+            dictionary=new Dictionary(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
+            //dictionary.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
 //            decryptionManager=new DecryptionManager(numberOfAgents,  this);
 //
 //            decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
@@ -568,34 +572,8 @@ public class EnigmaEngine implements Engine , Serializable {
         return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
     }
 
-    public void bruteForce(CodeFormatDTO codeFormatDTO, BruteForceLevel BFLevel)
-    {
-        this.decryptionManager=null;
-        decryptionManager=new DecryptionManager(2,this);
-        decryptionManager.setDictionary(dictionary);
-        decryptionManager.setTaskSize(500);
-        codeFormatBF=codeFormatDTO;
-        switch (BFLevel)
-        {
-            case easyLevel:
-                decryptionManager.createTaskEasyLevel(codeFormatDTO);
-                break;
-            case middleLevel:
-                decryptionManager.createTaskMiddleLevel(codeFormatDTO);
-                break;
-            case hardLevel:
-                decryptionManager.createTaskHardLevel(codeFormatDTO);
-                break;
-            case impossibleLevel:
-                decryptionManager.createTaskImpossibleLevel();
-                break;
-        }
-    }
 
-    public CodeFormatDTO getBFCodeFormat()
-    {
-        return codeFormatBF;
-    }
+
 
     public int getCipheredInputsAmount()
     {

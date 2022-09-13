@@ -6,19 +6,12 @@ import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SimpleCodeController {
@@ -83,15 +76,13 @@ public class SimpleCodeController {
    {
        currentCode=currCode;
        clearCurrentCodeView();
-
        hboxCodeFormat.setVisible(true);
-       System.out.println(Thread.currentThread().getName()+ ": setSelectedCode");
-      RotorInfoDTO[] rotorInfo=currCode.getRotorInfo();
+       RotorInfoDTO[] rotorInfo=currCode.getRotorInfoArray();
        List<PlugboardPairDTO> plugboardPairDTOList = currCode.getPlugboardPairDTOList();
        //example:<45,27,94><A(2)O(5)!(20)><III><A|Z,D|E>
        //<rotor ID(distance from notch to window),...> =<45,27,94>
        Text temp;
-       for(int i = currCode.getRotorInfo().length-1; i>0; i--)
+       for(int i = currCode.getRotorInfoArray().length-1; i>0; i--)
        {
            temp= new Text(String.format("%d,",rotorInfo[i].getId()));
            temp.getStyleClass().add("Rotors-text");

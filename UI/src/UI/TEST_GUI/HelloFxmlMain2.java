@@ -3,7 +3,6 @@ package UI.TEST_GUI;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
-
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;

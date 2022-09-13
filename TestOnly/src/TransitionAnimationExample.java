@@ -1,23 +1,19 @@
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.stage.Modality;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.Scene;
-import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.HLineTo;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
 import javafx.animation.*;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class TransitionAnimationExample extends Application {
 

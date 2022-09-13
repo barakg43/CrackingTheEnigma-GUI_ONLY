@@ -1,7 +1,5 @@
 package dtoObjects;
 
-import javafx.beans.property.SimpleStringProperty;
-
 import java.io.Serializable;
 
 public class PlugboardPairDTO implements Serializable {

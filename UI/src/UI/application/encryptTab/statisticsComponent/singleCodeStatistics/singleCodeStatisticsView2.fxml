@@ -4,13 +4,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.Blend?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <GridPane fx:id="mainContainer" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="400.0" prefHeight="423.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.applicationGUI.encryptTab.statisticsComponent.StatisticsComponentController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" minWidth="10.0" />

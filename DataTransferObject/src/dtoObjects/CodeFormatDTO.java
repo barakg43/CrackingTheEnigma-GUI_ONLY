@@ -1,55 +1,32 @@
 package dtoObjects;
 
-import javafx.beans.property.SimpleStringProperty;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CodeFormatDTO implements Serializable {
+public class CodeFormatDTO implements Serializable , Cloneable{
 
-    private final RotorInfoDTO[] rotorInfo;
+    private final RotorInfoDTO[] rotorInfoArray;
     private final String reflectorID;
     private final List<PlugboardPairDTO> plugboardPairDTOList;
     protected boolean isCurrentMachineCode;
-    public CodeFormatDTO(RotorInfoDTO[] rotorInfo, String reflectorID, List<PlugboardPairDTO> plugboardPairDTOList) {
-        this.rotorInfo = rotorInfo;
+    public CodeFormatDTO(RotorInfoDTO[] rotorInfoArray, String reflectorID, List<PlugboardPairDTO> plugboardPairDTOList) {
+        this.rotorInfoArray = rotorInfoArray;
         this.reflectorID = reflectorID;
         this.plugboardPairDTOList =new ArrayList<>(plugboardPairDTOList);
         isCurrentMachineCode=true;
 
     }
-//    public static class CodeFormatPropertyDTO {
-//
-//        RotorInfoDTO.RotorInfoPropertyDTO[] rotorInfo;
-//        SimpleStringProperty reflectorID;
-//        PlugboardPairDTO.PlugBoardPairProperty[] plugboardPairs;
-//
-//        public CodeFormatPropertyDTO(RotorInfoDTO.RotorInfoPropertyDTO[] rotorInfo,SimpleStringProperty reflectorID,PlugboardPairDTO.PlugBoardPairProperty[] plugboardPairs)
-//        {
-//            this.plugboardPairs=plugboardPairs;
-//            this.reflectorID=reflectorID;
-//            this.rotorInfo=rotorInfo;
-//        }
-//
-//        public String getReflectorID() {
-//            return reflectorID.get();
-//        }
-//
-//        public PlugboardPairDTO.PlugBoardPairProperty[] getPlugboardPairs() {
-//            return plugboardPairs;
-//        }
-//        public RotorInfoDTO.RotorInfoPropertyDTO[] getRotorInfo() {
-//            return rotorInfo;
-//        }
-//
-//
-//    }
+    public static CodeFormatDTO copyOf(CodeFormatDTO codeFormatDTO)
+    {
 
+        RotorInfoDTO[] rotorInfoArray=Arrays.copyOf(codeFormatDTO.rotorInfoArray,codeFormatDTO.rotorInfoArray.length);
+        return new CodeFormatDTO(rotorInfoArray, codeFormatDTO.reflectorID,new ArrayList<>(codeFormatDTO.plugboardPairDTOList));
 
-    public RotorInfoDTO[] getRotorInfo() {
-        return rotorInfo;
+    }
+    public RotorInfoDTO[] getRotorInfoArray() {
+        return rotorInfoArray;
     }
     public String getReflectorID() {
         return reflectorID;
@@ -60,6 +37,11 @@ public class CodeFormatDTO implements Serializable {
     }
 
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        return super.clone();
+    }
 
     @Override
     public String toString() {
@@ -67,18 +49,18 @@ public class CodeFormatDTO implements Serializable {
         //example:<45,27,94><A(2)O(5)!(20)><III><A|Z,D|E>
         //<rotor ID(distance from notch to window),...> =<45,27,94>
         codeFormat.append('<');
-        for(int i=rotorInfo.length-1;i>0;i--)
+        for(int i = rotorInfoArray.length-1; i>0; i--)
         {
-            codeFormat.append(String.format("%d,",rotorInfo[i].getId()));
+            codeFormat.append(String.format("%d,", rotorInfoArray[i].getId()));
         }
 
-        codeFormat.append(String.format("%d>",rotorInfo[0].getId()));
+        codeFormat.append(String.format("%d>", rotorInfoArray[0].getId()));
         //<starting letter leftest,...,starting letter rightest> = <A(2)O(5)!(20)>
         codeFormat.append('<');
-        for(int i=rotorInfo.length-1;i>0;i--) {
-            codeFormat.append(String.format("%c(%d),",rotorInfo[i].getStatingLetter(),rotorInfo[i].getDistanceToWindow()));
+        for(int i = rotorInfoArray.length-1; i>0; i--) {
+            codeFormat.append(String.format("%c(%d),", rotorInfoArray[i].getStatingLetter(), rotorInfoArray[i].getDistanceToWindow()));
         }
-        codeFormat.append(String.format("%c(%d)",rotorInfo[0].getStatingLetter(),rotorInfo[0].getDistanceToWindow()));
+        codeFormat.append(String.format("%c(%d)", rotorInfoArray[0].getStatingLetter(), rotorInfoArray[0].getDistanceToWindow()));
 
         codeFormat.append('>');
         //<reflector id> = <III>
@@ -105,7 +87,7 @@ public class CodeFormatDTO implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Arrays.hashCode(rotorInfo) +
+        hash = 23 * hash + Arrays.hashCode(rotorInfoArray) +
                            plugboardPairDTOList.hashCode()+
                            reflectorID.hashCode();
         return hash;
@@ -120,7 +102,7 @@ public class CodeFormatDTO implements Serializable {
             return false;
         }
         final CodeFormatDTO other = (CodeFormatDTO) obj;
-        return  (Arrays.equals(rotorInfo, other.rotorInfo)  &&
+        return  (Arrays.equals(rotorInfoArray, other.rotorInfoArray)  &&
                 (reflectorID.equals(other.reflectorID)) &&
                 ( plugboardPairDTOList.equals(other.plugboardPairDTOList)));
     }

@@ -1,5 +1,5 @@
 package decryptionManager.components;
-import java.io.Serializable;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;

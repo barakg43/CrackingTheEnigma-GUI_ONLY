@@ -2,21 +2,29 @@ package UI.application.MachineConfTab;
 
 
 import UI.application.AllMachineController;
-import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
-import dtoObjects.*;
-import dtoObjects.DmDTO.BruteForceLevel;
+import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import dtoObjects.CodeFormatDTO;
+import dtoObjects.MachineDataDTO;
+import dtoObjects.PlugboardPairDTO;
+import dtoObjects.RotorInfoDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MachineConfigurationController {
 
@@ -392,7 +400,7 @@ public class MachineConfigurationController {
         CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
 
         System.out.println("starting brute force");
-        mainAppController.startBF(codeFormatDTO, BruteForceLevel.easyLevel);
+        //mainAppController.startBF(codeFormatDTO, BruteForceLevel.easyLevel);
         System.out.println("After brute force");
     }
 

@@ -1,22 +1,22 @@
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.stage.Modality;
-import javafx.scene.Scene;
-import javafx.scene.shape.Circle;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
-import javafx.util.Duration;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.beans.Observable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class TimelineAnimationExample extends Application {
 

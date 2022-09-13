@@ -8,7 +8,10 @@ import dtoObjects.RotorInfoDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -64,7 +67,7 @@ public class NewCodeFormatController {
 
         currCodeController.clearCurrentCodeView();
         SelectedReflector.setText(currentCode.getReflectorID());
-        RotorInfoDTO[] SelectedRotors=currentCode.getRotorInfo();
+        RotorInfoDTO[] SelectedRotors=currentCode.getRotorInfoArray();
         ObservableList<rotorsAndPositions> rotorsAndPositions = FXCollections.observableArrayList();
         for (RotorInfoDTO rotor:SelectedRotors) {
             rotorsAndPositions.add(new rotorsAndPositions(rotor.getId(),String.valueOf(rotor.getStatingLetter())));

@@ -1,7 +1,6 @@
 package decryptionManager.components;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,13 +8,13 @@ import java.util.Set;
 public class Dictionary implements Serializable {
 
 
-    public Dictionary() {
+    public Dictionary(String words, List<Character> excludeCharsList, String alphabet) {
         wordsSet = new HashSet<>();
-
+        getValidDictionaryWords(words,excludeCharsList,alphabet);
     }
     private final Set<String> wordsSet;
     List<Character> excludeCharsList;
-    public void getValidDictionaryWords(String words, List<Character> excludeCharsList, String alphabet) {
+    private void getValidDictionaryWords(String words, List<Character> excludeCharsList, String alphabet) {
         this.excludeCharsList=excludeCharsList;
         words = words.toUpperCase();
         String[] wordsArray = words.trim().split(" ");

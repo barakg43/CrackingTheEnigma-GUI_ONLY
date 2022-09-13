@@ -4,28 +4,28 @@ import UI.application.AllMachineController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
+import decryptionManager.DecryptionManager;
+import decryptionManager.components.AtomicCounter;
 import dtoObjects.CodeFormatDTO;
+import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 public class EncryptTabController {
 
     @FXML public BorderPane mainPaneTab;
     public SplitPane encryptSplitPane;
     public ScrollPane currentCodeScrollPane;
-    public Label testLabel;
+
     //Current Machine Configuration
     @FXML
     private HBox codeComponent;
@@ -46,8 +46,14 @@ public class EncryptTabController {
 
     private Engine enigmaEngine;
     private AllMachineController mainAppController;
-    private AtomicLong counter;
 
+    public Label testLabel;
+    public ComboBox<BruteForceLevel> comboBoxBf;
+    public TextField taskSizeField;
+    private AtomicCounter counter;
+    private DecryptionManager decryptionManager;
+    SimpleLongProperty counterProperty;
+    Counter counterClass;
     public Engine getEnigmaEngine()
     {
         return enigmaEngine;
@@ -55,12 +61,10 @@ public class EncryptTabController {
     public void bindComponentsWidthToScene(ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty)
     {
 
-        System.out.println("before binding 1");
+
         mainPaneTab.prefWidthProperty().bind(widthProperty);
         mainPaneTab.prefHeightProperty().bind(heightProperty);
         statisticsComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
-        System.out.println("before binding 2");
-
         codeComponent.prefWidthProperty().bind(mainPaneTab.widthProperty());
         statisticsComponentController.bindSizePropertyToParent(mainPaneTab.widthProperty(),mainPaneTab.heightProperty());
 
@@ -84,6 +88,7 @@ public class EncryptTabController {
     public void setEnigmaEngine(Engine enigmaEngine) {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
+      new Thread(()-> decryptionManager=new DecryptionManager(enigmaEngine)).start();
     }
     public void doneProcessData()
     {
@@ -94,8 +99,14 @@ public class EncryptTabController {
     private void initialize() {
 
         encryptComponentController.setParentComponentTab(this);
-
-
+        counter=new AtomicCounter();
+        counterClass=new Counter();
+        counterProperty=new SimpleLongProperty(0);
+       // counterProperty=new SimpleLongProperty(counter,"counter");
+        counter.addPropertyChangeListener(e -> counterProperty.set((Long) e.getNewValue()));
+        comboBoxBf.getItems().addAll(BruteForceLevel.values());
+        testLabel.textProperty().bind(counterProperty.asString());
+        //obsver=new ReadOnlyObjectWrapper<>(counter);
 //        testLabel.textProperty().addListener(new ChangeListener<Number>() {
 //            @Override
 //            public void changed(final ObservableValue<? extends Number> observable,
@@ -128,9 +139,21 @@ public class EncryptTabController {
         return mainAppController;
     }
 
-    public void testBotton(ActionEvent actionEvent) {
+    public void testBotton(ActionEvent ignoredActionEvent) {
+        System.out.println("Starting BF!");
+        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),5,Integer.parseInt(taskSizeField.getText()));
+        decryptionManager.startBruteForce();
+        counter.increment();
+       // counterClass.setValue();
+        System.out.println(counterProperty.get());
+        //System.out.println(bindingCounter.get());
+    }
 
-        counter.incrementAndGet();
+    public void resumeOperation(ActionEvent ignoredActionEvent) {
+        decryptionManager.resume();
+    }
 
+    public void pauseOperation(ActionEvent ignoredActionEvent) {
+        decryptionManager.pause();
     }
 }

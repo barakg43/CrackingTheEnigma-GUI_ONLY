@@ -1,19 +1,15 @@
 package UI.TEST_GUI;
 
-import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import decryptionManager.components.CodeCalculatorFactory;
-import decryptionManager.components.Permuter;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
 import dtoObjects.StatisticRecordDTO;
-import enigmaEngine.Engine;
-import enigmaEngine.EnigmaEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

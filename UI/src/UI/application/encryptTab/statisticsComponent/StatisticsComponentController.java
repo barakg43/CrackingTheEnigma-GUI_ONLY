@@ -1,7 +1,6 @@
 package UI.application.encryptTab.statisticsComponent;
 
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
-import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.StatisticRecordDTO;
 import dtoObjects.StatisticsDataDTO;
@@ -12,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.Map;

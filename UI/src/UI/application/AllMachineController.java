@@ -3,10 +3,8 @@ package UI.application;
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.encryptTab.EncryptTabController;
-
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
 import dtoObjects.CodeFormatDTO;
-import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -101,10 +99,6 @@ public class AllMachineController {
         MachineConfComponentController.updateCurrentCode();
     }
 
-    public void startBF(CodeFormatDTO codeFormatDTO, BruteForceLevel level)
-    {
-        mEngine.bruteForce(codeFormatDTO,level);
-    }
 
     public void bindEncrypteCode()
     {

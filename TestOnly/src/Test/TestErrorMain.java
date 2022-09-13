@@ -1,10 +1,6 @@
 package Test;
 
 
-
-
-import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.CodeStatisticsFactory;
-import decryptionManager.components.CodeCalculatorFactory;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 

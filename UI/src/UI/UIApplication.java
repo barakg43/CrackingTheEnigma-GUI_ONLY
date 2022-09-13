@@ -1,12 +1,8 @@
 package UI;
 
 
-
 import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
-
-
-import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,7 +26,6 @@ public class UIApplication extends Application {
             AllMachineController machineController=fxmlLoader.getController();
             machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
-            controller.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.show();
         }
 
