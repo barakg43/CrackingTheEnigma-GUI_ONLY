@@ -2,6 +2,10 @@ package UI.TEST_GUI;
 
 import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
+import UI.application.DmTab.DMcontroller;
+import UI.application.DmTab.DMencrypt.automaticEncrypteDMController;
+import UI.application.DmTab.DMencrypt.encryptTabDMController;
+import UI.application.DmTab.DMoperational.DMoperationalController;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
@@ -48,7 +52,7 @@ public class HelloFxmlMain extends Application{
 //        }
 
 
-        start5(primaryStage);
+        start1(primaryStage);
         //start1(primaryStage);
 
 //         start2(primaryStage);
@@ -104,78 +108,78 @@ public class HelloFxmlMain extends Application{
 
           FXMLLoader fxmlLoader = new FXMLLoader();
 
-          URL url = getClass().getClassLoader().getResource("UI/application/encryptTab/encryptTab.fxml");
-          System.out.println("before 1");
+          URL url = getClass().getClassLoader().getResource("UI/src/UI/application/DmTab/DMoperational/DMoperational.fxml");
+//          System.out.println("before 1");
           fxmlLoader.setLocation(url);
-          System.out.println("before 2");
-          assert url != null;
-          System.out.println("before 2.5:"+url);
+//          System.out.println("before 2");
+//          assert url != null;
+//          System.out.println("before 2.5:"+url);
           Parent load = fxmlLoader.load(url.openStream());
-          System.out.println("before 3");
-//        TableStatisticRecordController controller= fxmlLoader.getController();
-          EncryptTabController controller= fxmlLoader.getController();
-          System.out.println("before 4");
-          List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          System.out.println("before 7");
-//        controller.addRecordsToStatisticTable(statisticRecordDTOList);
-          Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory= new HashMap<>();
-          RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
-          List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
-          CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
-         CodeCalculatorFactory codeCalculatorFactory=new CodeCalculatorFactory("AB",rotorInfoDTOS.length);
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
-          rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
-          rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
-          CodeFormatDTO currentCode=codeFormatDTO;
-         for (int i = 0; i < 27&&currentCode!=null; i++) {
-             System.out.println("current Code::"+currentCode);
-             System.out.println("remain code work::"+codeCalculatorFactory.remainCodeConfTask(currentCode));
-             currentCode=codeCalculatorFactory.getNextCodeIndexOffset(currentCode,1);
-             System.out.println("after calc  ::"+currentCode);
-
-         }
-          plugboardPairDTOList=new ArrayList<>();
-          plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
-          plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
-
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
-          statisticRecordDTOList=new ArrayList<>();
-          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-          statisticRecordDTOList.add(new StatisticRecordDTO("rrr","aaa",600));
-          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
-
-
-          //controller.updateCodeStatisticsView(statisticsDataHistory);
-
-          System.out.println("before 8");
+//          System.out.println("before 3");
+           DMoperationalController controller= fxmlLoader.getController();
+//          EncryptTabController controller= fxmlLoader.getController();
+//          System.out.println("before 4");
+//          List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
+//          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          System.out.println("before 7");
+////        controller.addRecordsToStatisticTable(statisticRecordDTOList);
+//          Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory= new HashMap<>();
+//          RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
+//          List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+//          CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"I",plugboardPairDTOList);
+//         CodeCalculatorFactory codeCalculatorFactory=new CodeCalculatorFactory("AB",rotorInfoDTOS.length);
+//          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+//          rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
+//          rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
+//          rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
+//          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
+//          CodeFormatDTO currentCode=codeFormatDTO;
+//         for (int i = 0; i < 27&&currentCode!=null; i++) {
+//             System.out.println("current Code::"+currentCode);
+//             System.out.println("remain code work::"+codeCalculatorFactory.remainCodeConfTask(currentCode));
+//             currentCode=codeCalculatorFactory.getNextCodeIndexOffset(currentCode,1);
+//             System.out.println("after calc  ::"+currentCode);
+//
+//         }
+//          plugboardPairDTOList=new ArrayList<>();
+//          plugboardPairDTOList.add(new PlugboardPairDTO('A','B'));
+//          plugboardPairDTOList.add(new PlugboardPairDTO('G','E'));
+//          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+//          statisticRecordDTOList=new ArrayList<>();
+//          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"IV",plugboardPairDTOList);
+//
+//          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+//          statisticRecordDTOList=new ArrayList<>();
+//          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"V",plugboardPairDTOList);
+//          statisticRecordDTOList=new ArrayList<>();
+//          statisticRecordDTOList.add(new StatisticRecordDTO("aaa","bbb",500));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticRecordDTOList.add(new StatisticRecordDTO("bbb","ccc",600));
+//          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+//          statisticRecordDTOList.add(new StatisticRecordDTO("rrr","aaa",600));
+//          statisticsDataHistory.put(codeFormatDTO,statisticRecordDTOList);
+//
+//
+//          //controller.updateCodeStatisticsView(statisticsDataHistory);
+//
+//          System.out.println("before 8");
           Scene scene = new Scene(load,800,600);
-          System.out.println("before 9");
-//         primaryStage.setScene(scene);
-         controller.bindComponentsWidthToScene(scene.widthProperty(),scene.heightProperty());
-//          primaryStage.show();
+//          System.out.println("before 9");
+         primaryStage.setScene(scene);
+     //    controller.bindComponentsWidthToScene(scene.widthProperty(),scene.heightProperty());
+        primaryStage.show();
 
      }
      private void start3(Stage primaryStage) throws IOException, InterruptedException {

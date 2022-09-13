@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<GridPane maxHeight="106.0" minHeight="106.0" prefHeight="106.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="201.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="10.0" prefWidth="146.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="10.0" prefWidth="82.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="10.0" prefWidth="74.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="10.0" prefWidth="122.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="10.0" prefWidth="129.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="83.0" minHeight="9.0" prefHeight="46.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="168.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label maxWidth="1.7976931348623157E308" text="Total Decrypt Time">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="totalDecrytpTIme" GridPane.columnIndex="1" />
+      <Label maxWidth="1.7976931348623157E308" text="Task Message" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="taskMessage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label maxWidth="1.7976931348623157E308" text="Task Progress" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="progressPercentLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <ProgressBar maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </ProgressBar>
+   </children>
+</GridPane>
