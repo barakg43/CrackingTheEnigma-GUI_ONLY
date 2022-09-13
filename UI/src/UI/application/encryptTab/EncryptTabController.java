@@ -99,6 +99,8 @@ public class EncryptTabController {
     private void initialize() {
 
         encryptComponentController.setParentComponentTab(this);
+
+
         counter=new AtomicCounter();
         counterClass=new Counter();
         counterProperty=new SimpleLongProperty(0);

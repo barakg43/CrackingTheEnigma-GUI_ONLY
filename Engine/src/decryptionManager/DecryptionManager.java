@@ -101,11 +101,11 @@ public class DecryptionManager {
         return copyEngine;
     }
     public void pause()  {
-        try {
-            taskCreator.checkAccess();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            taskCreator.checkAccess();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
     public void resume()  {
         taskCreator.notify();
