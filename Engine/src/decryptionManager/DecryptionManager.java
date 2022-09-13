@@ -2,7 +2,6 @@ package decryptionManager;
 
 import decryptionManager.components.*;
 import dtoObjects.*;
-import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import enigmaEngine.Engine;
 
@@ -239,9 +238,12 @@ public class DecryptionManager implements Serializable{
 
 
 
-
     }
 
+    public Dictionary getDictionary()
+    {
+        return dictionary;
+    }
 
 
 }

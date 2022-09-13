@@ -1,5 +1,6 @@
 package enigmaEngine;
 
+import decryptionManager.components.Dictionary;
 import dtoObjects.*;
 import dtoObjects.DmDTO.BruteForceLevel;
 
@@ -29,5 +30,6 @@ public interface Engine extends Encryptor {
     CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
     public void bruteForce(CodeFormatDTO codeFormatDTO, BruteForceLevel BFLevel);
     public CodeFormatDTO getBFCodeFormat();
+    public Dictionary getDictionary();
 
 }

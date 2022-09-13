@@ -30,7 +30,10 @@
                           <fx:include fx:id="encryptionTabComponent" source="encryptTab/encryptTab.fxml" />
                       </content>
                   </Tab>
-                  <Tab fx:id="automaticEncryptionTab" text="Automatic Encrypt/Decrypt " />
+                  <Tab fx:id="automaticEncryptionTab" text="Automatic Encrypt/Decrypt ">
+                     <content>
+                        <fx:include fx:id="DMTabComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="DmTab/dm.fxml" />
+                     </content></Tab>
               </tabs>
             </TabPane>
         </items>

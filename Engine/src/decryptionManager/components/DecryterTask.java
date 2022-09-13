@@ -32,7 +32,10 @@ public class DecryterTask implements Runnable {
         this.dictionary=dictionary;
         this.successfulDecryption=successfulDecryption;
         possibleCandidates=new ArrayList<>();
-	}
+
+        codeCalculatorFactory=new CodeCalculatorFactory(copyEngine.getMachineData().getAlphabetString(),copyEngine.getMachineData().getNumberOfRotorsInUse());
+
+    }
 
     @Override
     public void run() {
@@ -47,8 +50,6 @@ public class DecryterTask implements Runnable {
                         possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(false),processedOutput));
                         System.out.println(currentCode);
                         System.out.println("********************************************\nOutput " + processedOutput);
-
-
 
                     }
                     currentCode= codeCalculatorFactory.getNextCode(currentCode);
