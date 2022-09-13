@@ -32,8 +32,7 @@ public class EncryptComponentController {
     private RadioButton manualToggle;
     @FXML
     private Label outputString;
-    @FXML
-    private Label inputString;
+
     private Engine encryptor;
     private ToggleGroup toggleGroupSelector;
     private EncryptTabController parentComponentTab;

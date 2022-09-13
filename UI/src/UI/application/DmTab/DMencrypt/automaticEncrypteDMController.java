@@ -38,9 +38,8 @@ public class automaticEncrypteDMController {
     }
     @FXML
     private void initialize() {
-        encryptDataController.bindOutputPropertyFromParent(outputString.textProperty());
-        encryptDataController.bindInputPropertyFromParent(inputString.textProperty());
-//
+
+        encryptDataController.bindInputOutputPropertyFromParent(inputString.textProperty(),outputString.textProperty());
 //        //link child controller to parent
         encryptDataController.setAutomaticEncrypteDMController(this);
 

@@ -26,12 +26,7 @@ public class AutomaticEncryptController {
         private StringProperty inputProperty;
 
 
-    @FXML
-    private Button clearTextFieldButton;
-    @FXML
-    private TextField stringInputTextField;
-    private StringProperty outputProperty;
-    private StringProperty inputProperty;
+
 
 
     private EncryptComponentController encryptComponentController;
@@ -45,27 +40,7 @@ public class AutomaticEncryptController {
         this.automaticEncrypteDMController=encryptTabDMController;
     }
 
-        @FXML
-        void processStringData(ActionEvent event) {
-            outputProperty.setValue( encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
-            inputProperty.setValue(stringInputTextField.getText().toUpperCase());
-            if(automaticEncrypteDMController!=null) {
-                automaticEncrypteDMController.doneProcessData();
-            }
-            else{
-                encryptComponentController.doneProcessData(); //Pop up process done to parent
 
-            }
-
-//    private automaticEncrypteDMController automaticEncrypteDMController;
-
-    public void setEncryptComponentController(EncryptComponentController encryptComponentController) {
-        this.encryptComponentController = encryptComponentController;
-    }
-
-//    public void setAutomaticEncrypteDMController(automaticEncrypteDMController encryptTabDMController) {
-//        this.automaticEncrypteDMController = encryptTabDMController;
-//    }
 
     @FXML
     void processStringData(ActionEvent event) {
@@ -75,6 +50,7 @@ public class AutomaticEncryptController {
 
             outputProperty.setValue( encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
             inputProperty.setValue(stringInputTextField.getText().toUpperCase());
+
             //        if (automaticEncrypteDMController != null) {
 //            automaticEncrypteDMController.doneProcessData();
 //        } else {
@@ -116,9 +92,7 @@ public class AutomaticEncryptController {
         assert clearTextFieldButton != null : "fx:id=\"clearTextFieldButton\" was not injected: check your FXML file 'automaticEncrypt.fxml'.";
         assert stringInputTextField != null : "fx:id=\"stringInput\" was not injected: check your FXML file 'automaticEncrypt.fxml'.";
 
-    public void bindInputPropertyFromParent(StringProperty inputPropertyParent) {
-        inputProperty=inputPropertyParent;
-    }
+
 }
 
 }
