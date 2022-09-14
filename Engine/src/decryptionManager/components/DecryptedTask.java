@@ -6,11 +6,15 @@ import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import enigmaEngine.Engine;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static decryptionManager.DecryptionManager.fileOutput;
+import static decryptionManager.components.AgentsThreadPool.taskNumber;
 
 
 public class DecryptedTask implements Runnable {
@@ -43,11 +47,19 @@ public class DecryptedTask implements Runnable {
 
     @Override
     public void run() {
+
         long startTime=System.nanoTime();
         CodeFormatDTO currentCode=initialCode;
-
+        PrintWriter fileOutput1= null;
+        try {
+            fileOutput1 = new PrintWriter("C:\\ComputerScience\\Java\\EXCISES\\RUN-TEST\\output_"+taskNumber.incrementAndGet()+'_'+Thread.currentThread().getName()+".txt","UTF-8");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
-                fileOutput.println(currentCode);
+            fileOutput1.println(currentCode);
                 copyEngine.setCodeManually(currentCode);
                 String processedOutput = copyEngine.processDataInput(cipheredString);
                     if(dictionary.checkIfAllLetterInDic(processedOutput))
@@ -66,7 +78,7 @@ public class DecryptedTask implements Runnable {
     } catch (InterruptedException e) {
         throw new RuntimeException(e);}
 
-
+        fileOutput1.close();
     }
 
 

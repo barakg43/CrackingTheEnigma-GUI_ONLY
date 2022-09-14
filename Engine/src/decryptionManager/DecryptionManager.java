@@ -118,7 +118,7 @@ public class DecryptionManager {
     }
     public void startBruteForce()
     {
-
+        agents.prestartAllCoreThreads();
         taskCounter=0;
         totalTaskAmount=0;
         try {
@@ -131,7 +131,7 @@ public class DecryptionManager {
         taskCreator=new Thread(()-> {
             fileOutput.print("");
             try {
-                agents.prestartAllCoreThreads();
+
                 CodeFormatDTO startingCode = engine.getCodeFormat(false);
                 switch (level) {
                     case easyLevel:
@@ -250,19 +250,24 @@ public class DecryptionManager {
 
             fileOutput.println("Total Task number:"+(++taskCounter));
             System.out.println("Total Task number:"+(taskCounter));
-            //                taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
-//                        "german poland leg else",codeCalculatorFactory
-//                        ,createNewEngineCopy(),
-//                         taskSize,
-//                        successfulDecryption,
-//                        dictionary));
-            new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
-                    "aaaa",codeCalculatorFactory
-                    ,createNewEngineCopy(),
-                     taskSize,
-                    successfulDecryption,
-                    dictionary).run();
-            fileOutput.flush();
+            try {
+
+                taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
+            "aaaaa",codeCalculatorFactory
+            ,createNewEngineCopy(),
+             taskSize,
+            successfulDecryption,
+            dictionary));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+//            new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
+//                    "aaaa",codeCalculatorFactory
+//                    ,createNewEngineCopy(),
+//                     taskSize,
+//                    successfulDecryption,
+//                    dictionary).run();
+//            fileOutput.flush();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
