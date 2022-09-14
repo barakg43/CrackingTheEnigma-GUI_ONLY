@@ -2,8 +2,8 @@ package UI.TEST_GUI;
 
 import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
+import UI.application.DmTab.DMTaskComponents.TaskDataController;
 import UI.application.DmTab.DMcontroller;
-import UI.application.DmTab.DMencrypt.automaticEncrypteDMController;
 import UI.application.DmTab.DMencrypt.encryptTabDMController;
 import UI.application.DmTab.DMoperational.DMoperationalController;
 import UI.application.encryptTab.EncryptTabController;
@@ -108,7 +108,7 @@ public class HelloFxmlMain extends Application{
 
           FXMLLoader fxmlLoader = new FXMLLoader();
 
-          URL url = getClass().getClassLoader().getResource("UI/src/UI/application/DmTab/DMoperational/DMoperational.fxml");
+          URL url = getClass().getClassLoader().getResource("UI/application/AllMachine.fxml");
 //          System.out.println("before 1");
           fxmlLoader.setLocation(url);
 //          System.out.println("before 2");
@@ -116,7 +116,7 @@ public class HelloFxmlMain extends Application{
 //          System.out.println("before 2.5:"+url);
           Parent load = fxmlLoader.load(url.openStream());
 //          System.out.println("before 3");
-           DMoperationalController controller= fxmlLoader.getController();
+           AllMachineController controller= fxmlLoader.getController();
 //          EncryptTabController controller= fxmlLoader.getController();
 //          System.out.println("before 4");
 //          List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();
