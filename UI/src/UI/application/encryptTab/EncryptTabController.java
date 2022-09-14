@@ -143,7 +143,7 @@ public class EncryptTabController {
 
     public void testBotton(ActionEvent ignoredActionEvent) {
         System.out.println("Starting BF!");
-        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),5,Integer.parseInt(taskSizeField.getText()));
+        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
         decryptionManager.startBruteForce();
         counter.increment();
        // counterClass.setValue();

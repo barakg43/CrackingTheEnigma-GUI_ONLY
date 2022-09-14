@@ -4,12 +4,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-public class AgentsThreadPool extends ThreadPoolExecutor {
+import java.util.concurrent.atomic.AtomicLong;
 
+public class AgentsThreadPool extends ThreadPoolExecutor {
+    public static AtomicLong taskNumber;
     public AgentsThreadPool(int corePoolSize, int maximumPoolSize,
                             long keepAliveTime, TimeUnit unit,
                             BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,threadFactory);
+        taskNumber=new AtomicLong(0);
     }
 
 
