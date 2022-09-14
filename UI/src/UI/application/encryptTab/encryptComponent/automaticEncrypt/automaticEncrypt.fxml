@@ -4,8 +4,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.*?>
-<GridPane id="EncryptDecryptPane" prefHeight="127.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController">
+
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane id="EncryptDecryptPane" prefHeight="127.0" prefWidth="500.0" stylesheets="@../../../DmTab/DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController">
+
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="689.0" minWidth="10.0" prefWidth="404.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="432.0" minWidth="10.0" prefWidth="96.0" />
@@ -15,9 +21,9 @@
       <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Button id="processButton" fx:id="processEncryptButton" mnemonicParsing="false" onAction="#processStringData" prefHeight="31.0" prefWidth="80.0" text="Process " GridPane.columnIndex="1" />
-      <Button id="clearButton" fx:id="clearTextFieldButton" mnemonicParsing="false" onAction="#clearTextFieldInput" prefHeight="31.0" prefWidth="80.0" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label id="enterStringLabel" text="Please enter string that you want to chipper:">
+      <Button id="processButton" fx:id="processEncryptButton" mnemonicParsing="false" onAction="#processStringData" prefHeight="31.0" prefWidth="80.0" styleClass="text-label" text="Process " GridPane.columnIndex="1" />
+      <Button id="clearButton" fx:id="clearTextFieldButton" mnemonicParsing="false" onAction="#clearTextFieldInput" prefHeight="31.0" prefWidth="80.0" styleClass="text-label" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label id="enterStringLabel" styleClass="text-label" text="Please enter string that you want to chipper:">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin></Label>

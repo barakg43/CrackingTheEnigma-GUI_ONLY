@@ -24,14 +24,14 @@
          <children>
             <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308">
                <content>
-                  <fx:include fx:id="automaticEncrypteComponent" maxWidth="1.7976931348623157E308" source="automaticEncrypteDM.fxml" />
+                  <fx:include fx:id="codeEncryptComponent" source="automaticEncrypteDM.fxml" />
                </content>
             </ScrollPane>
             <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
               <content>
                   <FlowPane maxWidth="1.7976931348623157E308">
                      <children>
-                        <Label prefHeight="35.0" prefWidth="133.0" text="Dictionary words:">
+                        <Label prefHeight="35.0" prefWidth="133.0" styleClass="text-label" stylesheets="@encryptTabDM.css" text="Dictionary words:">
                            <padding>
                               <Insets left="10.0" />
                            </padding></Label>

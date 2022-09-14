@@ -2,6 +2,7 @@ package UI.application.DmTab.CandidatesStatus;
 
 import UI.application.CommonResourcesPaths;
 import UI.application.DmTab.CandidatesStatus.singleCandidate.SingleCandidateController;
+import UI.application.DmTab.DMTaskComponents.TaskDataController;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import javafx.application.Platform;
@@ -18,6 +19,8 @@ public class CandidatesStatusController {
     @FXML
     private FlowPane flowPaneCandidates;
 
+    private TaskDataController taskDataController;
+
 
     public void addAllCandidate(TaskFinishDataDTO taskFinishDataDTO)
     {
@@ -25,7 +28,6 @@ public class CandidatesStatusController {
         for(CandidateDTO candidateDTO: taskFinishDataDTO.getPossibleCandidates())
         {
             addNewTile(candidateDTO,taskFinishDataDTO.getAgentID());
-
         }
 
     }
@@ -33,7 +35,7 @@ public class CandidatesStatusController {
     {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(new URL(CommonResourcesPaths.CANDIDATE_SINGLE_TILE));
+            loader.setLocation(CommonResourcesPaths.MAIN_FXML_RESOURCE);
             Node singledCandidateTile = loader.load();
             SingleCandidateController singledCandidateTileController = loader.getController();
             singledCandidateTileController.setData(candidateDTO,agentID);
@@ -45,5 +47,9 @@ public class CandidatesStatusController {
         }
 
 
+    }
+
+    public void setTaskDataController(TaskDataController taskDataController) {
+        this.taskDataController=taskDataController;
     }
 }

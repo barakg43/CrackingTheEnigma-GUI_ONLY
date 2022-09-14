@@ -20,7 +20,7 @@
    <children>
       <BorderPane prefHeight="350.0" prefWidth="600.0">
          <bottom>
-            <GridPane prefHeight="131.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="131.0" prefWidth="600.0" stylesheets="@../../DmTab/DMencrypt/encryptTabDM.css" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="152.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="482.0" minWidth="10.0" prefWidth="448.0" />
@@ -38,8 +38,10 @@
                                  <children>
                                     <HBox AnchorPane.leftAnchor="10.0">
                                        <children>
-                                          <Label id="outputLabel" prefWidth="80.0" text="input:" />
-                                          <Label id="inputText" fx:id="inputString" />
+
+                                          <Label id="outputLabel" prefHeight="21.0" prefWidth="80.0" styleClass="text-label" text="input:" />
+                                          <Label id="inputText" fx:id="inputString" minWidth="50.0" prefHeight="21.0" />
+
                                        </children>
                                     </HBox>
                                  </children>
@@ -48,8 +50,10 @@
                                  <children>
                                     <HBox AnchorPane.leftAnchor="10.0">
                                        <children>
-                                          <Label id="output-label" prefHeight="21.0" prefWidth="80.0" text="output:" />
-                                          <Label id="outputText" fx:id="outputString">
+
+                                          <Label id="output-label" prefHeight="21.0" prefWidth="80.0" styleClass="text-label" text="output:" />
+                                          <Label id="outputText" fx:id="outputString" minWidth="50.0" prefHeight="21.0">
+
                                              <padding>
                                                 <Insets left="10.0" />
                                              </padding>
@@ -67,10 +71,10 @@
                   </HBox>
                   <ButtonBar buttonMinWidth="30.0">
                     <buttons>
-                      <Button mnemonicParsing="false" onAction="#resetCodeToInitialState" prefHeight="50.0" prefWidth="134.0" text="Reset Code" />
+                      <Button mnemonicParsing="false" onAction="#resetCodeToInitialState" prefHeight="50.0" prefWidth="134.0" styleClass="text-label" text="Reset Code" />
                     </buttons>
                   </ButtonBar>
-                  <Label id="alphabetStringLabel" prefHeight="21.0" prefWidth="98.0" text="Alphabet:" GridPane.rowIndex="1">
+                  <Label id="alphabetStringLabel" prefHeight="21.0" prefWidth="98.0" styleClass="text-label" text="Alphabet:" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
@@ -98,8 +102,8 @@
          <top>
             <AnchorPane prefHeight="56.0" prefWidth="600.0" BorderPane.alignment="TOP_LEFT">
                <children>
-                  <RadioButton fx:id="automaticToggle" layoutX="37.0" layoutY="26.0" mnemonicParsing="false" text="Automatic mode(continuous)" />
-                  <RadioButton fx:id="manualToggle" layoutX="354.0" layoutY="26.0" mnemonicParsing="false" text="Manual mode(single)" />
+                  <RadioButton fx:id="automaticToggle" layoutX="37.0" layoutY="26.0" mnemonicParsing="false" styleClass="text-label" stylesheets="@../../DmTab/DMencrypt/encryptTabDM.css" text="Automatic mode(continuous)" />
+                  <RadioButton fx:id="manualToggle" layoutX="354.0" layoutY="26.0" mnemonicParsing="false" styleClass="text-label" stylesheets="@../../DmTab/DMencrypt/encryptTabDM.css" text="Manual mode(single)" />
                </children>
             </AnchorPane>
          </top>

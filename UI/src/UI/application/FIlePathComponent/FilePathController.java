@@ -59,6 +59,12 @@ public class FilePathController {
                 //mainAppController.setInitializeCodeConf();
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
                 mainAppController.setEncrypteTab();
+
+                System.out.println("after set5");
+
+                mainAppController.setDMTab();
+
+
                 isFileSelected.set(true);
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);

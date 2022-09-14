@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxWidth="1.7976931348623157E308" prefHeight="213.0" prefWidth="647.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMoperational.DMoperationalController">
+
+<GridPane maxWidth="1.7976931348623157E308" prefHeight="213.0" prefWidth="647.0" stylesheets="@../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMoperational.DMoperationalController">
 
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="144.0" />
@@ -33,25 +34,25 @@
       <ComboBox fx:id="levelCombobox" prefHeight="31.0" prefWidth="187.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <HBox maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <children>
-            <Button fx:id="pauseBotton" mnemonicParsing="false" onAction="#pauseBFbotton" text="Pause" />
-            <Button fx:id="stopBotton" mnemonicParsing="false" onAction="#stopBFbotton" text="Stop" />
-            <Button fx:id="startBotton" mnemonicParsing="false" onAction="#startBFbotton" text="Start" />
+            <Button fx:id="pauseBotton" mnemonicParsing="false" onAction="#pauseBFbotton" styleClass="text-label" text="Pause" />
+            <Button fx:id="stopBotton" mnemonicParsing="false" onAction="#stopBFbotton" styleClass="text-label" text="Stop" />
+            <Button fx:id="startBotton" mnemonicParsing="false" onAction="#startBFbotton" styleClass="text-label" text="Start" />
          </children>
          <GridPane.margin>
             <Insets bottom="10.0" left="55.0" right="10.0" top="10.0" />
          </GridPane.margin>
       </HBox>
-      <Label maxWidth="1.7976931348623157E308" text="Tasks size:">
+      <Label maxWidth="1.7976931348623157E308" styleClass="text-label" text="Tasks size:">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label maxWidth="1.7976931348623157E308" text="Difficulty level:" GridPane.rowIndex="1">
+      <Label maxWidth="1.7976931348623157E308" styleClass="text-label" text="Difficulty level:" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label maxWidth="1.7976931348623157E308" text="Number of agents:" GridPane.rowIndex="2">
+      <Label maxWidth="1.7976931348623157E308" styleClass="text-label" text="Number of agents:" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
