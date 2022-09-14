@@ -1,4 +1,4 @@
-package UI.application.DmTab.CandidatesStatus.singleCandidate;
+package UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate;
 
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.DmDTO.CandidateDTO;

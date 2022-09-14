@@ -15,6 +15,7 @@ import java.util.concurrent.BlockingQueue;
 
 import static decryptionManager.DecryptionManager.fileOutput;
 import static decryptionManager.components.AgentsThreadPool.taskNumber;
+import static decryptionManager.components.AgentsThreadPool.totalTimeTasks;
 
 
 public class DecryptedTask implements Runnable {
@@ -71,10 +72,11 @@ public class DecryptedTask implements Runnable {
                     }
                     currentCode= codeCalculatorFactory.getNextCode(currentCode);
                 }
-
-                   try {
-        successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),
-                System.nanoTime()-startTime));
+        long totalTime=System.nanoTime()-startTime;
+        try {
+            if(possibleCandidates.size()>0)
+                 successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
+        totalTimeTasks.set(totalTimeTasks.get()+totalTime);
     } catch (InterruptedException e) {
         throw new RuntimeException(e);}
 

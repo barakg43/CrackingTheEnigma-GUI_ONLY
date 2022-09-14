@@ -10,6 +10,7 @@ import dtoObjects.MachineDataDTO;
 import dtoObjects.RotorInfoDTO;
 import enigmaEngine.Engine;
 
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class DecryptionManager {
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
     private AtomicCounter taskDoneAmount;
-
+    private String output;
     private Thread taskCreator;
     private double totalTaskAmount;
     private long taskCounter;
@@ -52,7 +53,7 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
 
-
+        taskDoneAmount=new AtomicCounter();
 
     }
     private void saveEngineCopy()
@@ -81,7 +82,7 @@ public class DecryptionManager {
         throw new RuntimeException("Agent amount must be between 2 and 50");
     if(level==null)
         throw new RuntimeException("Brute force level must be selected");
-    agents=new AgentsThreadPool(2,agentAmount,20, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory());
+    agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory(),taskDoneAmount);
     }
     public double getTotalTasksAmount(BruteForceLevel level) {
         if(totalTaskAmount==0)
@@ -89,7 +90,9 @@ public class DecryptionManager {
 
         return totalTaskAmount;
     }
-
+    public long getTotalTimeTasks(){
+        return agents.getTotalTimeTasks();
+    }
     private Engine createNewEngineCopy()  {
         ObjectInputStream oInputStream = null;
         Engine copyEngine=null;
@@ -102,6 +105,12 @@ public class DecryptionManager {
         }
         return copyEngine;
     }
+
+    public void addListenerTotalTaskDoneCounter(PropertyChangeListener listener)
+    {
+        taskDoneAmount.addPropertyChangeListener(listener);
+    }
+
     public void pause()  {
 //        try {
 //            taskCreator.checkAccess();
@@ -116,8 +125,10 @@ public class DecryptionManager {
     {
         return new TaskFinishSupplier(successfulDecryption);
     }
-    public void startBruteForce()
+    public void startBruteForce(String output)
     {
+        this.output=output;
+
         agents.prestartAllCoreThreads();
         taskCounter=0;
         totalTaskAmount=0;
@@ -238,6 +249,7 @@ public class DecryptionManager {
 
 
     }
+
     private void createTaskEasyLevel(CodeFormatDTO codeFormatDTO)
     {
         CodeFormatDTO currentCode=null,temp;
@@ -253,23 +265,11 @@ public class DecryptionManager {
             try {
 
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
-            "aaaaa",codeCalculatorFactory
+            output,codeCalculatorFactory
             ,createNewEngineCopy(),
              taskSize,
             successfulDecryption,
             dictionary));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-//            new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
-//                    "aaaa",codeCalculatorFactory
-//                    ,createNewEngineCopy(),
-//                     taskSize,
-//                    successfulDecryption,
-//                    dictionary).run();
-//            fileOutput.flush();
-            try {
-                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

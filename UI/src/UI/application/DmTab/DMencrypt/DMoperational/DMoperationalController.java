@@ -1,8 +1,10 @@
-package UI.application.DmTab.DMoperational;
+package UI.application.DmTab.DMencrypt.DMoperational;
 
 import UI.application.DmTab.DMcontroller;
 import decryptionManager.DecryptionManager;
 import dtoObjects.DmDTO.BruteForceLevel;
+import enigmaEngine.Engine;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -19,7 +21,7 @@ public class DMoperationalController {
 
     @FXML
     private ComboBox<BruteForceLevel> levelCombobox;
-    @FXML
+    private SimpleStringProperty outputString;
     private DecryptionManager decryptionManager;
 
     @FXML
@@ -31,18 +33,31 @@ public class DMoperationalController {
     @FXML
     private Button startBotton;
 
-    private DMcontroller DMcontroller;
+
     public void setDecryptionManager(DecryptionManager decryptionManager) {
       //  this.decryptionManager = decryptionManager;
     }
-
+    private Engine enigmaEngine;
 
     @FXML
     void pauseBFbotton(ActionEvent event) {
 
 
     }
+    public void bindOutputStringToParent(SimpleStringProperty outputParent)
+    {
+        outputString.bind(outputParent);
 
+    }
+
+    public DecryptionManager getDecryptionManager() {
+        return decryptionManager;
+    }
+
+    public void setEnigmaEngine(Engine enigmaEngine) {
+        this.enigmaEngine = enigmaEngine;
+        decryptionManager=new DecryptionManager(enigmaEngine);
+    }
     @FXML
     void startBFbotton(ActionEvent event) {
         String error=checkIfBFDataValid();
@@ -54,8 +69,13 @@ public class DMoperationalController {
             errorAlert.setContentText(error);
             errorAlert.showAndWait();
         }
+
         else{
-            DMcontroller.addCandidates();
+            decryptionManager.setSetupConfiguration(levelCombobox.getValue(),
+                    (int) agentSize.getValue(),
+                    Integer.parseInt(taskSizeTextField.getText()));
+           // DMcontroller.addCandidates();
+            decryptionManager.startBruteForce(outputString.getValue());
         }
 
 
@@ -94,7 +114,7 @@ public class DMoperationalController {
         agentSize.setMinorTickCount(5);
         agentSize.setShowTickLabels(true);
         agentSize.setSnapToTicks(true);
-
+        outputString=new SimpleStringProperty();
         agentSize.valueProperty().addListener(
                 (observable, oldValue, newValue) -> sliderValueLabel.setText("value: " + newValue.intValue()));
 
@@ -102,8 +122,6 @@ public class DMoperationalController {
 
     }
 
-    public void setDMControoler(DMcontroller dMcontroller) {
-        this.DMcontroller=dMcontroller;
-    }
+
 }
 

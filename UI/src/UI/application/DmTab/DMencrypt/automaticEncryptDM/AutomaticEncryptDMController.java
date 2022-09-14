@@ -1,8 +1,10 @@
-package UI.application.DmTab.DMencrypt;
+package UI.application.DmTab.DMencrypt.automaticEncryptDM;
 
+import UI.application.DmTab.DMencrypt.encryptTabDMController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import decryptionManager.components.Dictionary;
 import enigmaEngine.Encryptor;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -24,6 +26,11 @@ public class AutomaticEncryptDMController {
     @FXML private AutomaticEncryptController encryptDataController;
     private encryptTabDMController parentComponentTab;
 
+    public void bindParentToOutputString(SimpleStringProperty outputProperty)
+    {
+        outputProperty.bind(outputString.textProperty());
+
+    }
 
     public encryptTabDMController getParentComponentTab()
     {
@@ -45,9 +52,10 @@ public class AutomaticEncryptDMController {
         if (encryptDataController != null)
         {
             encryptDataController.setAutomaticEncrypteDMController(this);
-            encryptDataController.bindOutputPropertyFromParent(outputString.textProperty());
-            encryptDataController.bindInputPropertyFromParent(inputString.textProperty());
+            encryptDataController.bindInputOutputPropertyFromParent(inputString.textProperty(),outputString.textProperty());
+
         }
+
 
     }
 

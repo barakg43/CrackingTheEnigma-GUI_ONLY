@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,11 +13,6 @@
                   <fx:include fx:id="encryptComponent" source="DMencrypt/encryptTabDM.fxml" />
                </children>
             </FlowPane>
-            <FlowPane maxWidth="1.7976931348623157E308">
-               <children>
-                  <fx:include fx:id="operationalComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="DMoperational/DMoperational.fxml" />
-               </children>
-            </FlowPane>
             <FlowPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <children>
                   <fx:include fx:id="taskDataComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="DMTaskComponents/taskData.fxml" />
@@ -28,4 +22,3 @@
       </VBox>
    </content>
 </ScrollPane>
-

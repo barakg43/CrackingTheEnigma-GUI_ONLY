@@ -1,8 +1,6 @@
 package UI.application.encryptTab.encryptComponent.automaticEncrypt;
 
-import UI.application.DmTab.DMencrypt.AutomaticEncryptDMController;
-import UI.application.DmTab.DMencrypt.encryptTabDMController;
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.DmTab.DMencrypt.automaticEncryptDM.AutomaticEncryptDMController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
@@ -10,8 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-
-import java.util.Set;
 
 public class AutomaticEncryptController {
 
@@ -64,9 +60,10 @@ public class AutomaticEncryptController {
             this.encryptor = encryptor;
         }
 
-        public void bindOutputPropertyFromParent(StringProperty outputPropertyParent) {
-            outputProperty=outputPropertyParent;
-        }
+    public void bindInputOutputPropertyFromParent(StringProperty inputPropertyParent,StringProperty outputPropertyParent) {
+        outputProperty=outputPropertyParent;
+        inputProperty=inputPropertyParent;
+    }
 
     @FXML
     private void initialize() {
@@ -77,9 +74,7 @@ public class AutomaticEncryptController {
 
         }
 
-    public void bindInputPropertyFromParent(StringProperty inputPropertyParent) {
-        inputProperty=inputPropertyParent;
-    }
+
 
     public TextField getStringInputTextField()
     {

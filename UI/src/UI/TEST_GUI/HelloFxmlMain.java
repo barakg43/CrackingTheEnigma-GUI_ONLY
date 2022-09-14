@@ -1,15 +1,10 @@
 package UI.TEST_GUI;
 
+import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
-import UI.application.DmTab.DMTaskComponents.TaskDataController;
-import UI.application.DmTab.DMcontroller;
-import UI.application.DmTab.DMencrypt.encryptTabDMController;
-import UI.application.DmTab.DMoperational.DMoperationalController;
-import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
-import decryptionManager.components.CodeCalculatorFactory;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;

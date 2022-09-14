@@ -15,6 +15,7 @@ public class  AtomicCounter {
 
         public void increment() {
             long oldValue = this.counter.get();
+
             pcs.firePropertyChange("counter", oldValue,  counter.incrementAndGet());
         }
 

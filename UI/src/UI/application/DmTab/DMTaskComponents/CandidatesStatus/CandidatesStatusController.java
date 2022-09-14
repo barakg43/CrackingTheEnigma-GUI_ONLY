@@ -1,7 +1,7 @@
-package UI.application.DmTab.CandidatesStatus;
+package UI.application.DmTab.DMTaskComponents.CandidatesStatus;
 
 import UI.application.CommonResourcesPaths;
-import UI.application.DmTab.CandidatesStatus.singleCandidate.SingleCandidateController;
+import UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController;
 import UI.application.DmTab.DMTaskComponents.TaskDataController;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class CandidatesStatusController {
 

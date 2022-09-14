@@ -1,7 +1,9 @@
 package UI.application.DmTab.DMTaskComponents;
 
-import UI.application.DmTab.CandidatesStatus.CandidatesStatusController;
+import UI.application.DmTab.DMTaskComponents.CandidatesStatus.CandidatesStatusController;
+import UI.application.DmTab.DMTaskComponents.taskProgress.taskProgressController;
 import UI.application.DmTab.DMcontroller;
+import UI.application.DmTab.ProgressDataDTO;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
@@ -23,16 +25,23 @@ public class TaskDataController {
     @FXML private CandidatesStatusController candidateStatusComponentController;
 
     private DMcontroller DMcontroller;
-
+    public ProgressDataDTO createNewProgressProperties()
+    {
+        return taskProgressComponentController.createNewProgressProperties();
+    }
     @FXML
     private void initialize() {
         if(taskProgressComponentController!=null && candidateStatusComponentController!=null)
         {
-            taskProgressComponentController.setTaskDataController(this);
             candidateStatusComponentController.setTaskDataController(this);
 
         }
     }
+
+    public CandidatesStatusController getCandidateStatusComponentController() {
+        return candidateStatusComponentController;
+    }
+
     public void setDMControoler(DMcontroller dMcontroller) {
         this.DMcontroller=dMcontroller;
     }

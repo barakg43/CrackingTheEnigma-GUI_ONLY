@@ -26,10 +26,10 @@ public class CandidateUpdater extends Task<Boolean> {
 
     private final long SLEEP_TIME = 5;
     AtomicBoolean setRunning;
-    private UIAdapter uiAdapter;
+    private UIUpdater uiAdapter;
     private Consumer<Runnable> onCancel;
     Supplier<TaskFinishDataDTO> taskSupplier;
-    public CandidateUpdater(UIAdapter uiAdapter, Consumer<Runnable> onCancel, Supplier<TaskFinishDataDTO> taskSupplier) {
+    public CandidateUpdater(UIUpdater uiAdapter, Consumer<Runnable> onCancel, Supplier<TaskFinishDataDTO> taskSupplier) {
        this.taskSupplier=taskSupplier;
         this.uiAdapter = uiAdapter;
         this.onCancel = onCancel;
@@ -50,7 +50,7 @@ public class CandidateUpdater extends Task<Boolean> {
         {
 
             TaskFinishDataDTO currentTaskData=taskSupplier.get();
-            uiAdapter.addNewCandidates(currentTaskData);
+            uiAdapter.pause();
 
         }
 

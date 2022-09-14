@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox prefHeight="200.0" prefWidth="537.0" stylesheets="@../../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.CandidatesStatus.singleCandidate.SingleCandidateController">
+<VBox prefHeight="200.0" prefWidth="537.0" stylesheets="@../../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
 
    <children>
       <Pane prefHeight="45.0" prefWidth="537.0">

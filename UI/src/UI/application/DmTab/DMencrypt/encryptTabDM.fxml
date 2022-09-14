@@ -22,9 +22,14 @@
       </ScrollPane>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
          <children>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308">
+            <ScrollPane>
                <content>
-                  <fx:include fx:id="codeEncryptComponent" source="automaticEncrypteDM.fxml" />
+                  <VBox>
+                     <children>
+                        <fx:include fx:id="codeEncryptComponent" source="automaticEncryptDM/automaticEncrypteDM.fxml" />
+                        <fx:include fx:id="operationalComponent" source="DMoperational/DMoperational.fxml" />
+                     </children>
+                  </VBox>
                </content>
             </ScrollPane>
             <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">

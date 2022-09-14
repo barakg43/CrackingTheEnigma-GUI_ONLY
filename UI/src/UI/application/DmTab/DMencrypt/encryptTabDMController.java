@@ -2,25 +2,22 @@ package UI.application.DmTab.DMencrypt;
 
 import UI.application.AllMachineController;
 import UI.application.DmTab.DMcontroller;
+import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
+import UI.application.DmTab.DMencrypt.automaticEncryptDM.AutomaticEncryptDMController;
 import UI.application.DmTab.Trie.Trie;
 import UI.application.DmTab.Trie.TrieNode;
-import UI.application.encryptTab.EncryptTabController;
-import UI.application.encryptTab.encryptComponent.EncryptComponentController;
-import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
-import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
-import com.sun.deploy.util.StringUtils;
+import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Encryptor;
 import enigmaEngine.Engine;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -28,12 +25,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class encryptTabDMController {
 
@@ -46,19 +40,23 @@ public class encryptTabDMController {
 
     public AutomaticEncryptDMController codeEncryptComponentController;
 
-
+    @FXML private GridPane operationalComponent;
+    @FXML private DMoperationalController operationalComponentController;
     @FXML
     private HBox simpleCodeComponent;
 
     @FXML
     private SimpleCodeController simpleCodeComponentController;
-    Trie dictionaryTrie;
+   private  Trie dictionaryTrie;
     private Encryptor encryptor;
    private DMcontroller DmController;
 
     private  ObservableList<String> dictionaryWords = FXCollections.observableArrayList();
     private Engine enigmaEngine;
-
+    private SimpleStringProperty outputString;
+    public DecryptionManager getDecryptionManager() {
+        return operationalComponentController.getDecryptionManager();
+    }
     @FXML
     private void initialize() {
 
@@ -96,11 +94,17 @@ public class encryptTabDMController {
 
                 });
 
-
+        outputString=new SimpleStringProperty();
+        bindOutputStringBetweenComponent();
 
         searchBox.textProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> search((String) oldVal, (String) newVal));
     }
+    public void bindOutputStringBetweenComponent()
+    {
+        codeEncryptComponentController.bindParentToOutputString(outputString);
+        operationalComponentController.bindOutputStringToParent(outputString);
 
+    }
 
     public Engine getEnigmaEngine()
     {
@@ -166,6 +170,7 @@ public class encryptTabDMController {
     public void setEnigmaEngine(Engine enigmaEngine) {
         this.enigmaEngine = enigmaEngine;
         codeEncryptComponentController.setEncryptor(enigmaEngine);
+        operationalComponentController.setEnigmaEngine(enigmaEngine);
     }
 
     public SimpleCodeController getCodeComponentController() {

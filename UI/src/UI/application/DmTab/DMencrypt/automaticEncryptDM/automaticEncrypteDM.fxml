@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="321.0" prefWidth="699.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMencrypt.AutomaticEncryptDMController">
+<VBox prefHeight="321.0" prefWidth="699.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMencrypt.automaticEncryptDM.AutomaticEncryptDMController">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0">
          <children>
@@ -23,14 +23,14 @@
                <children>
                   <ScrollPane prefHeight="150.0" prefWidth="710.0">
                      <content>
-                        <fx:include fx:id="encryptData" source="../../encryptTab/encryptComponent/automaticEncrypt/automaticEncrypt.fxml" />
+                        <fx:include fx:id="encryptData" source="../../../encryptTab/encryptComponent/automaticEncrypt/automaticEncrypt.fxml" />
                      </content>
                   </ScrollPane>
                </children>
             </Pane>
          </children>
       </StackPane>
-      <GridPane prefHeight="131.0" prefWidth="600.0" stylesheets="@encryptTabDM.css">
+      <GridPane prefHeight="131.0" prefWidth="600.0" stylesheets="@../encryptTabDM.css">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="152.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="482.0" minWidth="10.0" prefWidth="448.0" />

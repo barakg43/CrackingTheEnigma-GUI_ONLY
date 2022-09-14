@@ -8,13 +8,21 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class AgentsThreadPool extends ThreadPoolExecutor {
     public static AtomicLong taskNumber;
+    AtomicCounter totalDoneCounter;
+    public static AtomicLong totalTimeTasks;
+
     public AgentsThreadPool(int corePoolSize, int maximumPoolSize,
                             long keepAliveTime, TimeUnit unit,
-                            BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+                            BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,AtomicCounter totalDoneCounter) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,threadFactory);
         taskNumber=new AtomicLong(0);
+        this.totalDoneCounter=totalDoneCounter;
+        totalTimeTasks=new AtomicLong(0);
     }
 
+    public long getTotalTimeTasks() {
+        return totalTimeTasks.get();
+    }
 
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
@@ -28,6 +36,7 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
         if (t != null) {
             throw new RuntimeException(t);
         }
+        totalDoneCounter.increment();
         System.out.println("Perform afterExecute() logic");
     }
 }
