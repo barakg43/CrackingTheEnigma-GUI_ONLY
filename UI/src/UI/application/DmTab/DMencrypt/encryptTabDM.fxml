@@ -27,6 +27,7 @@
                   <VBox>
                      <children>
                         <fx:include fx:id="codeEncryptComponent" source="automaticEncryptDM/automaticEncrypteDM.fxml" />
+                        <Button mnemonicParsing="false" onAction="#testCounter" text="Button" />
                         <fx:include fx:id="operationalComponent" source="DMoperational/DMoperational.fxml" />
                      </children>
                   </VBox>

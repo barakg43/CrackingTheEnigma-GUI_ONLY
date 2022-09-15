@@ -80,7 +80,9 @@ public class DMoperationalController {
                     (int) agentSize.getValue(),
                     Integer.parseInt(taskSizeTextField.getText()));
            // DMcontroller.addCandidates();
+            uiUpdater.startCandidateListener();
             decryptionManager.startBruteForce(outputString.getValue());
+
         }
 
     }

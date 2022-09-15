@@ -26,18 +26,18 @@ public class DecryptionManager {
 
     private final Dictionary dictionary;
     private final Engine engine;
-    BruteForceLevel level=null;
+    private BruteForceLevel level=null;
     private int taskSize=0;
     private  int agentsAmount;
     private final CodeCalculatorFactory codeCalculatorFactory;
     private final MachineDataDTO machineData;
-    BlockingQueue<Runnable> taskQueue;
+    private final BlockingQueue<Runnable> taskQueue;
     private final BlockingQueue<TaskFinishDataDTO> successfulDecryption;
      private AgentsThreadPool agents;
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
-    public static AtomicCounter taskDoneAmount;
+    public  AtomicCounter taskDoneAmount;
 
     private String output;
     private Thread taskCreator;
@@ -54,9 +54,14 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
 
-        taskDoneAmount=new AtomicCounter();
+
 
     }
+
+    public void setTaskDoneAmount(AtomicCounter taskDoneAmount) {
+        this.taskDoneAmount = taskDoneAmount;
+    }
+
     private void saveEngineCopy()
     {
 
@@ -85,10 +90,9 @@ public class DecryptionManager {
         throw new RuntimeException("Brute force level must be selected");
     agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory(),taskDoneAmount);
     }
-    public double getTotalTasksAmount(BruteForceLevel level) {
+    public double getTotalTasksAmount() {
         if(totalTaskAmount==0)
             calculateTotalTaskAmount(level);
-
         return totalTaskAmount;
     }
     public long getTotalTimeTasks(){
@@ -107,10 +111,7 @@ public class DecryptionManager {
         return copyEngine;
     }
 
-    public void addListenerTotalTaskDoneCounter(PropertyChangeListener listener)
-    {
-        taskDoneAmount.addPropertyChangeListener(listener);
-    }
+
     public void testCounter()
     {
         taskDoneAmount.increment();
@@ -136,15 +137,11 @@ public class DecryptionManager {
         agents.prestartAllCoreThreads();
         taskCounter=0;
         totalTaskAmount=0;
-        try {
-            fileOutput = new PrintWriter( "C:\\ComputerScience\\Java\\EXCISES\\RUN-TEST\\output3.txt","UTF-8");
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Total amount:"+getTotalTasksAmount(level));
+
+        System.out.println("Total amount:"+getTotalTasksAmount());
 
         taskCreator=new Thread(()-> {
-            fileOutput.print("");
+
             try {
 
                 CodeFormatDTO startingCode = engine.getCodeFormat(false);
@@ -166,10 +163,10 @@ public class DecryptionManager {
             } catch (RuntimeException e) {
                 throw new RuntimeException("Error when creating tasks: "+e);
             }
-            fileOutput.close();
+
         },"Task Creator DM Thread");
         taskCreator.start();
-       // fileOutput.close();
+
     }
 
 
@@ -264,8 +261,7 @@ public class DecryptionManager {
         while(temp!=null){
             currentCode=temp;
 
-            //fileOutput.println("Total Task number:"+(++taskCounter));
-          //  System.out.println("Total Task number:"+(taskCounter));
+
             try {
 
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
@@ -278,14 +274,11 @@ public class DecryptionManager {
                 throw new RuntimeException(e);
             }
 
-            fileOutput.flush();
             temp=codeCalculatorFactory.getNextCodeIndexOffset(temp,taskSize);
-            fileOutput.println("inner while");
             //System.out.println("current code  " + currentCode);
         }
 
-        fileOutput.println("last code:"+currentCode);
-        fileOutput.flush();
+
     }
 
     private CodeFormatDTO resetAllPositionToFirstPosition(CodeFormatDTO codeFormatDTO) {
