@@ -2,32 +2,38 @@ package UI.application.DmTab;
 
 import UI.application.DmTab.DMTaskComponents.CandidatesStatus.CandidatesStatusController;
 import decryptionManager.DecryptionManager;
-import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.concurrent.Task;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class UIUpdater extends Task<Boolean> {
+public class UIUpdater  implements Consumer<String> {
 
     private AtomicBoolean stillHaveCandidate;
     private Thread candidateListener;
-    private DecryptionManager decryptionManager;
-    private CandidatesStatusController candidatesStatusController;
-    private ProgressDataDTO progressDataDTO;
-    private long totalTaskAmount;
+    private final DecryptionManager decryptionManager;
+    private final CandidatesStatusController candidatesStatusController;
+    private final ProgressDataDTO progressDataDTO;
+    private final SimpleStringProperty messageProperty;
+    private final SimpleDoubleProperty progressProperty;
+    SimpleLongProperty counterProperty;
+    private Long totalTaskAmount;
     public UIUpdater(DecryptionManager decryptionManager, ProgressDataDTO progressDataDTO, CandidatesStatusController candidatesStatusController) {
         this.decryptionManager = decryptionManager;
         this.candidatesStatusController = candidatesStatusController;
 
 
         this.progressDataDTO = progressDataDTO;
+        messageProperty=new SimpleStringProperty();
+        counterProperty=new SimpleLongProperty();
+        progressProperty=new SimpleDoubleProperty(0);
         bindUpdaterToUIComponents();
-
     }
 //
 //    public void addNewCandidates(TaskFinishDataDTO histogramData) {
@@ -39,24 +45,21 @@ public class UIUpdater extends Task<Boolean> {
 //    }
     private void bindUpdaterToUIComponents() {
         // task message
-        progressDataDTO.taskMessagePropertyProperty().bind(this.messageProperty());
-
+        progressDataDTO.taskMessageProperty().bind(this.messageProperty);
 
         // task progress bar
-        progressDataDTO.progressBarPropertyProperty().bind(this.progressProperty());
+        progressDataDTO.progressBarProperty().bind(this.progressProperty);
 
         // task percent label
-        progressDataDTO.progressPercentPropertyProperty().bind( Bindings.concat(
+        progressDataDTO.progressPercentProperty().bind( Bindings.concat(
                 Bindings.format(
                         "%.0f",
                         Bindings.multiply(
-                                this.progressProperty(),
+                                this.progressProperty,
                                 100)),
                 " %"));
 
-        decryptionManager.addListenerTotalTaskDoneCounter(e->{
-            this.updateProgress((Long) e.getNewValue(),totalTaskAmount);
-        });
+      //  decryptionManager.addListenerTotalTaskDoneCounter((newValue) -> counterProperty.set((Long)newValue/totalTaskAmount));
 
 
 
@@ -65,12 +68,14 @@ public class UIUpdater extends Task<Boolean> {
 
 
     }
-    @Override
-    protected Boolean call() throws Exception {
+
+
+
+    public void startCandidateListener() {
         totalTaskAmount= decryptionManager.getTotalTimeTasks();
         candidateListener=new Thread(this::updateNewCandidate,"Candidate Updater");
         candidateListener.start();
-        return true;
+
     }
 
     public void pause(){
@@ -85,6 +90,16 @@ public class UIUpdater extends Task<Boolean> {
             candidatesStatusController.addAllCandidate(supplier.get());
         }
     }
+
+    @Override
+    public Consumer<String> andThen(Consumer<? super String> after) {
+        return Consumer.super.andThen(after);
+    }
+    @Override
+    public void accept(String message) {
+        messageProperty.set(message);
+    }
+
 //    public void updateExistingWord(CandidateDTO histogramData) {
 //        Platform.runLater(
 //                () -> updateExistingWord.accept(histogramData)

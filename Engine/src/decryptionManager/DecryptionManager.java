@@ -37,7 +37,7 @@ public class DecryptionManager {
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
-    private AtomicCounter taskDoneAmount;
+    private final AtomicCounter taskDoneAmount;
     private String output;
     private Thread taskCreator;
     private double totalTaskAmount;
@@ -110,7 +110,10 @@ public class DecryptionManager {
     {
         taskDoneAmount.addPropertyChangeListener(listener);
     }
-
+    public void testCounter()
+    {
+        taskDoneAmount.increment();
+    }
     public void pause()  {
 //        try {
 //            taskCreator.checkAccess();

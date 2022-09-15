@@ -60,7 +60,7 @@ public class EncryptTabController {
     private AtomicCounter counter;
     private DecryptionManager decryptionManager;
     SimpleLongProperty counterProperty;
-    Counter counterClass;
+//    Counter counterClass;
     public Engine getEnigmaEngine()
     {
         return enigmaEngine;
@@ -104,6 +104,9 @@ public class EncryptTabController {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
       new Thread(()-> decryptionManager=new DecryptionManager(enigmaEngine)).start();
+        decryptionManager.addListenerTotalTaskDoneCounter(e -> {counterProperty.set((Long) e.getNewValue());
+            System.out.println("counter is: "+e.getNewValue()); }
+        );
     }
     public void doneProcessData()
     {
@@ -117,9 +120,9 @@ public class EncryptTabController {
 
 
         counter=new AtomicCounter();
-        counterClass=new Counter();
-        counterProperty=new SimpleLongProperty(0);
-       // counterProperty=new SimpleLongProperty(counter,"counter");
+//        counterClass=new Counter();
+       // counterProperty=new SimpleLongProperty(0);
+        counterProperty=new SimpleLongProperty(counter,"counter");
         counter.addPropertyChangeListener(e -> counterProperty.set((Long) e.getNewValue()));
         comboBoxBf.getItems().addAll(BruteForceLevel.values());
         testLabel.textProperty().bind(counterProperty.asString());
@@ -158,10 +161,11 @@ public class EncryptTabController {
 
     public void testBotton(ActionEvent ignoredActionEvent) {
         System.out.println("Starting BF!");
-        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
-        decryptionManager.startBruteForce("aaaaa");
-        counter.increment();
+        //decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
+       //decryptionManager.startBruteForce("aaaaa");
+        //counter.increment();
        // counterClass.setValue();
+        decryptionManager.testCounter();
         System.out.println(counterProperty.get());
         //System.out.println(bindingCounter.get());
     }

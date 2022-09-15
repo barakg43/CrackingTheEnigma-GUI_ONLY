@@ -35,6 +35,7 @@ public class DMcontroller {
      private AllMachineController mainAppController;
      private Engine enigmaEngine;
      private SimpleStringProperty outputString;
+
     @FXML
     public void initialize()
     {
@@ -43,9 +44,12 @@ public class DMcontroller {
         {
             encryptComponentController.setDMController(this);
             taskDataComponentController.setDMControoler(this);
+
         }
+    }
 
-
+    public TaskDataController getTaskDataComponentController() {
+        return taskDataComponentController;
     }
 
     public void setDictionaryList()
@@ -93,7 +97,7 @@ public class DMcontroller {
         return encryptComponentController.getCodeComponentController();
     }
 
-    public void addCandidates() {
-        taskDataComponentController.addCandidates();
-    }
+//    public void addCandidates() {
+//        taskDataComponentController.addCandidates();
+//    }
 }

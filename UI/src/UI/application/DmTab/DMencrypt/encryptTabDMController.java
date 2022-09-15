@@ -6,10 +6,10 @@ import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
 import UI.application.DmTab.DMencrypt.automaticEncryptDM.AutomaticEncryptDMController;
 import UI.application.DmTab.Trie.Trie;
 import UI.application.DmTab.Trie.TrieNode;
+import UI.application.DmTab.UIUpdater;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
-import enigmaEngine.Encryptor;
 import enigmaEngine.Engine;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,15 +48,20 @@ public class encryptTabDMController {
     @FXML
     private SimpleCodeController simpleCodeComponentController;
    private  Trie dictionaryTrie;
-    private Encryptor encryptor;
+//    private Encryptor encryptor;
    private DMcontroller DmController;
-
-    private  ObservableList<String> dictionaryWords = FXCollections.observableArrayList();
+    private UIUpdater uiUpdater;
+    private final ObservableList<String> dictionaryWords = FXCollections.observableArrayList();
     private Engine enigmaEngine;
     private SimpleStringProperty outputString;
     public DecryptionManager getDecryptionManager() {
         return operationalComponentController.getDecryptionManager();
     }
+
+    public void setUiUpdater(UIUpdater uiUpdater) {
+        this.uiUpdater = uiUpdater;
+    }
+
     @FXML
     private void initialize() {
 
@@ -123,7 +128,7 @@ public class encryptTabDMController {
         dictionaryTrie=new Trie();
     }
     public void search(String oldVal, String newVal) {
-        ObservableList<String> subentries = FXCollections.observableArrayList();
+        ObservableList<String> subEntries = FXCollections.observableArrayList();
 
         if(newVal.isEmpty())
         {
@@ -136,12 +141,10 @@ public class encryptTabDMController {
                 dictionaryTrie.wordsFinderTraversal(node,0);
                 ArrayList<String> prefixWords= dictionaryTrie.getWordsArray();
 
-                for (String word : prefixWords) {
-                    subentries.add(word);
-                }
+                subEntries.addAll(prefixWords);
 
             }
-            dictionaryListView.setItems(subentries);
+            dictionaryListView.setItems(subEntries);
 
         }
 
@@ -155,9 +158,10 @@ public class encryptTabDMController {
     public void setDMController(DMcontroller DMController) {
 
         this.DmController=DMController;
+
     }
 
-    public void deleteButtonOnAction(ActionEvent actionEvent) {
+    public void deleteButtonOnAction(ActionEvent ignoredActionEvent) {
         searchBox.clear();
 
     }
@@ -171,6 +175,13 @@ public class encryptTabDMController {
         this.enigmaEngine = enigmaEngine;
         codeEncryptComponentController.setEncryptor(enigmaEngine);
         operationalComponentController.setEnigmaEngine(enigmaEngine);
+        uiUpdater=new UIUpdater(getDecryptionManager(),
+                DmController.getTaskDataComponentController()
+                        .createNewProgressProperties(),
+                DmController.getTaskDataComponentController()
+                        .getCandidateStatusComponentController());
+
+        operationalComponentController.setUiUpdater(uiUpdater);
     }
 
     public SimpleCodeController getCodeComponentController() {
@@ -186,6 +197,6 @@ public class encryptTabDMController {
     }
 
     public void clearListView() {
-        dictionaryListView.getSelectionModel().getSelectedItems().removeAll();
+        dictionaryListView.getItems().clear();
     }
 }
