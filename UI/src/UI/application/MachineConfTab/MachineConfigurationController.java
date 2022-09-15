@@ -23,8 +23,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MachineConfigurationController {
 
@@ -79,8 +79,10 @@ public class MachineConfigurationController {
     private ObservableList<SimpleStringProperty> currentRotorsIDProperty;
     private ObservableList<SimpleStringProperty> selectedPlugBoardPairsProperty;
 
-
-
+    private Set<Integer> rotorIDSet;
+    private Set<Character> positionSet;
+    List<ComboBox<Integer>> rotorIDGroupedComboBoxes;
+    List<ComboBox<Character>> positionGroupedComboBoxes;
     @FXML
     public void initialize() {
 
@@ -169,6 +171,7 @@ public class MachineConfigurationController {
         CurrentMachineCodeController.clearCurrentCodeView();
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
+        createPositionRotorIdSet();
         if (machineData != null) {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse() + "/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
@@ -184,6 +187,23 @@ public class MachineConfigurationController {
         } else {
             setVisibleCodeFields(false);
         }
+    }
+
+    private void createPositionRotorIdSet() {
+
+
+
+        rotorIDSet=Arrays.stream(machineData.getRotorsId())
+                .boxed().
+                collect(Collectors.toSet());
+        positionSet = machineData.getAlphabetString()
+                .chars().
+                mapToObj(c -> (Character)(char)c)
+                .collect(Collectors.toSet());
+
+        rotorIDGroupedComboBoxes=new ArrayList<>();
+        positionGroupedComboBoxes=new ArrayList<>();
+
     }
 
     private void setVisibleCodeFields(boolean toVisible) {
@@ -220,25 +240,48 @@ public class MachineConfigurationController {
         rotorsAndPositionsHBox.setSpacing(40);
     }
 
-    private ChoiceBox<Integer> SetRotorChoiceBox(int[] rotorsID) {
-        ObservableList<Integer> rotorsIDList = FXCollections.observableArrayList();
-        ;
-        ChoiceBox<Integer> rotorsChoiceBox = new ChoiceBox<>();
-        for (int i = 0; i < rotorsID.length; i++) {
-            rotorsIDList.add(rotorsID[i]);
-        }
-        rotorsChoiceBox.getItems().addAll(rotorsIDList);
-        return rotorsChoiceBox;
+    private ComboBox<Integer> SetRotorChoiceBox(int[] rotorsID) {
+        ObservableList<Integer> rotorsIDList = FXCollections.observableArrayList(Arrays.stream(rotorsID).boxed().collect(Collectors.toList()));
+        //rotorsIDList.addAll(rotorIDSet);
+        ComboBox<Integer> rotorsComboBox = new ComboBox<>(rotorsIDList);
+        rotorIDGroupedComboBoxes.add(rotorsComboBox);
+        rotorsComboBox.setVisibleRowCount(10);
+        rotorsComboBox.setMinWidth(20);
+        rotorsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
+
+        //remove selected id value from other rotor id combobox
+        rotorsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
+            rotorIDGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(rotorsComboBox))).forEach(comboBox ->
+            {
+                comboBox.getItems().remove(newValue);
+                if (oldValue != null && !comboBox.getItems().contains(oldValue))
+                    comboBox.getItems().add(oldValue);
+                FXCollections.sort(comboBox.getItems());
+
+            });
+        });
+//        for (int i = 0; i < rotorsID.length; i++) {
+//            rotorsIDList.add(rotorsID[i]);
+//        }
+//        rotorsChoiceBox.getItems().addAll(rotorsIDList);
+       // return rotorsChoiceBox;
+        return rotorsComboBox;
     }
 
-    private ChoiceBox<Character> SetPositionsChoiceBox(String positions) {
-        ChoiceBox<Character> positionsChoiceBox = new ChoiceBox<>();
-        ObservableList<Character> positionsList = FXCollections.observableArrayList();
-        for (int i = 0; i < positions.length(); i++) {
-            positionsList.add(positions.charAt(i));
-        }
-        positionsChoiceBox.getItems().addAll(positionsList);
-        return positionsChoiceBox;
+    private ComboBox <Character> SetPositionsChoiceBox(String positions) {
+        ObservableList<Character> positionsList = FXCollections.observableArrayList(positionSet);
+        ComboBox <Character> positionsComboBox = new ComboBox <>(positionsList);
+        positionGroupedComboBoxes.add(positionsComboBox);
+        positionsComboBox.setVisibleRowCount(10);
+        positionsComboBox.setMinWidth(20);
+        positionsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
+
+//        for (int i = 0; i < positions.length(); i++) {
+//            positionsList.add(positions.charAt(i));
+//        }
+//        positionsChoiceBox.getItems().addAll(positionsList);
+//        return positionsChoiceBox;
+        return positionsComboBox;
     }
 
 
@@ -254,12 +297,12 @@ public class MachineConfigurationController {
                 VBox rotorAndPosition=(VBox) rotorsAndPositionsHBox.getChildren().get(i);
                 if(rotorAndPosition==null)
                     throw new Exception("You need to configurate all data.");
-                if(((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
+                if(((ComboBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
-                int selectedID=((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
-                if(((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
+                int selectedID=((ComboBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
+                if(((ComboBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
-                Character selectedPosition=((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
+                Character selectedPosition=((ComboBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
 
                 selectedRotorsID.add(selectedID);
                 selectedPositions.add(selectedPosition);
@@ -392,8 +435,8 @@ public class MachineConfigurationController {
     {
         for (int i = 0; i <  rotorsAndPositionsHBox.getChildren().size(); i++) {
            VBox rotorAndPositionVBOx= (VBox)(rotorsAndPositionsHBox.getChildren().get(i));
-           ChoiceBox<Integer> rotorID = (ChoiceBox<Integer>) (rotorAndPositionVBOx.getChildren().get(0));
-            ChoiceBox<Character> positions = (ChoiceBox<Character>) (rotorAndPositionVBOx.getChildren().get(1));
+           ComboBox<Integer> rotorID = (ComboBox<Integer>) (rotorAndPositionVBOx.getChildren().get(0));
+            ComboBox<Integer> positions = (ComboBox<Integer>) (rotorAndPositionVBOx.getChildren().get(1));
             for (int j = 0; j <rotorID.getItems().size() ; j++) {
                 rotorID.getItems().remove(j);
                 positions.getItems().remove(j);

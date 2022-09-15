@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -106,16 +107,21 @@ public class EnigmaEngine implements Engine , Serializable {
     @Override
     public void setCodeManually(CodeFormatDTO codeConfiguration) {
         RotorInfoDTO[] rotorInfoDTO=codeConfiguration.getRotorInfoArray();
-        List<Integer> rotorIds=new ArrayList<>();
-        List<Character> positions=new ArrayList<>();
 
-        for (RotorInfoDTO rotorInfo: rotorInfoDTO) {
-            rotorIds.add(rotorInfo.getId());
-            positions.add(rotorInfo.getStatingLetter());
-        }
+        Integer[] rotorIds=new Integer[rotorInfoDTO.length];
+        Character[] positions=new Character[rotorInfoDTO.length];
+            for(int i=0;i<rotorInfoDTO.length;i++)
+            {       rotorIds[i]=rotorInfoDTO[i].getId();
+                    positions[i]=rotorInfoDTO[i].getStatingLetter();
 
-         checkIfRotorsValid(rotorIds);
-         checkIfPositionsValid(positions);
+            }
+
+         List<Integer> rotorIdsList=Arrays.asList(rotorIds);
+         List<Character> positionsList=Arrays.asList(positions);
+         Collections.reverse(rotorIdsList);
+         Collections.reverse(positionsList);
+         checkIfRotorsValid(rotorIdsList);
+         checkIfPositionsValid(positionsList);
          int reflectorId= Reflector.convertRomanIdToNumber(codeConfiguration.getReflectorID());
          checkIfReflectorNumValid(String.valueOf(reflectorId));
          checkPlugBoardPairs(codeConfiguration.getPlugboardPairDTOList()) ;

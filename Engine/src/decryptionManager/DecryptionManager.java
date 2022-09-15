@@ -37,7 +37,8 @@ public class DecryptionManager {
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
-    private final AtomicCounter taskDoneAmount;
+    public static AtomicCounter taskDoneAmount;
+
     private String output;
     private Thread taskCreator;
     private double totalTaskAmount;
@@ -263,8 +264,8 @@ public class DecryptionManager {
         while(temp!=null){
             currentCode=temp;
 
-            fileOutput.println("Total Task number:"+(++taskCounter));
-            System.out.println("Total Task number:"+(taskCounter));
+            //fileOutput.println("Total Task number:"+(++taskCounter));
+          //  System.out.println("Total Task number:"+(taskCounter));
             try {
 
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),

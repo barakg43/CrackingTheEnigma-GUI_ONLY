@@ -27,7 +27,7 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
         super.beforeExecute(t, r);
-        System.out.println("Perform beforeExecute() logic");
+   //     System.out.println("Perform beforeExecute() logic");
     }
 
     @Override
@@ -37,6 +37,6 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
             throw new RuntimeException(t);
         }
         totalDoneCounter.increment();
-        System.out.println("Perform afterExecute() logic");
+       // System.out.println("Perform afterExecute() logic");
     }
 }
