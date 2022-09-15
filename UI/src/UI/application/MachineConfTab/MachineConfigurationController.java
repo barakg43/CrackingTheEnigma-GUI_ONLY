@@ -7,7 +7,6 @@ import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
-import dtoObjects.RotorInfoDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -80,9 +79,9 @@ public class MachineConfigurationController {
     private ObservableList<SimpleStringProperty> selectedPlugBoardPairsProperty;
 
     private Set<Integer> rotorIDSet;
-    private Set<Character> positionSet;
+    private Set<Character> alphabetSet;
     List<ComboBox<Integer>> rotorIDGroupedComboBoxes;
-    List<ComboBox<Character>> positionGroupedComboBoxes;
+    List<ComboBox<Character>> plugBoardGroupedComboBoxes;
     @FXML
     public void initialize() {
 
@@ -102,7 +101,7 @@ public class MachineConfigurationController {
         currentMachineLabel.visibleProperty().bind(showCodeDetails);
         selectedCodeConfiguration.disableProperty().bind(showCodeDetails.not());
         CurrentCodeConfigurationPane.disableProperty().bind(isSelected.not());
-
+        removePlugBoardPairButton.setDisable(true);
        // SelectedMachineCodeController.getReflectorIDtext().textProperty().bind(selectedReflectorProperty);
 
       //  CurrentMachineCodeController.getReflectorIDtext().textProperty().bind(currentReflectorProperty);
@@ -171,7 +170,7 @@ public class MachineConfigurationController {
         CurrentMachineCodeController.clearCurrentCodeView();
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
-        createPositionRotorIdSet();
+        createAlphabetRotorIdSet();
         if (machineData != null) {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse() + "/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
@@ -189,22 +188,23 @@ public class MachineConfigurationController {
         }
     }
 
-    private void createPositionRotorIdSet() {
+    private void createAlphabetRotorIdSet() {
 
 
 
         rotorIDSet=Arrays.stream(machineData.getRotorsId())
                 .boxed().
                 collect(Collectors.toSet());
-        positionSet = machineData.getAlphabetString()
+        alphabetSet = machineData.getAlphabetString()
                 .chars().
                 mapToObj(c -> (Character)(char)c)
                 .collect(Collectors.toSet());
 
         rotorIDGroupedComboBoxes=new ArrayList<>();
-        positionGroupedComboBoxes=new ArrayList<>();
+        plugBoardGroupedComboBoxes=new ArrayList<>();
 
     }
+
 
     private void setVisibleCodeFields(boolean toVisible) {
         SelectedMachineCode.setVisible(toVisible);
@@ -220,7 +220,7 @@ public class MachineConfigurationController {
         int[] rotorsId = machineData.getRotorsId();
         String positions = machineData.getAlphabetString();
         for (int i = 0; i < numberOfRotorsInUse; i++) {
-            createChoiceBox(rotorsId, positions);
+            createComboBox();
         }
         List<String> reflectorIDName = machineData.getReflectorIdList();
         ObservableList<String> reflectorID = FXCollections.observableArrayList();
@@ -231,17 +231,17 @@ public class MachineConfigurationController {
     }
 
 
-    private void createChoiceBox(int[] rotorsID, String positions) {
+    private void createComboBox() {
         VBox Vbox = new VBox();
-        Vbox.getChildren().add(SetRotorChoiceBox(rotorsID));
-        Vbox.getChildren().add(SetPositionsChoiceBox(positions));
+        Vbox.getChildren().add(SetRotorComboBox());
+        Vbox.getChildren().add(SetPositionsComboBox());
         Vbox.setSpacing(30);
         rotorsAndPositionsHBox.getChildren().add(Vbox);
         rotorsAndPositionsHBox.setSpacing(40);
     }
 
-    private ComboBox<Integer> SetRotorChoiceBox(int[] rotorsID) {
-        ObservableList<Integer> rotorsIDList = FXCollections.observableArrayList(Arrays.stream(rotorsID).boxed().collect(Collectors.toList()));
+    private ComboBox<Integer> SetRotorComboBox() {
+        ObservableList<Integer> rotorsIDList = FXCollections.observableArrayList(rotorIDSet);
         //rotorsIDList.addAll(rotorIDSet);
         ComboBox<Integer> rotorsComboBox = new ComboBox<>(rotorsIDList);
         rotorIDGroupedComboBoxes.add(rotorsComboBox);
@@ -263,15 +263,14 @@ public class MachineConfigurationController {
 //        for (int i = 0; i < rotorsID.length; i++) {
 //            rotorsIDList.add(rotorsID[i]);
 //        }
-//        rotorsChoiceBox.getItems().addAll(rotorsIDList);
-       // return rotorsChoiceBox;
+//        rotorsComboBox.getItems().addAll(rotorsIDList);
+       // return rotorsComboBox;
         return rotorsComboBox;
     }
 
-    private ComboBox <Character> SetPositionsChoiceBox(String positions) {
-        ObservableList<Character> positionsList = FXCollections.observableArrayList(positionSet);
+    private ComboBox <Character> SetPositionsComboBox() {
+        ObservableList<Character> positionsList = FXCollections.observableArrayList(alphabetSet);
         ComboBox <Character> positionsComboBox = new ComboBox <>(positionsList);
-        positionGroupedComboBoxes.add(positionsComboBox);
         positionsComboBox.setVisibleRowCount(10);
         positionsComboBox.setMinWidth(20);
         positionsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
@@ -279,8 +278,8 @@ public class MachineConfigurationController {
 //        for (int i = 0; i < positions.length(); i++) {
 //            positionsList.add(positions.charAt(i));
 //        }
-//        positionsChoiceBox.getItems().addAll(positionsList);
-//        return positionsChoiceBox;
+//        positionsComboBox.getItems().addAll(positionsList);
+//        return positionsComboBox;
         return positionsComboBox;
     }
 
@@ -322,12 +321,12 @@ public class MachineConfigurationController {
 
             for(int i=0;i<numberOfPairs;i++)
             {
-                if(((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                if(((ComboBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
-                Character firstInput = ((ChoiceBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                if(((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                Character firstInput = ((ComboBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                if(((ComboBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
-                Character secondInput=((ChoiceBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                Character secondInput=((ComboBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
                 plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
             }
             mEngine.checkPlugBoardPairs(plugBoardPairs);
@@ -381,22 +380,36 @@ public class MachineConfigurationController {
         mainAppController.setCurrentCode(currentCode);
     }
 
-    private ChoiceBox<Character> SetPairsChoiceBox(String alphabet) {
-        ChoiceBox<Character> pairsChoiceBox = new ChoiceBox<>();
-        ObservableList<Character> alphabetList = FXCollections.observableArrayList();
-        for (int i = 0; i < alphabet.length(); i++) {
-            alphabetList.add(alphabet.charAt(i));
-        }
-        pairsChoiceBox.setPrefSize(70, 5);
-        pairsChoiceBox.getItems().addAll(alphabetList);
-        return pairsChoiceBox;
+    private ComboBox<Character> SetPairsComboBox() {
+        ComboBox<Character> pairComboBox = new ComboBox<>();
+//        ObservableList<Character> alphabetList = FXCollections.observableArrayList();
+//        for (int i = 0; i < alphabet.length(); i++) {
+//            alphabetList.add(alphabet.charAt(i));
+//        }
+        plugBoardGroupedComboBoxes.add(pairComboBox);
+        pairComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
+            plugBoardGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(pairComboBox))).forEach(comboBox ->
+            {
+                comboBox.getItems().remove(newValue);
+                if (oldValue != null && !comboBox.getItems().contains(oldValue))
+                    comboBox.getItems().add(oldValue);
+                FXCollections.sort(comboBox.getItems());
+
+            });
+        });
+        pairComboBox.setPrefSize(70, 10);
+        pairComboBox.getItems().addAll(alphabetSet);
+        //remove selected id value from other rotor id combobox
+
+        return pairComboBox;
+
     }
 
     private void setPlugBoardPairs()
     {
         String alphabet=machineData.getAlphabetString();
-        firstInputVBox.getChildren().add(SetPairsChoiceBox(alphabet));
-        secondInputVBox.getChildren().add(SetPairsChoiceBox(alphabet));
+        firstInputVBox.getChildren().add(SetPairsComboBox());
+        secondInputVBox.getChildren().add(SetPairsComboBox());
         PairsHBox.setSpacing(20);
         firstInputVBox.setSpacing(10);
         secondInputVBox.setSpacing(10);
@@ -419,16 +432,16 @@ public class MachineConfigurationController {
         showAllCodes();
         disableAllFields(false);
 
-        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
-        List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
-        rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
-        rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
-        rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
-        CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
+//        RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
+//        List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
+//        rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
+//        rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
+//        rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
+//        CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
 
-        System.out.println("starting brute force");
-        //mainAppController.startBF(codeFormatDTO, BruteForceLevel.easyLevel);
-        System.out.println("After brute force");
+//        System.out.println("starting brute force");
+//        //mainAppController.startBF(codeFormatDTO, BruteForceLevel.easyLevel);
+//        System.out.println("After brute force");
     }
 
     public void resetAllFields()
@@ -452,8 +465,8 @@ public class MachineConfigurationController {
         VBox firstInputs=(VBox)PairsHBox.getChildren().get(0);
         VBox secondInputs=(VBox)PairsHBox.getChildren().get(1);
         for (int i = 0; i < firstInputs.getChildren().size(); i++) {
-            ChoiceBox<Character> firstInputFromPair = ( ChoiceBox<Character>)firstInputs.getChildren().get(i);
-            ChoiceBox<Character> secondInputFromPair = ( ChoiceBox<Character>)secondInputs.getChildren().get(i);
+            ComboBox<Character> firstInputFromPair = ( ComboBox<Character>)firstInputs.getChildren().get(i);
+            ComboBox<Character> secondInputFromPair = ( ComboBox<Character>)secondInputs.getChildren().get(i);
             for (int j = 0; j <firstInputFromPair.getItems().size() ; j++) {
                 firstInputFromPair.getItems().remove(j);
                 secondInputFromPair.getItems().remove(j);
@@ -507,13 +520,15 @@ public class MachineConfigurationController {
     }
 
     public void removePlugBoardPairOnAction(ActionEvent actionEvent) {
-        if(numberOfPairs==0)
+        if((--numberOfPairs)==0)
             removePlugBoardPairButton.setDisable(true);
         else
-            removePlugBoardPairButton.setDisable(false);
+        {     removePlugBoardPairButton.setDisable(false);
         firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
         secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
-        numberOfPairs--;
+
+        }
+
     }
 
     public void SelectedReflectorActionListener(ActionEvent actionEvent) {

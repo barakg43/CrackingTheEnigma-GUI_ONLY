@@ -10,6 +10,10 @@ import javafx.scene.control.ProgressBar;
 public class taskProgressController {
     @FXML
     public Label totalDecryptTime;
+    @FXML
+    private Label totalNumberOfTasks;
+    @FXML
+    public Label totalAmountTaskDone;
 
 
     @FXML
@@ -21,13 +25,12 @@ public class taskProgressController {
     @FXML
     private ProgressBar progressBar;
 
-    @FXML
-    private Label totalNumberOfTasks;
+
 
     public ProgressDataDTO createNewProgressProperties()
     {
         return new ProgressDataDTO(taskMessage.textProperty(),progressPercentLabel.textProperty()
-                ,progressBar.progressProperty(),totalNumberOfTasks.textProperty());
+                ,progressBar.progressProperty(),totalNumberOfTasks.textProperty(),totalAmountTaskDone.textProperty());
     }
 
 //    private TaskDataController taskDataController;

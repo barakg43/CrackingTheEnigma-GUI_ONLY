@@ -203,4 +203,8 @@ public class encryptTabDMController {
        // dictionaryListView.getSelectionModel().getSelectedItems().removeAll();
 
     }
+
+    public void testCounter(ActionEvent actionEvent) {
+        getDecryptionManager().testCounter();
+    }
 }

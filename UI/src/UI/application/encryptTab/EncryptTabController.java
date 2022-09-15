@@ -25,6 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -60,7 +62,7 @@ public class EncryptTabController {
     public TextField taskSizeField;
     private AtomicCounter counter;
     private DecryptionManager decryptionManager;
-    SimpleLongProperty counterProperty;
+    SimpleLongProperty counterProperty=new SimpleLongProperty(0);
 
 
 
@@ -107,13 +109,17 @@ public class EncryptTabController {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
 
-      decryptionManager=new DecryptionManager(enigmaEngine);
-        counterProperty=new SimpleLongProperty(0);
+        decryptionManager=new DecryptionManager(enigmaEngine);
+
         testLabel.textProperty().bind(counterProperty.asString());
-        // counterProperty=new SimpleLongProperty(counter,"counter");
-        decryptionManager.addListenerTotalTaskDoneCounter(e -> {counterProperty.set((Long) e.getNewValue());
-            System.out.println("counter is"+ e.getNewValue());
-        });
+//        decryptionManager.addListenerTotalTaskDoneCounter(new PropertyChangeListener() {
+//            @Override
+//            public void propertyChange(PropertyChangeEvent evt) {
+//                counterProperty.set((Long) evt.getNewValue());
+//                System.out.println(evt.getNewValue());
+//            }
+//        }
+//    );
 
     }
     public void doneProcessData()
@@ -128,7 +134,8 @@ public class EncryptTabController {
 
 
         counter=new AtomicCounter();
-
+//        counter.addPropertyChangeListener(evt -> counterProperty.set((Long) evt.getNewValue()));
+       // decryptionManager.addListenerTotalTaskDoneCounter(evt -> counterProperty.set((Long) evt.getNewValue()));
         comboBoxBf.getItems().addAll(BruteForceLevel.values());
 
         //obsver=new ReadOnlyObjectWrapper<>(counter);
@@ -182,7 +189,7 @@ public class EncryptTabController {
 
 //        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
 //        decryptionManager.startBruteForce("aaaaa");
-        counter.increment();
+        //counter.increment();
 
        // counterClass.setValue();
         decryptionManager.testCounter();

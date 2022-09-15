@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class CandidatesStatusController {
 
@@ -34,7 +35,7 @@ public class CandidatesStatusController {
     {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(CommonResourcesPaths.MAIN_FXML_RESOURCE);
+            loader.setLocation(new URL(CommonResourcesPaths.CANDIDATE_SINGLE_TILE));
             Node singledCandidateTile = loader.load();
             SingleCandidateController singledCandidateTileController = loader.getController();
             singledCandidateTileController.setData(candidateDTO,agentID);
