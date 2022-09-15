@@ -48,7 +48,10 @@ public class CandidatesStatusController {
 
 
     }
-
+public void clearAllTiles()
+{
+    flowPaneCandidates.getChildren().clear();
+}
     public void setTaskDataController(TaskDataController taskDataController) {
         this.taskDataController=taskDataController;
     }

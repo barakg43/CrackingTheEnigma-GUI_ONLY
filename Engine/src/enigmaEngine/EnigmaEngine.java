@@ -456,7 +456,9 @@ public class EnigmaEngine implements Engine , Serializable {
         plugBoardPairs=new ArrayList<>();
         boolean res;
         if (withPlugBoardPairs) {
+            enigmaMachine.getPlugBoard().resetPlugBoardPairs();
             String alphabet=enigmaMachine.getAlphabet();
+
             int alphabetSize=alphabet.length();
             Set<Character> alreadyExist=new HashSet<>(alphabet.length());
             int numOfPairs = random.nextInt(alphabet.length() / 2) + 1;
@@ -465,18 +467,15 @@ public class EnigmaEngine implements Engine , Serializable {
                  res = false;
                 while (!res) {
                     try {
-                        input = alphabet.charAt(random.nextInt(alphabetSize));
-                        while(alreadyExist.contains(input))
-                        {
+                        do{
                             input = alphabet.charAt(random.nextInt(alphabetSize));
-                        }
+                        } while(alreadyExist.contains(input));
                         alreadyExist.add(input);
-                        output = alphabet.charAt(random.nextInt(alphabetSize));
-                        while(alreadyExist.contains(output))
-                        {
-                            output = alphabet.charAt(random.nextInt(alphabetSize));
-                        }
-                        alreadyExist.add(output);
+                       do {
+                           output = alphabet.charAt(random.nextInt(alphabetSize));
+                       }while(alreadyExist.contains(output));
+
+                                alreadyExist.add(output);
                         enigmaMachine.getPlugBoard().addMappedInputOutput(input, output);
                         plugBoardPairs.add(new PlugboardPairDTO(input,output));
                         res = true;

@@ -88,7 +88,8 @@ public class DecryptionManager {
         throw new RuntimeException("Agent amount must be between 2 and 50");
     if(level==null)
         throw new RuntimeException("Brute force level must be selected");
-    agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,taskQueue,new AgentThreadFactory(),taskDoneAmount);
+    agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,
+            taskQueue,new AgentThreadFactory(),taskDoneAmount);
     }
     public double getTotalTasksAmount() {
         if(totalTaskAmount==0)
