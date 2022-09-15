@@ -91,7 +91,9 @@ public class UIUpdater  {
         totalTaskAmount= decryptionManager.getTotalTasksAmount();
         progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(totalTaskAmount));
         progressProperty.bind(Bindings.divide(counterProperty,totalTaskAmount));
+        counterProperty.set(0);
         stillHaveCandidate.set(true);
+        candidatesStatusController.clearAllTiles();
         candidateListener=new Thread(this::updateNewCandidate,"Candidate Updater");
         candidateListener.start();
 

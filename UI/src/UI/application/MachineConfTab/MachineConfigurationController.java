@@ -65,7 +65,6 @@ public class MachineConfigurationController {
     private Engine mEngine;
     private MachineDataDTO machineData;
     private AllMachineController mainAppController;
-    private int numberOfPairs;
     SplitPane AllMachineSplitPane;
 
     private SimpleBooleanProperty isCodeSelectedByUser;
@@ -135,7 +134,7 @@ public class MachineConfigurationController {
 
     public MachineConfigurationController()
     {
-        numberOfPairs=0;
+        //numberOfPairs=0;
         isCodeSelectedByUser=new SimpleBooleanProperty();
         isSelected=new SimpleBooleanProperty(false);
         showCodeDetails=new SimpleBooleanProperty(false);
@@ -212,13 +211,14 @@ public class MachineConfigurationController {
 
     public void setInitializeConfiguration() {
 
-        numberOfPairs=0;
+        firstInputVBox.getChildren().clear();
+        secondInputVBox.getChildren().clear();
         isCodeSelectedByUser.set(false);
         MachineCodePane.setVisible(true);
         showCodeDetails.set(true);
         int numberOfRotorsInUse = machineData.getNumberOfRotorsInUse();
-        int[] rotorsId = machineData.getRotorsId();
-        String positions = machineData.getAlphabetString();
+//        int[] rotorsId = machineData.getRotorsId();
+//        String positions = machineData.getAlphabetString();
         for (int i = 0; i < numberOfRotorsInUse; i++) {
             createComboBox();
         }
@@ -319,7 +319,7 @@ public class MachineConfigurationController {
             List<PlugboardPairDTO> plugBoardPairs=new ArrayList<>();
 
 
-            for(int i=0;i<numberOfPairs;i++)
+            for(int i=0;i<firstInputVBox.getChildren().size();i++)
             {
                 if(((ComboBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
@@ -407,14 +407,15 @@ public class MachineConfigurationController {
 
     private void setPlugBoardPairs()
     {
+        removePlugBoardPairButton.setDisable(false);
         String alphabet=machineData.getAlphabetString();
         firstInputVBox.getChildren().add(SetPairsComboBox());
         secondInputVBox.getChildren().add(SetPairsComboBox());
         PairsHBox.setSpacing(20);
         firstInputVBox.setSpacing(10);
         secondInputVBox.setSpacing(10);
-        numberOfPairs++;
-        if(numberOfPairs==alphabet.length()/2)
+
+        if(firstInputVBox.getChildren().size()==alphabet.length()/2)
             AddMorePairsButton.setDisable(true);
         else
             AddMorePairsButton.setDisable(false);
@@ -465,8 +466,8 @@ public class MachineConfigurationController {
         VBox firstInputs=(VBox)PairsHBox.getChildren().get(0);
         VBox secondInputs=(VBox)PairsHBox.getChildren().get(1);
         for (int i = 0; i < firstInputs.getChildren().size(); i++) {
-            ComboBox<Character> firstInputFromPair = ( ComboBox<Character>)firstInputs.getChildren().get(i);
-            ComboBox<Character> secondInputFromPair = ( ComboBox<Character>)secondInputs.getChildren().get(i);
+            ComboBox<Character> firstInputFromPair = (ComboBox<Character>)firstInputs.getChildren().get(i);
+            ComboBox<Character> secondInputFromPair = (ComboBox<Character>)secondInputs.getChildren().get(i);
             for (int j = 0; j <firstInputFromPair.getItems().size() ; j++) {
                 firstInputFromPair.getItems().remove(j);
                 secondInputFromPair.getItems().remove(j);
@@ -520,15 +521,18 @@ public class MachineConfigurationController {
     }
 
     public void removePlugBoardPairOnAction(ActionEvent actionEvent) {
-        if((--numberOfPairs)==0)
-            removePlugBoardPairButton.setDisable(true);
-        else
-        {     removePlugBoardPairButton.setDisable(false);
         firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
         secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
+        if(firstInputVBox.getChildren().size()==0) {
+            removePlugBoardPairButton.setDisable(true);
 
         }
+        else
+        {
+            removePlugBoardPairButton.setDisable(false);
 
+        }
+        AddMorePairsButton.setDisable(false);
     }
 
     public void SelectedReflectorActionListener(ActionEvent actionEvent) {

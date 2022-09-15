@@ -81,7 +81,6 @@ public class DMoperationalController {
                     Integer.parseInt(taskSizeTextField.getText()));
            // DMcontroller.addCandidates();
             uiUpdater.startCandidateListener();
-            uiUpdater.getProgressDataDTO().progressBarProperty().set(0);  //TODO
             decryptionManager.startBruteForce(outputString.getValue());
         }
 
