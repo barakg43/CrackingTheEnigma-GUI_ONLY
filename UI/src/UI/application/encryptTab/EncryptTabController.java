@@ -62,6 +62,8 @@ public class EncryptTabController {
     private DecryptionManager decryptionManager;
     SimpleLongProperty counterProperty;
 
+
+
     public Engine getEnigmaEngine()
     {
         return enigmaEngine;
@@ -104,7 +106,15 @@ public class EncryptTabController {
     public void setEnigmaEngine(Engine enigmaEngine) {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
-      new Thread(()-> decryptionManager=new DecryptionManager(enigmaEngine)).start();
+
+      decryptionManager=new DecryptionManager(enigmaEngine);
+        counterProperty=new SimpleLongProperty(0);
+        testLabel.textProperty().bind(counterProperty.asString());
+        // counterProperty=new SimpleLongProperty(counter,"counter");
+        decryptionManager.addListenerTotalTaskDoneCounter(e -> {counterProperty.set((Long) e.getNewValue());
+            System.out.println("counter is"+ e.getNewValue());
+        });
+
     }
     public void doneProcessData()
     {
@@ -118,11 +128,9 @@ public class EncryptTabController {
 
 
         counter=new AtomicCounter();
-        counterProperty=new SimpleLongProperty(0);
-       // counterProperty=new SimpleLongProperty(counter,"counter");
-        counter.addPropertyChangeListener(e -> counterProperty.set((Long) e.getNewValue()));
+
         comboBoxBf.getItems().addAll(BruteForceLevel.values());
-        testLabel.textProperty().bind(counterProperty.asString());
+
         //obsver=new ReadOnlyObjectWrapper<>(counter);
 //        testLabel.textProperty().addListener(new ChangeListener<Number>() {
 //            @Override
@@ -157,24 +165,27 @@ public class EncryptTabController {
     }
 
     public void testBotton(ActionEvent ignoredActionEvent) {
-        System.out.println("Before  config"+enigmaEngine.getCodeFormat(true));
-        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
-        System.out.println("Before "+enigmaEngine.getCodeFormat(true));
-        String out = enigmaEngine.processDataInput(taskSizeField.getText());
-        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
-        System.out.println("after "+enigmaEngine.getCodeFormat(true));
-        String out2 = enigmaEngine.processDataInput(out);
-        String gyy;
-        if(enigmaEngine.getDictionary().checkIfAllLetterInDic(out2))
-            System.out.println("TRUE");
-        else
-            System.out.println("False");
+//        System.out.println("Before  config"+enigmaEngine.getCodeFormat(true));
+//        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
+//        System.out.println("Before "+enigmaEngine.getCodeFormat(true));
+//        String out = enigmaEngine.processDataInput(taskSizeField.getText());
+//        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
+//        System.out.println("after "+enigmaEngine.getCodeFormat(true));
+//        String out2 = enigmaEngine.processDataInput(out);
+//        String gyy;
+//        if(enigmaEngine.getDictionary().checkIfAllLetterInDic(out2))
+//            System.out.println("TRUE");
+//        else
+//            System.out.println("False");
 
         System.out.println("Starting BF!");
+
 //        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
 //        decryptionManager.startBruteForce("aaaaa");
         counter.increment();
+
        // counterClass.setValue();
+        decryptionManager.testCounter();
         System.out.println(counterProperty.get());
         //System.out.println(bindingCounter.get());
     }

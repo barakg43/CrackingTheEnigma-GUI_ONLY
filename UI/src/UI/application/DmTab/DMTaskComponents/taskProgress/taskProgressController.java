@@ -8,9 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
 public class taskProgressController {
-
     @FXML
-    private Label totalDecrytpTIme;
+    public Label totalDecryptTime;
+
 
     @FXML
     private Label taskMessage;
