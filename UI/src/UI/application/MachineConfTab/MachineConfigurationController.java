@@ -247,6 +247,9 @@ public class MachineConfigurationController {
         rotorIDGroupedComboBoxes.add(rotorsComboBox);
         rotorsComboBox.setVisibleRowCount(10);
         rotorsComboBox.setMinWidth(20);
+        rotorsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
+
+        //remove selected id value from other rotor id combobox
         rotorsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
             rotorIDGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(rotorsComboBox))).forEach(comboBox ->
             {
@@ -271,16 +274,8 @@ public class MachineConfigurationController {
         positionGroupedComboBoxes.add(positionsComboBox);
         positionsComboBox.setVisibleRowCount(10);
         positionsComboBox.setMinWidth(20);
-        positionsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
-            positionGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(positionsComboBox))).forEach(comboBox ->
-            {
-                comboBox.getItems().remove(newValue);
-                if (oldValue != null && !comboBox.getItems().contains(oldValue))
-                    comboBox.getItems().add(oldValue);
-                FXCollections.sort(comboBox.getItems());
+        positionsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
 
-            });
-        });
 //        for (int i = 0; i < positions.length(); i++) {
 //            positionsList.add(positions.charAt(i));
 //        }
@@ -302,12 +297,12 @@ public class MachineConfigurationController {
                 VBox rotorAndPosition=(VBox) rotorsAndPositionsHBox.getChildren().get(i);
                 if(rotorAndPosition==null)
                     throw new Exception("You need to configurate all data.");
-                if(((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
+                if(((ComboBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
-                int selectedID=((ChoiceBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
-                if(((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
+                int selectedID=((ComboBox<Integer>)(rotorAndPosition.getChildren().toArray()[0])).getSelectionModel().getSelectedItem();
+                if(((ComboBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select all rotors and positions.\nPlease check rotor in column number: " + (i+1));
-                Character selectedPosition=((ChoiceBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
+                Character selectedPosition=((ComboBox<Character>)(rotorAndPosition.getChildren().toArray()[1])).getSelectionModel().getSelectedItem();
 
                 selectedRotorsID.add(selectedID);
                 selectedPositions.add(selectedPosition);
