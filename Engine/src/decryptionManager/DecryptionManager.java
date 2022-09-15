@@ -260,8 +260,8 @@ public class DecryptionManager {
         while(temp!=null){
             currentCode=temp;
 
-            fileOutput.println("Total Task number:"+(++taskCounter));
-            System.out.println("Total Task number:"+(taskCounter));
+            //fileOutput.println("Total Task number:"+(++taskCounter));
+          //  System.out.println("Total Task number:"+(taskCounter));
             try {
 
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),

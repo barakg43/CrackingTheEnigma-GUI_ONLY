@@ -186,6 +186,8 @@ public class encryptTabDMController {
     }
 
     public void clearListView() {
-        dictionaryListView.getSelectionModel().getSelectedItems().removeAll();
+        dictionaryListView.getSelectionModel().clearSelection();
+        dictionaryListView.getItems().clear();
+       // dictionaryListView.getSelectionModel().getSelectedItems().removeAll();
     }
 }
