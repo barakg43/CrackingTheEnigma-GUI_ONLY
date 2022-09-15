@@ -8,6 +8,7 @@ import decryptionManager.DecryptionManager;
 import decryptionManager.components.AtomicCounter;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.BruteForceLevel;
+import dtoObjects.DmDTO.CandidateDTO;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -60,7 +61,7 @@ public class EncryptTabController {
     private AtomicCounter counter;
     private DecryptionManager decryptionManager;
     SimpleLongProperty counterProperty;
-    Counter counterClass;
+
     public Engine getEnigmaEngine()
     {
         return enigmaEngine;
@@ -117,7 +118,6 @@ public class EncryptTabController {
 
 
         counter=new AtomicCounter();
-        counterClass=new Counter();
         counterProperty=new SimpleLongProperty(0);
        // counterProperty=new SimpleLongProperty(counter,"counter");
         counter.addPropertyChangeListener(e -> counterProperty.set((Long) e.getNewValue()));
@@ -157,9 +157,22 @@ public class EncryptTabController {
     }
 
     public void testBotton(ActionEvent ignoredActionEvent) {
+        System.out.println("Before  config"+enigmaEngine.getCodeFormat(true));
+        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
+        System.out.println("Before "+enigmaEngine.getCodeFormat(true));
+        String out = enigmaEngine.processDataInput(taskSizeField.getText());
+        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
+        System.out.println("after "+enigmaEngine.getCodeFormat(true));
+        String out2 = enigmaEngine.processDataInput(out);
+        String gyy;
+        if(enigmaEngine.getDictionary().checkIfAllLetterInDic(out2))
+            System.out.println("TRUE");
+        else
+            System.out.println("False");
+
         System.out.println("Starting BF!");
-        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
-        decryptionManager.startBruteForce("aaaaa");
+//        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
+//        decryptionManager.startBruteForce("aaaaa");
         counter.increment();
        // counterClass.setValue();
         System.out.println(counterProperty.get());
