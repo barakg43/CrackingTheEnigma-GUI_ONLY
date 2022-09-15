@@ -6,6 +6,7 @@ import enigmaEngine.Encryptor;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
@@ -39,21 +40,42 @@ public class AutomaticEncryptController {
                 String inputText=stringInputTextField.getText();
                if(automaticEncryptDMController.checkIfInputStringInDictionary(inputText.toUpperCase()))
                {
-                   inputProperty.setValue(stringInputTextField.getText().toUpperCase());
-                   outputProperty.setValue( encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
+                   try {
+                       outputProperty.setValue(encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
+                       inputProperty.setValue(stringInputTextField.getText().toUpperCase());
+
+                   }catch (Exception ex)
+                   {
+                       Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                       errorAlert.setTitle("Error");
+                       errorAlert.setHeaderText("Invalid input string");
+                       errorAlert.setContentText(ex.getMessage());
+                       errorAlert.showAndWait();
+                   }
                    automaticEncryptDMController.doneProcessData();
                }
             }
             else{
-                inputProperty.setValue(stringInputTextField.getText().toUpperCase());
-                outputProperty.setValue( encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
+                try {
+                    outputProperty.setValue(encryptor.processDataInput(stringInputTextField.getText()));//update output label on component
+                    inputProperty.setValue(stringInputTextField.getText().toUpperCase());
+
+                }catch (Exception ex)
+                {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Error");
+                    errorAlert.setHeaderText("Invalid input string");
+                    errorAlert.setContentText(ex.getMessage());
+                    errorAlert.showAndWait();
+                }
                 encryptComponentController.doneProcessData(); //Pop up process done to parent
             }
 
         }
         @FXML public void clearTextFieldInput(ActionEvent event) {
              stringInputTextField.clear();
-            automaticEncryptDMController.clearListView();
+             if(automaticEncryptDMController!=null)
+                  automaticEncryptDMController.clearListView();
         }
 
         public void setEncryptor(Encryptor encryptor) {

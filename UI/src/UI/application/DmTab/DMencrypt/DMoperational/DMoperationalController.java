@@ -81,8 +81,8 @@ public class DMoperationalController {
                     Integer.parseInt(taskSizeTextField.getText()));
            // DMcontroller.addCandidates();
             uiUpdater.startCandidateListener();
+            uiUpdater.getProgressDataDTO().progressBarProperty().set(0);  //TODO
             decryptionManager.startBruteForce(outputString.getValue());
-
         }
 
     }
@@ -111,7 +111,7 @@ public class DMoperationalController {
     @FXML
     private void initialize() {
 
-
+        sliderValueLabel.setText("value: 2 ");
         agentSize.setMin(2);
         agentSize.setMax(50);
         agentSize.setValue(2);

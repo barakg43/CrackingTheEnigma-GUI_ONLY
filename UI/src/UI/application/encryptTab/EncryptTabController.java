@@ -201,7 +201,21 @@ public class EncryptTabController {
         decryptionManager.resume();
     }
 
+
+
+
     public void pauseOperation(ActionEvent ignoredActionEvent) {
         decryptionManager.pause();
+    }
+
+    public void bindResetButtonToCode() {
+        codeComponentController.setSelectedCode(enigmaEngine.getCodeFormat(true));
+        mainAppController.bindCurrentCode();
+    }
+
+    public void resetAllData() {
+        codeComponentController.clearCurrentCodeView();
+        statisticsComponentController.clearAllData();
+        encryptComponentController.clearAllData();
     }
 }

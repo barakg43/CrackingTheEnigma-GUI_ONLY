@@ -70,7 +70,6 @@ public class encryptTabDMController {
             codeEncryptComponentController.setParentComponentTab(this);
         }
         dictionaryListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
 //        dictionaryListView.setOnMouseClicked(new EventHandler<Event>() {
 //            @Override
 //            public void handle(Event event) {
@@ -82,28 +81,42 @@ public class encryptTabDMController {
 //            }
 //
 //        });
-
-
-
-        dictionaryListView.getSelectionModel().selectedItemProperty().addListener
-                ((ObservableValue ov, Object old_val, Object new_val) -> {
-                    ObservableList<String> selectedItems = dictionaryListView.getSelectionModel().getSelectedItems();
-
-                    StringBuilder builder = new StringBuilder();
-
-                    for (String word : selectedItems) {
-                        builder.append(word+" ");
-                    }
-
-                    codeEncryptComponentController.getInputString().setText(builder.toString());
-
-                });
+        createDictionaryList();
 
         outputString=new SimpleStringProperty();
         bindOutputStringBetweenComponent();
 
         searchBox.textProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> search((String) oldVal, (String) newVal));
     }
+
+    public void restartAllData()
+    {
+        dictionaryListView.getSelectionModel().clearSelection();
+
+        createDictionaryList();
+        simpleCodeComponentController.clearCurrentCodeView();
+        searchBox.clear();
+        codeEncryptComponentController.resetAllData();
+
+    }
+
+    private void createDictionaryList()
+    {
+        dictionaryListView.getSelectionModel().selectedItemProperty().addListener
+            ((ObservableValue ov, Object old_val, Object new_val) -> {
+                ObservableList<String> selectedItems = dictionaryListView.getSelectionModel().getSelectedItems();
+
+                StringBuilder builder = new StringBuilder();
+
+                for (String word : selectedItems) {
+                    builder.append(word+" ");
+                }
+
+                codeEncryptComponentController.getInputString().setText(builder.toString());
+
+            });
+    }
+
     public void bindOutputStringBetweenComponent()
     {
         codeEncryptComponentController.bindParentToOutputString(outputString);
@@ -202,6 +215,11 @@ public class encryptTabDMController {
         dictionaryListView.getItems().clear();
        // dictionaryListView.getSelectionModel().getSelectedItems().removeAll();
 
+    }
+
+    public void bindResetButtonToCode() {
+        simpleCodeComponentController.setSelectedCode(enigmaEngine.getCodeFormat(true));
+        DmController.getMainAppController().bindCurrentBFCode();
     }
 
     public void testCounter(ActionEvent actionEvent) {

@@ -47,10 +47,14 @@ public class UIUpdater  {
 //
 //
 //    }
+
+    public ProgressDataDTO getProgressDataDTO(){
+        return progressDataDTO;
+    }
+
     private void bindUpdaterToUIComponents() {
         // task message
         progressDataDTO.taskMessageProperty().bind(this.messageProperty);
-        progressDataDTO.progressBarProperty().set(0);
         // task progress bar
         progressDataDTO.progressBarProperty().bind(this.progressProperty);
          progressDataDTO.totalAmountTaskDoneProperty().bind(counterProperty.asString());

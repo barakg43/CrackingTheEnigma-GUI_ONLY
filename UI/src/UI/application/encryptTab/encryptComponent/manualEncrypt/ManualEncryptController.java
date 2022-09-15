@@ -46,16 +46,15 @@ public class ManualEncryptController {
         private void processSingleCharacter(KeyEvent event) {
              //  System.out.println("pressed key:"+event.getCharacter()+" length: "+ event.getCharacter().length());
              try {
-
-                char outputProcessChar=encryptor.processDataInput(event.getCharacter().charAt(0));
-                inputProperty.setValue(inputProperty.getValue()+event.getCharacter().toUpperCase());
-                outputProperty.setValue(outputProperty.getValue()+outputProcessChar);
-             }
-             catch (RuntimeException ex)
+                     char outputProcessChar=encryptor.processDataInput(event.getCharacter().charAt(0));
+                     inputProperty.setValue(inputProperty.getValue()+event.getCharacter().toUpperCase());
+                     outputProperty.setValue(outputProperty.getValue()+outputProcessChar);
+                 }
+             catch (Exception ex)
              {
                  Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                  errorAlert.setTitle("Error");
-                 errorAlert.setHeaderText("Invalid input!");
+                 errorAlert.setHeaderText("Invalid input string");
                  errorAlert.setContentText(ex.getMessage());
                  errorAlert.showAndWait();
              }

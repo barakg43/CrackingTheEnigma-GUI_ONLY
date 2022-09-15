@@ -35,7 +35,7 @@ public class CandidatesStatusController {
     {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(new URL(CommonResourcesPaths.CANDIDATE_SINGLE_TILE));
+            loader.setLocation(CommonResourcesPaths.MAIN_FXML_RESOURCE);
             Node singledCandidateTile = loader.load();
             SingleCandidateController singledCandidateTileController = loader.getController();
             singledCandidateTileController.setData(candidateDTO,agentID);
@@ -52,4 +52,5 @@ public class CandidatesStatusController {
     public void setTaskDataController(TaskDataController taskDataController) {
         this.taskDataController=taskDataController;
     }
+
 }
