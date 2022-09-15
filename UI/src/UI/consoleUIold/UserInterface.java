@@ -434,6 +434,8 @@ public class UserInterface {
             catch (RuntimeException e) {
                 System.out.println(e.getMessage()+"\nPlease try again...");
 
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
     }

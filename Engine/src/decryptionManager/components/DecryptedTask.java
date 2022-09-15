@@ -55,8 +55,13 @@ public class DecryptedTask implements Runnable {
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
 
                 copyEngine.setCodeManually(currentCode);
-                String processedOutput = copyEngine.processDataInput(cipheredString);
-                    if(dictionary.checkIfAllLetterInDic(processedOutput))
+            String processedOutput = null;
+            try {
+                processedOutput = copyEngine.processDataInput(cipheredString);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if(dictionary.checkIfAllLetterInDic(processedOutput))
                     {
                         possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(true),processedOutput));
                         System.out.println(currentCode);

@@ -33,6 +33,9 @@ public class taskProgressController {
                 ,progressBar.progressProperty(),totalNumberOfTasks.textProperty(),totalAmountTaskDone.textProperty());
     }
 
+    public void restartAllData() {
+    }
+
 //    private TaskDataController taskDataController;
 //
 //

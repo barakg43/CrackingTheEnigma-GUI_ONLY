@@ -65,7 +65,9 @@ public class AutomaticEncryptDMController {
 
     public void resetCodeToInitialState(ActionEvent actionEvent) {
         encryptor.resetCodePosition();
-        encryptDataController.clearTextFieldInput(actionEvent);
+       // encryptDataController.clearTextFieldInput(actionEvent);
+        parentComponentTab.bindResetButtonToCode();
+
     }
 
     public boolean checkIfInputStringInDictionary(String inputText) {
@@ -94,6 +96,12 @@ public class AutomaticEncryptDMController {
 
     public void clearListView() {
         parentComponentTab.clearListView();
+    }
+
+    public void resetAllData() {
+        outputString.setText("");
+        inputString.setText("");
+        encryptDataController.getStringInputTextField().clear();
     }
 }
 

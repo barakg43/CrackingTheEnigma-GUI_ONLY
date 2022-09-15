@@ -421,14 +421,14 @@ public class MachineConfigurationController {
     }
 
     public void GetRandomButtonActionListener(ActionEvent actionEvent) {
-        resetAllFields();
+   //    resetAllFields();
         disableAllFields(true);
-        mEngine.resetSelected();
+  //      mEngine.resetSelected();
         mEngine.setCodeAutomatically();
         showCodeDetails.set(true);
         isSelected.set(true);
-        CurrentMachineCodeController.clearCurrentCodeView();
-        SelectedMachineCodeController.clearCurrentCodeView();
+      //  CurrentMachineCodeController.clearCurrentCodeView();
+      //  SelectedMachineCodeController.clearCurrentCodeView();
         showAllCodes();
         disableAllFields(false);
 

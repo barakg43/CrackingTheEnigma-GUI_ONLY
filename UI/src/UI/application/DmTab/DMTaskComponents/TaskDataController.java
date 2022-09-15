@@ -59,4 +59,8 @@ public class TaskDataController {
         TaskFinishDataDTO taskFinishDataDTO=new TaskFinishDataDTO(candidates,"2",200);
         candidateStatusComponentController.addAllCandidate(taskFinishDataDTO);
     }
+
+    public void restarAllData() {
+        taskProgressComponentController.restartAllData();
+    }
 }

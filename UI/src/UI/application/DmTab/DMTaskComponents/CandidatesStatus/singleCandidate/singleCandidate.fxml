@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox prefHeight="200.0" prefWidth="537.0" stylesheets="@../../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
-
+<VBox prefHeight="200.0" prefWidth="537.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
    <children>
       <Pane prefHeight="45.0" prefWidth="537.0">
          <children>
@@ -27,9 +23,8 @@
          <content>
             <FlowPane maxWidth="1.7976931348623157E308">
                <children>
-                  <fx:include fx:id="codeFormat" maxWidth="1.7976931348623157E308" source="../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
-               </children>
-            </FlowPane>
+                  <fx:include fx:id="codeFormat" source="../../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
+               </children></FlowPane>
          </content>
       </ScrollPane>
       <Pane prefHeight="57.0" prefWidth="570.0">

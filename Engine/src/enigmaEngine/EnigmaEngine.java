@@ -171,18 +171,23 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     @Override
-    public String processDataInput(String dataInput) {
+    public String processDataInput(String dataInput) throws Exception {
 
         resetProcessingTime();
         dataInput = dataInput.toUpperCase();
         StringBuilder output = new StringBuilder();
 
-        for (int i = 0; i < dataInput.length(); i++) {
-            output.append(processDataInput(dataInput.charAt(i)));
+        try {
+            for (int i = 0; i < dataInput.length(); i++) {
+                output.append(processDataInput(dataInput.charAt(i)));
+            }
+            //System.out.println("output:" + output);
+            addOutputStringToStatics(dataInput, output.toString());
+            return output.toString();
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
         }
-        //System.out.println("output:" + output);
-        addOutputStringToStatics(dataInput,output.toString());
-        return output.toString();
     }
 
     @Override
@@ -554,29 +559,36 @@ public class EnigmaEngine implements Engine , Serializable {
         }
 
     @Override
-    public char processDataInput(char charInput) {
+    public char processDataInput(char charInput) throws Exception {
         long startTime = System.nanoTime();
         charInput = Character.toUpperCase(charInput);
         // System.out.println("char is:"+charInput);
 
         boolean advanceNextRotor = true;//first right rotor always advance every typing of letter
         //the row input after moving in plug board
-        int currentRow = enigmaMachine.getKeyboard().getMappedOutput(charInput);
-        //move input flow from right rotor to left rotors
-        for (Rotor selectedRotor : selectedRotors) {
-            advanceNextRotor = selectedRotor.forwardWindowPosition(advanceNextRotor);
-            currentRow = selectedRotor.getOutputMapIndex(currentRow, false);
-        }
-        currentRow = selectedReflector.getMappedOutput(currentRow);
+        try {
+            int currentRow = enigmaMachine.getKeyboard().getMappedOutput(charInput);
+            //move input flow from right rotor to left rotors
+            for (Rotor selectedRotor : selectedRotors) {
+                advanceNextRotor = selectedRotor.forwardWindowPosition(advanceNextRotor);
+                currentRow = selectedRotor.getOutputMapIndex(currentRow, false);
+            }
+            currentRow = selectedReflector.getMappedOutput(currentRow);
 //        System.out.format("Reflect:%d->%d\n", rotorOutput.getOutputIndex(),currentRow);
-        //input flow go back from left rotor to right rotor after reflector
-        for (int j = selectedRotors.length - 1; j >= 0; j--) {
-            currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
+            //input flow go back from left rotor to right rotor after reflector
+            for (int j = selectedRotors.length - 1; j >= 0; j--) {
+                currentRow = selectedRotors[j].getOutputMapIndex(currentRow, true);
+            }
+            sumProcessingTime += System.nanoTime() - startTime;
+
+            return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
         }
 
-        sumProcessingTime += System.nanoTime() - startTime;
 
-        return enigmaMachine.getKeyboard().getLetterFromRowNumber(currentRow);
     }
 
 

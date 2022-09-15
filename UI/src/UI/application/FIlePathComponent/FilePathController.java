@@ -51,6 +51,7 @@ public class FilePathController {
             try {
                 mEngine.loadXMLFile(absolutePath);
                 mEngine.resetAllData();
+                mainAppController.resetAllData();
                 selectedFileProperty.set(absolutePath);
                 mainAppController.setmEngine(mEngine);
                 mainAppController.setMachineDetails();

@@ -7,6 +7,7 @@ import enigmaEngine.Encryptor;
 import enigmaEngine.Engine;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -17,6 +18,7 @@ public class EncryptComponentController {
     public Label inputString;
 
     @FXML public Label alphabetString;
+    public Button resetButton;
 
     @FXML
     private AutomaticEncryptController automaticComponentController;
@@ -40,6 +42,7 @@ public class EncryptComponentController {
     public void resetCodeToInitialState(ActionEvent actionEvent) {
         encryptor.resetCodePosition();
         automaticComponentController.clearTextFieldInput(actionEvent);
+        parentComponentTab.bindResetButtonToCode();
     }
 
     public void setParentComponentTab(EncryptTabController parentComponentTab) {

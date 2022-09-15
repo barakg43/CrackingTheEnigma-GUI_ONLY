@@ -146,4 +146,9 @@ public class AllMachineController {
        // DMTabComponentController.setEnigmaEngine(mEngine);
         DMTabComponentController.bindTabDisable(MachineConfComponentController.getIsSelected());
     }
+
+    public void resetAllData() {
+        DMTabComponentController.resetAllData();
+        encryptionTabComponentController.resetAllData();
+    }
 }
