@@ -37,7 +37,7 @@ public class DecryptionManager {
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
-    private AtomicCounter taskDoneAmount;
+    public static AtomicCounter taskDoneAmount;
     private String output;
     private Thread taskCreator;
     private double totalTaskAmount;
