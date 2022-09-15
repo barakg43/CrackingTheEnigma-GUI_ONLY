@@ -2,9 +2,6 @@ package UI.application.DmTab;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 
 public class ProgressDataDTO {
 
@@ -21,15 +18,15 @@ public class ProgressDataDTO {
         this.totalNumberOfTasksProperty = totalNumberOfTasksProperty;
     }
 
-    public StringProperty taskMessagePropertyProperty() {
+    public StringProperty taskMessageProperty() {
         return taskMessageProperty;
     }
 
-    public StringProperty progressPercentPropertyProperty() {
+    public StringProperty progressPercentProperty() {
         return progressPercentProperty;
     }
 
-    public DoubleProperty progressBarPropertyProperty() {
+    public DoubleProperty progressBarProperty() {
         return progressBarProperty;
     }
 

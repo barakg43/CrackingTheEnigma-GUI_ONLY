@@ -41,7 +41,7 @@
          </GridPane.margin>
       </Label>
       <Label fx:id="progressPercentLabel" styleClass="text-label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <ProgressBar maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
+      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>

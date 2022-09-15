@@ -1,6 +1,7 @@
 package UI.application.DmTab.DMencrypt.DMoperational;
 
 import UI.application.DmTab.DMcontroller;
+import UI.application.DmTab.UIUpdater;
 import decryptionManager.DecryptionManager;
 import dtoObjects.DmDTO.BruteForceLevel;
 import enigmaEngine.Engine;
@@ -23,7 +24,7 @@ public class DMoperationalController {
     private ComboBox<BruteForceLevel> levelCombobox;
     private SimpleStringProperty outputString;
     private DecryptionManager decryptionManager;
-
+    private UIUpdater uiUpdater;
     @FXML
     private Button pauseBotton;
 
@@ -38,6 +39,10 @@ public class DMoperationalController {
       //  this.decryptionManager = decryptionManager;
     }
     private Engine enigmaEngine;
+
+    public void setUiUpdater(UIUpdater uiUpdater) {
+        this.uiUpdater = uiUpdater;
+    }
 
     @FXML
     void pauseBFbotton(ActionEvent event) {
@@ -77,7 +82,6 @@ public class DMoperationalController {
            // DMcontroller.addCandidates();
             decryptionManager.startBruteForce(outputString.getValue());
         }
-
 
     }
 

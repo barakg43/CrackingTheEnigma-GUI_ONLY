@@ -69,20 +69,22 @@ public class AutomaticEncryptDMController {
     }
 
     public boolean checkIfInputStringInDictionary(String inputText) {
-        String[] inputWords=inputText.split(" ");
-        Dictionary dictionary=parentComponentTab.getEnigmaEngine().getDictionary();
-        for (String word:inputWords) {
-            if(!dictionary.isExistWord(word))
-            {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Error");
-                errorAlert.setHeaderText("Invalid input");
-                errorAlert.setContentText("The word  '" + word + "'  not exist in dictionary.");
-                errorAlert.showAndWait();
-                return false;
-            }
-        }
-        return true;
+
+        return parentComponentTab.getEnigmaEngine().getDictionary().checkIfAllLetterInDic(inputText);
+//        String[] inputWords=inputText.split(" ");
+//        Dictionary dictionary=parentComponentTab.getEnigmaEngine().getDictionary();
+//        for (String word:inputWords) {
+//            if(!dictionary.isExistWord(word))
+//            {
+//                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+//                errorAlert.setTitle("Error");
+//                errorAlert.setHeaderText("Invalid input");
+//                errorAlert.setContentText("The word  '" + word + "'  not exist in dictionary.");
+//                errorAlert.showAndWait();
+//                return false;
+//            }
+//        }
+//        return true;
     }
 
     public TextField getInputString()
