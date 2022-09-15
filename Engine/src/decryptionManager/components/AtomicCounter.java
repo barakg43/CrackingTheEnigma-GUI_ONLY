@@ -5,7 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class  AtomicCounter {
-
+        private final String PROPERTY_NAME="counter";
         private final AtomicLong counter;
         private final PropertyChangeSupport pcs ;
         public AtomicCounter() {
@@ -14,13 +14,14 @@ public class  AtomicCounter {
         }
 
         public void increment() {
-            long oldValue = this.counter.get();
-
-            pcs.firePropertyChange("counter", oldValue,  counter.incrementAndGet());
+            Long oldValue = this.counter.get();
+            Long newValue=counter.incrementAndGet();
+            pcs.firePropertyChange(PROPERTY_NAME, oldValue, newValue );
         }
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
-            pcs.addPropertyChangeListener(listener);
+            pcs.addPropertyChangeListener(PROPERTY_NAME,listener);
+            // pcs.addPropertyChangeListener(listener);
         }
 
 

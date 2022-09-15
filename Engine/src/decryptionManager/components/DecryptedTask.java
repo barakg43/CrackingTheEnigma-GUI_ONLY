@@ -51,16 +51,9 @@ public class DecryptedTask implements Runnable {
 
         long startTime=System.nanoTime();
         CodeFormatDTO currentCode=initialCode;
-        PrintWriter fileOutput1= null;
-        try {
-            fileOutput1 = new PrintWriter("C:\\ComputerScience\\Java\\EXCISES\\RUN-TEST\\output_"+taskNumber.incrementAndGet()+'_'+Thread.currentThread().getName()+".txt","UTF-8");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
-            fileOutput1.println(currentCode);
+
                 copyEngine.setCodeManually(currentCode);
                 String processedOutput = copyEngine.processDataInput(cipheredString);
                     if(dictionary.checkIfAllLetterInDic(processedOutput))
@@ -77,10 +70,11 @@ public class DecryptedTask implements Runnable {
             if(possibleCandidates.size()>0)
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
         totalTimeTasks.set(totalTimeTasks.get()+totalTime);
+        Thread.sleep(500);
     } catch (InterruptedException e) {
         throw new RuntimeException(e);}
 
-        fileOutput1.close();
+
     }
 
 
