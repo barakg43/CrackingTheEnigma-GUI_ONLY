@@ -85,7 +85,7 @@ public class encryptTabDMController {
 
         outputString=new SimpleStringProperty();
         bindOutputStringBetweenComponent();
-
+        operationalComponent.disableProperty().bind(outputString.isEmpty());
         searchBox.textProperty().addListener((ChangeListener) (observable, oldVal, newVal) -> search((String) oldVal, (String) newVal));
     }
 

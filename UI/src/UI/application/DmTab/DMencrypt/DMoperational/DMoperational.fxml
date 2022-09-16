@@ -5,7 +5,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,9 +33,10 @@
       <ComboBox fx:id="levelCombobox" prefHeight="31.0" prefWidth="187.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <HBox maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <children>
-            <Button fx:id="pauseBotton" mnemonicParsing="false" onAction="#pauseBFbotton" styleClass="text-label" text="Pause" />
-            <Button fx:id="stopBotton" mnemonicParsing="false" onAction="#stopBFbotton" styleClass="text-label" text="Stop" />
-            <Button fx:id="startBotton" mnemonicParsing="false" onAction="#startBFbotton" styleClass="text-label" text="Start" />
+            <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseBFButton" styleClass="text-label" text="Pause" />
+            <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#resumeButtonOnAction" prefHeight="31.0" prefWidth="83.0" styleClass="text-label" text="Resume" />
+            <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopBFButton" styleClass="text-label" text="Stop" />
+            <Button fx:id="startButton" mnemonicParsing="false" onAction="#startBFButton" styleClass="text-label" text="Start" />
          </children>
          <GridPane.margin>
             <Insets bottom="10.0" left="55.0" right="10.0" top="10.0" />
@@ -60,10 +62,10 @@
             <Insets />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="taskSizeTextField" GridPane.columnIndex="2">
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
-      </TextField>
+      <Spinner fx:id="taskSizeTextSpinner" editable="true" prefHeight="80.0" prefWidth="150.0" GridPane.columnIndex="2">
+         <tooltip>
+            <Tooltip text="choose positive task size number" />
+         </tooltip>
+      </Spinner>
    </children>
 </GridPane>

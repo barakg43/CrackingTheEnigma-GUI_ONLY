@@ -29,7 +29,6 @@ public class AutomaticEncryptDMController {
     public void bindParentToOutputString(SimpleStringProperty outputProperty)
     {
         outputProperty.bind(outputString.textProperty());
-
     }
 
     public encryptTabDMController getParentComponentTab()
@@ -39,6 +38,11 @@ public class AutomaticEncryptDMController {
     public void setEncryptor(Encryptor encryptor) {
         this.encryptor = encryptor;
         encryptDataController.setEncryptor(encryptor);
+
+    }
+    public void clearOutputInputLabels(){
+        outputString.setText("");
+        inputString.setText("");
 
     }
     public void doneProcessData()

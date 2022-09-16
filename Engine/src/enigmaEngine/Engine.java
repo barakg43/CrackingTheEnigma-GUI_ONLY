@@ -33,6 +33,6 @@ public interface Engine extends Encryptor {
     boolean isMachineLoaded();
     CodeFormatDTO getCodeFormat(boolean isCalcDistanceFromInitWindow);
     Dictionary getDictionary();
-
+    int getAgentsAmount();
 
 }

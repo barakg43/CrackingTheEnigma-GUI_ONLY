@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import static decryptionManager.DecryptionManager.fileOutput;
+import static decryptionManager.DecryptionManager.*;
 import static decryptionManager.components.AgentsThreadPool.taskNumber;
 import static decryptionManager.components.AgentsThreadPool.totalTimeTasks;
 
@@ -53,8 +53,19 @@ public class DecryptedTask implements Runnable {
         CodeFormatDTO currentCode=initialCode;
 
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
-
-                copyEngine.setCodeManually(currentCode);
+            try {
+            if(isDmPause) {
+                    synchronized (pauseLock) {
+                        System.out.println(Thread.currentThread().getName() + " is pause!");
+                        pauseLock.wait();
+                        System.out.println(Thread.currentThread().getName() + " is resume!");
+                      }
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            System.out.println(Thread.currentThread().getName() + " is running!");
+            copyEngine.setCodeManually(currentCode);
             String processedOutput = null;
             try {
                 processedOutput = copyEngine.processDataInput(cipheredString);
@@ -75,7 +86,8 @@ public class DecryptedTask implements Runnable {
             if(possibleCandidates.size()>0)
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
         totalTimeTasks.set(totalTimeTasks.get()+totalTime);
-        Thread.sleep(500);
+        Thread.sleep(1000);
+            currentTaskTimeConsumer.accept(totalTime);
     } catch (InterruptedException e) {
         throw new RuntimeException(e);}
 
