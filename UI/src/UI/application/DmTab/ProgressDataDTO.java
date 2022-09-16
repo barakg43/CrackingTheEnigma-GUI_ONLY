@@ -5,25 +5,39 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class ProgressDataDTO {
+public class ProgressDataDTO<totalTimeTaskAmountProperty> {
 
     private final StringProperty taskMessageProperty;
     private final StringProperty progressPercentProperty;
     private final DoubleProperty progressBarProperty;
     private final StringProperty totalNumberOfTasksProperty;
     private StringProperty totalAmountTaskDoneProperty;
+    private StringProperty totalTimeTaskAmountProperty;
+    private StringProperty averageTaskTimeProperty;
     public ProgressDataDTO(StringProperty taskMessageProperty,
                            StringProperty progressPercentProperty,
                            DoubleProperty progressBarProperty,
                            StringProperty totalNumberOfTasksProperty,
-                           StringProperty totalAmountTaskDoneProperty) {
+                           StringProperty totalAmountTaskDoneProperty,
+                           StringProperty averageTaskTimeProperty,
+                           StringProperty totalTimeTaskAmountProperty) {
         this.taskMessageProperty = taskMessageProperty;
         this.progressPercentProperty = progressPercentProperty;
         this.progressBarProperty = progressBarProperty;
         this.totalNumberOfTasksProperty = totalNumberOfTasksProperty;
         this.totalAmountTaskDoneProperty = totalAmountTaskDoneProperty;
+        this.totalTimeTaskAmountProperty=totalTimeTaskAmountProperty;
+        this.averageTaskTimeProperty=averageTaskTimeProperty;
+
     }
 
+    public StringProperty getAverageTaskTimeProperty() {
+        return averageTaskTimeProperty;
+    }
+
+    public StringProperty totalTimeTaskAmountProperty() {
+        return totalTimeTaskAmountProperty;
+    }
 
     public StringProperty taskMessageProperty() {
         return taskMessageProperty;

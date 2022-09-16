@@ -74,8 +74,10 @@ public class AutomaticEncryptController {
         }
         @FXML public void clearTextFieldInput(ActionEvent event) {
              stringInputTextField.clear();
+
              if(automaticEncryptDMController!=null)
-                  automaticEncryptDMController.clearListView();
+                    automaticEncryptDMController.clearOutputInputLabels();
+//                  automaticEncryptDMController.clearListView(); //TODO:check why?!?!
         }
 
         public void setEncryptor(Encryptor encryptor) {

@@ -6,11 +6,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static decryptionManager.DecryptionManager.doneBruteForceTasks;
+
 public class AgentsThreadPool extends ThreadPoolExecutor {
     public static AtomicLong taskNumber;
     AtomicCounter totalDoneCounter;
     public static AtomicLong totalTimeTasks;
-
+    private double totalTaskAmount;
     public AgentsThreadPool(int corePoolSize, int maximumPoolSize,
                             long keepAliveTime, TimeUnit unit,
                             BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,AtomicCounter totalDoneCounter) {
@@ -23,7 +25,10 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
     public long getTotalTimeTasks() {
         return totalTimeTasks.get();
     }
-
+    public void setTotalTaskAmount(double taskAmount)
+    {
+        totalTaskAmount=taskAmount;
+    }
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
         super.beforeExecute(t, r);
@@ -37,6 +42,8 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
             throw new RuntimeException(t);
         }
         totalDoneCounter.increment();
+        if(totalDoneCounter.getValue()==totalTaskAmount)
+            doneBruteForceTasks();
        // System.out.println("Perform afterExecute() logic");
     }
 }

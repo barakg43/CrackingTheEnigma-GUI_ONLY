@@ -51,7 +51,7 @@ public class StatisticsComponentController {
     public void updateCodeStatisticsView(Map<CodeFormatDTO, List<StatisticRecordDTO>> statisticsDataHistory) {
         //run the task on new tread,may be heavy I/O loading file 'createNewCodeStatisticsNode'
         statisticsNodeMangerService.execute(() -> {
-            System.out.println(Thread.currentThread().getName()+ ": creating StaticsNode");
+            //System.out.println(Thread.currentThread().getName()+ ": creating StaticsNode");
             FlowPane flowPaneCodeStaticsNode=new FlowPane();
             flowPaneCodeStaticsNode.setPrefSize(FlowPane.USE_COMPUTED_SIZE,FlowPane.USE_COMPUTED_SIZE);
             flowPaneCodeStaticsNode.setMaxWidth(Double.MAX_VALUE);
@@ -66,17 +66,13 @@ public class StatisticsComponentController {
 //                    );
            // System.out.println(Thread.currentThread().getName()+ ": before load component");
             for (CodeFormatDTO code : statisticsDataHistory.keySet()) {
-//                System.out.println("Current code:"+code);
-//                System.out.println("before factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
+//
                 GridPane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
 
                 flowPaneCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
-//                System.out.println("after factory isEmpty:"+ statisticsDataHistory.get(code).isEmpty());
             }
-           // System.out.println(Thread.currentThread().getName()+ ": after create component");
             Platform.runLater(//update UI without blocking JAT
                     () -> {
-                      System.out.println(Thread.currentThread().getName()+ ": update UI JAT");
                         statisticsCodeScrollPane.setContent(flowPaneCodeStaticsNode);
                     });
         });

@@ -78,7 +78,8 @@ public class MachineConfigurationController {
     private ObservableList<SimpleStringProperty> selectedPlugBoardPairsProperty;
 
     private Set<Integer> rotorIDSet;
-    private Set<Character> alphabetSet;
+    private Set<Character> positionsSet;
+    private Set<Character> plugBoardSet;
     List<ComboBox<Integer>> rotorIDGroupedComboBoxes;
     List<ComboBox<Character>> plugBoardGroupedComboBoxes;
     @FXML
@@ -169,7 +170,7 @@ public class MachineConfigurationController {
         CurrentMachineCodeController.clearCurrentCodeView();
         mEngine = mainAppController.getmEngine();
         machineData = mEngine.getMachineData();
-        createAlphabetRotorIdSet();
+        createDataMachineSets();
         if (machineData != null) {
             NumberOfRotors.setText(machineData.getNumberOfRotorsInUse() + "/" + machineData.getNumberOfRotorInSystem());
             numberOfReflectors.setText(String.valueOf(machineData.getNumberOfReflectors()));
@@ -187,18 +188,18 @@ public class MachineConfigurationController {
         }
     }
 
-    private void createAlphabetRotorIdSet() {
+    private void createDataMachineSets() {
 
 
 
         rotorIDSet=Arrays.stream(machineData.getRotorsId())
                 .boxed().
                 collect(Collectors.toSet());
-        alphabetSet = machineData.getAlphabetString()
+        positionsSet = machineData.getAlphabetString()
                 .chars().
                 mapToObj(c -> (Character)(char)c)
                 .collect(Collectors.toSet());
-
+        plugBoardSet=new HashSet<>(positionsSet);
         rotorIDGroupedComboBoxes=new ArrayList<>();
         plugBoardGroupedComboBoxes=new ArrayList<>();
 
@@ -220,7 +221,7 @@ public class MachineConfigurationController {
 //        int[] rotorsId = machineData.getRotorsId();
 //        String positions = machineData.getAlphabetString();
         for (int i = 0; i < numberOfRotorsInUse; i++) {
-            createComboBox();
+            createRotorInfoComboBox();
         }
         List<String> reflectorIDName = machineData.getReflectorIdList();
         ObservableList<String> reflectorID = FXCollections.observableArrayList();
@@ -231,16 +232,16 @@ public class MachineConfigurationController {
     }
 
 
-    private void createComboBox() {
+    private void createRotorInfoComboBox() {
         VBox Vbox = new VBox();
-        Vbox.getChildren().add(SetRotorComboBox());
-        Vbox.getChildren().add(SetPositionsComboBox());
+        Vbox.getChildren().add(createRotorComboBox());
+        Vbox.getChildren().add(createPositionsComboBox());
         Vbox.setSpacing(30);
         rotorsAndPositionsHBox.getChildren().add(Vbox);
         rotorsAndPositionsHBox.setSpacing(40);
     }
 
-    private ComboBox<Integer> SetRotorComboBox() {
+    private ComboBox<Integer> createRotorComboBox() {
         ObservableList<Integer> rotorsIDList = FXCollections.observableArrayList(rotorIDSet);
         //rotorsIDList.addAll(rotorIDSet);
         ComboBox<Integer> rotorsComboBox = new ComboBox<>(rotorsIDList);
@@ -268,8 +269,8 @@ public class MachineConfigurationController {
         return rotorsComboBox;
     }
 
-    private ComboBox <Character> SetPositionsComboBox() {
-        ObservableList<Character> positionsList = FXCollections.observableArrayList(alphabetSet);
+    private ComboBox <Character> createPositionsComboBox() {
+        ObservableList<Character> positionsList = FXCollections.observableArrayList(positionsSet);
         ComboBox <Character> positionsComboBox = new ComboBox <>(positionsList);
         positionsComboBox.setVisibleRowCount(10);
         positionsComboBox.setMinWidth(20);
@@ -281,6 +282,8 @@ public class MachineConfigurationController {
 //        positionsComboBox.getItems().addAll(positionsList);
 //        return positionsComboBox;
         return positionsComboBox;
+
+
     }
 
 
@@ -321,12 +324,12 @@ public class MachineConfigurationController {
 
             for(int i=0;i<firstInputVBox.getChildren().size();i++)
             {
-                if(((ComboBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                if(((ComboBox<Character>)(firstInputVBox.getChildren().get(i))).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
                 Character firstInput = ((ComboBox<Character>)(firstInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
-                if(((ComboBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedIndex()==-1)
+                if(((ComboBox<Character>)(secondInputVBox.getChildren().get(i))).getSelectionModel().getSelectedIndex()==-1)
                     throw new Exception("You need to select pairs.\nPlease check pair number: " + (i+1));
-                Character secondInput=((ComboBox<Character>)(secondInputVBox.getChildren().toArray()[i])).getSelectionModel().getSelectedItem();
+                Character secondInput=((ComboBox<Character>)(secondInputVBox.getChildren().get(i))).getSelectionModel().getSelectedItem();
                 plugBoardPairs.add(new PlugboardPairDTO(firstInput,secondInput));
             }
             mEngine.checkPlugBoardPairs(plugBoardPairs);
@@ -337,18 +340,6 @@ public class MachineConfigurationController {
 
             showAllCodes();
             isCodeSelectedByUser.set(false);
-
-//            RotorInfoDTO[] rotorInfoDTOS=new RotorInfoDTO[3];
-//            List<PlugboardPairDTO> plugboardPairDTOList=new ArrayList<>();
-//            rotorInfoDTOS[0]=new RotorInfoDTO(1,1,'A');
-//            rotorInfoDTOS[1]=new RotorInfoDTO(2,0,'A');
-//            rotorInfoDTOS[2]=new RotorInfoDTO(3,2,'A');
-//            CodeFormatDTO codeFormatDTO=new CodeFormatDTO(rotorInfoDTOS,"II",plugboardPairDTOList);
-//
-//            System.out.println("starting brute force");
-//            mainAppController.startBF(codeFormatDTO, bruteForceLevel.easyLevel);
-//            System.out.println("After brute force");
-
 
         }catch (Exception ex)
         {
@@ -380,37 +371,77 @@ public class MachineConfigurationController {
         mainAppController.setCurrentCode(currentCode);
     }
 
-    private ComboBox<Character> SetPairsComboBox() {
-        ComboBox<Character> pairComboBox = new ComboBox<>();
+    private ComboBox<Character> createSinglePlugBoardComboBox() {
+        ObservableList<Character> plugboardLetterList = FXCollections.observableArrayList(plugBoardSet);
+        ComboBox<Character> pairComboBox = new ComboBox<>(plugboardLetterList);
+        plugBoardGroupedComboBoxes.add(pairComboBox);
+        pairComboBox.setVisibleRowCount(10);
+        pairComboBox.setMinWidth(20);
+        pairComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
+        pairComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            plugBoardGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(pairComboBox))).forEach(comboBox ->
+            {
+
+//                comboBox.getItems().remove(newValue);
+//                if (oldValue != null && !comboBox.getItems().contains(oldValue))
+//                    comboBox.getItems().add(oldValue);
+
+//                FXCollections.sort(comboBox.getItems());
+            });
+            if(oldValue!=null)
+                plugBoardSet.add(oldValue);
+            plugBoardSet.remove(newValue);
+        });
+        return pairComboBox;
+    }
 //        ObservableList<Character> alphabetList = FXCollections.observableArrayList();
 //        for (int i = 0; i < alphabet.length(); i++) {
 //            alphabetList.add(alphabet.charAt(i));
 //        }
-        plugBoardGroupedComboBoxes.add(pairComboBox);
-        pairComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
-            plugBoardGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(pairComboBox))).forEach(comboBox ->
-            {
-                comboBox.getItems().remove(newValue);
-                if (oldValue != null && !comboBox.getItems().contains(oldValue))
-                    comboBox.getItems().add(oldValue);
-                FXCollections.sort(comboBox.getItems());
+//                            plugBoardGroupedComboBoxes.add(pairComboBox);
+//                }
+//            pairComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                plugBoardGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(pairComboBox))).forEach(comboBox ->
+//                {
+//                    comboBox.getItems().remove(newValue);
+//                    if (oldValue != null && !comboBox.getItems().contains(oldValue))
+//                        comboBox.getItems().add(oldValue);
+//
+//                    FXCollections.sort(comboBox.getItems());
+//
+//                });
+//            });
+//            pairComboBox.setPrefSize(70, 10);
+//            pairComboBox.getItems().addAll(alphabetSet);
+            //remove selected id value from other rotor id combobox
 
-            });
-        });
-        pairComboBox.setPrefSize(70, 10);
-        pairComboBox.getItems().addAll(alphabetSet);
-        //remove selected id value from other rotor id combobox
 
-        return pairComboBox;
+//        ObservableList<Character> positionsList = FXCollections.observableArrayList(positionSet);
+//        ComboBox <Character> positionsComboBox = new ComboBox <>(positionsList);
+//        positionGroupedComboBoxes.add(positionsComboBox);
+//        positionsComboBox.setVisibleRowCount(10);
+//        positionsComboBox.setMinWidth(20);
+//        positionsComboBox.setStyle("-fx-font: 15 arial ;-fx-font-weight: bold;");
+//        positionsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)->{
+//            positionGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(positionsComboBox))).forEach(comboBox ->
+//            {
+//                comboBox.getItems().remove(newValue);
+//                if (oldValue != null && !comboBox.getItems().contains(oldValue))
+//                    comboBox.getItems().add(oldValue);
+//                FXCollections.sort(comboBox.getItems());
+//
+//            });
+//        });
+//
 
-    }
 
-    private void setPlugBoardPairs()
+    private void addNewPlugBoardPair()
     {
         removePlugBoardPairButton.setDisable(false);
         String alphabet=machineData.getAlphabetString();
-        firstInputVBox.getChildren().add(SetPairsComboBox());
-        secondInputVBox.getChildren().add(SetPairsComboBox());
+        firstInputVBox.getChildren().add(createSinglePlugBoardComboBox());
+        secondInputVBox.getChildren().add(createSinglePlugBoardComboBox());
         PairsHBox.setSpacing(20);
         firstInputVBox.setSpacing(10);
         secondInputVBox.setSpacing(10);
@@ -451,10 +482,11 @@ public class MachineConfigurationController {
            VBox rotorAndPositionVBOx= (VBox)(rotorsAndPositionsHBox.getChildren().get(i));
            ComboBox<Integer> rotorID = (ComboBox<Integer>) (rotorAndPositionVBOx.getChildren().get(0));
             ComboBox<Integer> positions = (ComboBox<Integer>) (rotorAndPositionVBOx.getChildren().get(1));
-            for (int j = 0; j <rotorID.getItems().size() ; j++) {
-                rotorID.getItems().remove(j);
-                positions.getItems().remove(j);
-            }
+            rotorID.getItems().clear();
+//            for (int j = 0; j <rotorID.getItems().size() ; j++) {
+//                rotorID.getItems().remove(j);
+//                positions.getItems().remove(j);
+//            }
             rotorID.getItems().clear();
             positions.getItems().clear();
             ((VBox)(rotorsAndPositionsHBox.getChildren().get(i))).getChildren().clear();
@@ -517,20 +549,39 @@ public class MachineConfigurationController {
     }
 
     public void addMorePairsButtonOnAction(ActionEvent actionEvent) {
-        setPlugBoardPairs();
+        addNewPlugBoardPair();
     }
 
+    private void addRemovePlugLetterToOtherComboBox(VBox comboBoxContainer, int index)
+    {
+        ComboBox<Character> currentCombo= (ComboBox<Character>) comboBoxContainer.getChildren().get(index);
+        final Character selectedLetter=currentCombo.getValue();
+        plugBoardGroupedComboBoxes.stream().filter((comboBox -> !comboBox.equals(currentCombo))).forEach(comboBox ->
+        {
+            if (selectedLetter != null && !comboBox.getItems().contains(selectedLetter))
+                comboBox.getItems().add(selectedLetter);
+
+            FXCollections.sort(comboBox.getItems());
+        });
+        plugBoardSet.add(selectedLetter);
+    }
     public void removePlugBoardPairOnAction(ActionEvent actionEvent) {
-        firstInputVBox.getChildren().remove(firstInputVBox.getChildren().size()-1);
-        secondInputVBox.getChildren().remove(secondInputVBox.getChildren().size()-1);
+
+        int index=firstInputVBox.getChildren().size()-1;
+
+        addRemovePlugLetterToOtherComboBox(firstInputVBox,index);
+        addRemovePlugLetterToOtherComboBox(secondInputVBox,index);
+        firstInputVBox.getChildren().remove(index);
+        secondInputVBox.getChildren().remove(index);
+        plugBoardGroupedComboBoxes.remove(plugBoardGroupedComboBoxes.size()-1);
+        plugBoardGroupedComboBoxes.remove(plugBoardGroupedComboBoxes.size()-1);
+
         if(firstInputVBox.getChildren().size()==0) {
             removePlugBoardPairButton.setDisable(true);
-
         }
         else
         {
             removePlugBoardPairButton.setDisable(false);
-
         }
         AddMorePairsButton.setDisable(false);
     }

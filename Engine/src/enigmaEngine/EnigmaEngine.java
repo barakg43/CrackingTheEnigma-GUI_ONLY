@@ -26,7 +26,7 @@ public class EnigmaEngine implements Engine , Serializable {
     private EnigmaMachine enigmaMachine;
     private MachineDataDTO machineData;
     private List<PlugboardPairDTO> plugBoardPairs;
-
+    private int agentAmount;
     private StatisticsData statisticsData;
 
     private Reflector selectedReflector = null;
@@ -147,6 +147,11 @@ public class EnigmaEngine implements Engine , Serializable {
             tempSelectedRotorsID.add(rotorNum);
 
         }
+    }
+
+    @Override
+    public int getAgentsAmount() {
+        return agentAmount;
     }
 
     @Override
@@ -288,20 +293,10 @@ public class EnigmaEngine implements Engine , Serializable {
             setMachineConfigurationByUser();
             return;
         }
-
+        enigmaMachine.getPlugBoard().resetPlugBoardPairs();
         //withPlugBoardPairs=true;
         List<Character> alreadyExistLetter=new ArrayList<>();
         Set<Character> letterSet=new HashSet<>(plugBoardPairs.size());
-
- //       for(int i=0;i<plugBoardPairs.size();i++) {
-  //          if(letterSet.contains(plugBoardPairs.get(i).getFirstLetter()) )
-  //              alreadyExistLetter.add(plugBoardPairs.get(i).getFirstLetter());
-  //          if(letterSet.contains(plugBoardPairs.get(i).getSecondLetter()))
-   //             alreadyExistLetter.add(plugBoardPairs.get(i).getSecondLetter());
-   //         else
-   //         {
-   //             letterSet.add(plugBoardPairs.get(i).getFirstLetter());
-  //              letterSet.add(plugBoardPairs.get(i).getSecondLetter());
 
         for (PlugboardPairDTO plugBoardPair : plugBoardPairs) {
             if (letterSet.contains(plugBoardPair.getFirstLetter()))
@@ -319,23 +314,11 @@ public class EnigmaEngine implements Engine , Serializable {
 
 
         tempPlugBoardPairs.addAll(plugBoardPairs);
-//        for(int i=0;i<plugBoardPairs.size();i+=2)
-//        {
-//            tempPlugBoardPairs.add(new PlugboardPairDTO(plugBoardPairs.get(i).getFirstLetter(),plugBoardPairs.get(i).getSecondLetter()));
-////            enigmaMachine.getPlugBoard().addMappedInputOutput(pairs.charAt(i),pairs.charAt(i+1));
-//
-//        }
-
 
         setMachineConfigurationByUser();//user success to choose all machine configuration ,move to new setup
     }
 
-//    public void setPlugBoardPairs(List<PlugboardPairDTO> plugBoardPairs)
-//    {
-//        tempPlugBoardPairs=new ArrayList<>();
-//        tempPlugBoardPairs.addAll(plugBoardPairs);
-//        setMachineConfigurationByUser();
-//    }
+
 
     public void setMachineConfigurationByUser()
     {
@@ -451,12 +434,13 @@ public class EnigmaEngine implements Engine , Serializable {
     }
 
     private void setRandomPlugboardPairs() {
+        enigmaMachine.getPlugBoard().resetPlugBoardPairs();
         Random random = new Random();
         boolean withPlugBoardPairs = random.nextBoolean();
         plugBoardPairs=new ArrayList<>();
         boolean res;
         if (withPlugBoardPairs) {
-            enigmaMachine.getPlugBoard().resetPlugBoardPairs();
+
             String alphabet=enigmaMachine.getAlphabet();
 
             int alphabetSize=alphabet.length();
@@ -516,18 +500,13 @@ public class EnigmaEngine implements Engine , Serializable {
             initialCodeFormat=null;
 
             int[] rotorsArrayId = copyRotorsID(eng.getCTEMachine().getCTERotors().getCTERotor());
-            int numberOfAgents=eng.getCTEDecipher().getAgents();
+            agentAmount=eng.getCTEDecipher().getAgents();
             List<Character> excludeChars=copyExcludeChars(eng.getCTEDecipher().getCTEDictionary().getExcludeChars());
 
-            if(numberOfAgents<1||numberOfAgents>50)
-                throw  new RuntimeException("Invalid number of agents "+numberOfAgents+" number need to between 2 to 50");
+            if(agentAmount<1||agentAmount>50)
+                throw  new RuntimeException("Invalid number of agents "+agentAmount+" number need to between 2 to 50");
 
             dictionary=new Dictionary(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
-            //dictionary.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
-//            decryptionManager=new DecryptionManager(numberOfAgents,  this);
-//
-//            decryptionManager.getValidDictionaryWords(eng.getCTEDecipher().getCTEDictionary().getWords(),excludeChars,tempEnigmaMachine.getAlphabet());
-
             machineData = new MachineDataDTO( eng.getCTEMachine().getRotorsCount(),
                                              rotorsArrayId,
                                             tempEnigmaMachine.getReflectorIDList(),

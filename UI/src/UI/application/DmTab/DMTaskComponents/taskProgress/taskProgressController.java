@@ -11,6 +11,8 @@ public class taskProgressController {
     @FXML
     public Label totalDecryptTime;
     @FXML
+    public Label averageTaskTime;
+    @FXML
     private Label totalNumberOfTasks;
     @FXML
     public Label totalAmountTaskDone;
@@ -29,8 +31,13 @@ public class taskProgressController {
 
     public ProgressDataDTO createNewProgressProperties()
     {
-        return new ProgressDataDTO(taskMessage.textProperty(),progressPercentLabel.textProperty()
-                ,progressBar.progressProperty(),totalNumberOfTasks.textProperty(),totalAmountTaskDone.textProperty());
+        return new ProgressDataDTO(taskMessage.textProperty()
+                ,progressPercentLabel.textProperty()
+                ,progressBar.progressProperty()
+                ,totalNumberOfTasks.textProperty()
+                ,totalAmountTaskDone.textProperty(),
+                averageTaskTime.textProperty(),
+                totalDecryptTime.textProperty());
     }
 
     public void restartAllData() {

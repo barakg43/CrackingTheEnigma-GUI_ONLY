@@ -10,7 +10,6 @@ import dtoObjects.MachineDataDTO;
 import dtoObjects.RotorInfoDTO;
 import enigmaEngine.Engine;
 
-import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
@@ -32,20 +33,27 @@ public class DecryptionManager {
     private final CodeCalculatorFactory codeCalculatorFactory;
     private final MachineDataDTO machineData;
     private final BlockingQueue<Runnable> taskQueue;
-    private final BlockingQueue<TaskFinishDataDTO> successfulDecryption;
+    private BlockingQueue<TaskFinishDataDTO> successfulDecryption;
      private AgentsThreadPool agents;
     private byte[] engineCopyBytes;
     private final int QUEUE_SIZE=1000;
     public static PrintWriter fileOutput;
     public  AtomicCounter taskDoneAmount;
-
+    private static long startTime;
     private String output;
     private Thread taskCreator;
     private double totalTaskAmount;
+    private static Consumer<String> messageConsumer;
+    private static Consumer<Long> startTimeTasks;
+    public static Consumer<Long> currentTaskTimeConsumer;
     private long taskCounter;
+    private static AtomicBoolean isFinishAllTask;
+    public static boolean isDmPause;
+    private boolean stopFlag;
+    public static final Object pauseLock=new Object();
     public DecryptionManager(Engine engine) {
         taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-        successfulDecryption =new LinkedBlockingDeque<>();
+
         this.engine = engine;
         dictionary=engine.getDictionary();
         machineData=engine.getMachineData();
@@ -54,12 +62,18 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
 
-
+        isFinishAllTask=new AtomicBoolean();
 
     }
 
     public void setTaskDoneAmount(AtomicCounter taskDoneAmount) {
         this.taskDoneAmount = taskDoneAmount;
+    }
+
+    public void setDataConsumer(Consumer<String> messageConsumer, Consumer<Long> startTimeTasksConsumer, Consumer<Long> currentTaskTimeConsumer) {
+        DecryptionManager.messageConsumer = messageConsumer;
+        DecryptionManager.startTimeTasks =startTimeTasksConsumer;
+        DecryptionManager.currentTaskTimeConsumer =currentTaskTimeConsumer;
     }
 
     private void saveEngineCopy()
@@ -88,6 +102,7 @@ public class DecryptionManager {
         throw new RuntimeException("Agent amount must be between 2 and 50");
     if(level==null)
         throw new RuntimeException("Brute force level must be selected");
+    successfulDecryption =new LinkedBlockingDeque<>();
     agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,
             taskQueue,new AgentThreadFactory(),taskDoneAmount);
     }
@@ -118,6 +133,7 @@ public class DecryptionManager {
         taskDoneAmount.increment();
     }
     public void pause()  {
+        isDmPause=true;
 //        try {
 //            taskCreator.checkAccess();
 //        } catch (InterruptedException e) {
@@ -125,11 +141,22 @@ public class DecryptionManager {
 //        }
     }
     public void resume()  {
-        taskCreator.notify();
+        isDmPause=false;
+        synchronized (pauseLock)
+        {
+            System.out.println("Dm:Trying to resume");
+            pauseLock.notifyAll();
+        }
     }
+    public void stop(){
+        stopFlag=true;
+        agents.shutdown();
+
+    }
+
     public Supplier<TaskFinishDataDTO> getFinishQueueSupplier()
     {
-        return new TaskFinishSupplier(successfulDecryption);
+        return new TaskFinishSupplier(successfulDecryption,isFinishAllTask);
     }
     public void startBruteForce(String output)
     {
@@ -138,25 +165,30 @@ public class DecryptionManager {
         agents.prestartAllCoreThreads();
         taskCounter=0;
         totalTaskAmount=0;
-
+        isFinishAllTask.set(false);
+        isDmPause=false;
+        stopFlag=false;
         System.out.println("Total amount:"+getTotalTasksAmount());
-
+        startTime=System.nanoTime();
         taskCreator=new Thread(()-> {
-
+        agents.setTotalTaskAmount(getTotalTasksAmount());
             try {
-
                 CodeFormatDTO startingCode = engine.getCodeFormat(false);
                 switch (level) {
                     case easyLevel:
+                        messageConsumer.accept("Starting brute force easy level");
                         createTaskEasyLevel(startingCode);
                         break;
                     case middleLevel:
+                        messageConsumer.accept("Starting brute force middle level");
                         createTaskMiddleLevel(startingCode);
                         break;
                     case hardLevel:
+                        messageConsumer.accept("Starting brute force hard level");
                         createTaskHardLevel(startingCode);
                         break;
                     case impossibleLevel:
+                        messageConsumer.accept("Starting brute force impossible level");
                         createTaskImpossibleLevel();
                         break;
                 }
@@ -170,7 +202,11 @@ public class DecryptionManager {
 
     }
 
-
+    static public void doneBruteForceTasks()
+    {
+        isFinishAllTask.set(true);
+        startTimeTasks.accept(startTime);
+    }
     private void createTaskImpossibleLevel() {
 
         int rotorNumberInSystem=machineData.getNumberOfRotorInSystem();
@@ -182,6 +218,9 @@ public class DecryptionManager {
             rotorIdSet[i] = i;
         }
         while (rotorIdSet[rotorNumberInUsed - 1] < rotorNumberInSystem) {
+            if(stopFlag)
+                return;
+
             RotorInfoDTO[] rotorInfoDTO=new RotorInfoDTO[rotorNumberInUsed];
             for (int i = 0; i <rotorNumberInUsed ; i++) {
                 rotorInfoDTO[i]=new RotorInfoDTO(rotorIdSet[i]+1,0,
@@ -218,6 +257,9 @@ public class DecryptionManager {
 
         while (currentPermutationIndex!=null)
         {
+            if(stopFlag)
+                return;
+
             RotorInfoDTO[] currentRotorInfo=codeFormatDTO.getRotorInfoArray();
 
             for (int i = 0; i < rotorUsedNumber; i++) {
@@ -242,6 +284,8 @@ public class DecryptionManager {
         CodeFormatDTO currentCode;
         for(String reflector:reflectorIdList)
         {
+            if(stopFlag)
+                return;
            // System.out.println("reflector " + reflector);
             currentCode=new CodeFormatDTO(codeFormatDTO.getRotorInfoArray(),reflector,codeFormatDTO.getPlugboardPairDTOList());
           //  System.out.println("After new reflector: " + currentCode);
@@ -259,15 +303,22 @@ public class DecryptionManager {
         temp=resetAllPositionToFirstPosition(codeFormatDTO);
         double i = 0;
 
-        while(temp!=null){
+        while(temp!=null&&!stopFlag){
             currentCode=temp;
-
-
             try {
-
+                if(isDmPause) {
+                    synchronized (pauseLock) {
+                        System.out.println("Task creator is pause!");
+                        pauseLock.wait();
+                        System.out.println("resume Task creator!");
+                    }
+                }
+                Thread.sleep(1000);
+                System.out.println("Task creator is running!");
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
-            output,codeCalculatorFactory
-            ,createNewEngineCopy(),
+                output,
+                  codeCalculatorFactory,
+                 createNewEngineCopy(),
              taskSize,
             successfulDecryption,
             dictionary));

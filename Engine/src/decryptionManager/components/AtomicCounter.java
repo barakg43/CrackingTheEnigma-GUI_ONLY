@@ -18,7 +18,14 @@ public class  AtomicCounter {
             Long newValue=counter.incrementAndGet();
             pcs.firePropertyChange(PROPERTY_NAME, oldValue, newValue );
         }
-
+        public long getValue()
+        {
+            return counter.get();
+        }
+        public void resetCounter()
+        {
+            counter.set(0);
+        }
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             pcs.addPropertyChangeListener(PROPERTY_NAME,listener);
             // pcs.addPropertyChangeListener(listener);

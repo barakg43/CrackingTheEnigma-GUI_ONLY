@@ -57,12 +57,8 @@ public class EncryptTabController {
     private Engine enigmaEngine;
     private AllMachineController mainAppController;
 
-    public Label testLabel;
-    public ComboBox<BruteForceLevel> comboBoxBf;
-    public TextField taskSizeField;
-    private AtomicCounter counter;
     private DecryptionManager decryptionManager;
-    SimpleLongProperty counterProperty=new SimpleLongProperty(0);
+    SimpleLongProperty counterProperty;
 
 
 
@@ -111,7 +107,7 @@ public class EncryptTabController {
 
         decryptionManager=new DecryptionManager(enigmaEngine);
 
-        testLabel.textProperty().bind(counterProperty.asString());
+
 //        decryptionManager.addListenerTotalTaskDoneCounter(new PropertyChangeListener() {
 //            @Override
 //            public void propertyChange(PropertyChangeEvent evt) {
@@ -131,29 +127,7 @@ public class EncryptTabController {
     private void initialize() {
 
         encryptComponentController.setParentComponentTab(this);
-
-
-        counter=new AtomicCounter();
-//        counter.addPropertyChangeListener(evt -> counterProperty.set((Long) evt.getNewValue()));
-       // decryptionManager.addListenerTotalTaskDoneCounter(evt -> counterProperty.set((Long) evt.getNewValue()));
-        comboBoxBf.getItems().addAll(BruteForceLevel.values());
-
-        //obsver=new ReadOnlyObjectWrapper<>(counter);
-//        testLabel.textProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(final ObservableValue<? extends Number> observable,
-//                                final Number oldValue, final Number newValue) {
-//                if (counter.getAndSet(newValue.intValue()) == -1) {
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                            testLabel.setText(String.valueOf(newValue));
-//                        }
-//                    });
-//
-
-
+        counterProperty=new SimpleLongProperty(0);
     }
 
     public SimpleCodeController bindCodeComponentController()
@@ -171,19 +145,7 @@ public class EncryptTabController {
         return mainAppController;
     }
 
-    public void testBotton(ActionEvent ignoredActionEvent) {
-//        System.out.println("Before  config"+enigmaEngine.getCodeFormat(true));
-//        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
-//        System.out.println("Before "+enigmaEngine.getCodeFormat(true));
-//        String out = enigmaEngine.processDataInput(taskSizeField.getText());
-//        enigmaEngine.setCodeManually(enigmaEngine.getCodeFormat(true));
-//        System.out.println("after "+enigmaEngine.getCodeFormat(true));
-//        String out2 = enigmaEngine.processDataInput(out);
-//        String gyy;
-//        if(enigmaEngine.getDictionary().checkIfAllLetterInDic(out2))
-//            System.out.println("TRUE");
-//        else
-//            System.out.println("False");
+    public void testButton(ActionEvent ignoredActionEvent) {
 
         System.out.println("Starting BF!");
 
