@@ -15,6 +15,8 @@ import javafx.stage.WindowEvent;
 
 import java.util.Optional;
 
+import static java.lang.Thread.sleep;
+
 
 public class DMoperationalController {
 
@@ -100,6 +102,7 @@ public class DMoperationalController {
     }
     @FXML
     void startBFButton(ActionEvent event) {
+        uiUpdater.resetData();
         String error=checkIfBFDataValid();
 
         if(error!=null)
@@ -120,24 +123,33 @@ public class DMoperationalController {
 
         uiUpdater.setupCandidateListener();
         decryptionManager.startBruteForce(outputString.getValue());
-
+        pauseButtonDisabled.set(true);
 
 
     }
     @FXML
     void stopBFButton(ActionEvent event) {
         startButtonDisabled.setValue(false);
+        resumeButton.setDisable(true);
+        pauseButtonDisabled.set(true);
         decryptionManager.stop();
+
         uiUpdater.stopCandidateListener();
+
+        uiUpdater.resetData();
+
+
     }
     @FXML
     void pauseBFButton(ActionEvent event) {
+        resumeButton.setDisable(false);
         pauseButtonDisabled.setValue(true);
         decryptionManager.pause();
         uiUpdater.pauseCandidateListener();
     }
     public void resumeButtonOnAction(ActionEvent actionEvent) {
         pauseButtonDisabled.setValue(false);
+        resumeButton.setDisable(true);
         decryptionManager.resume();
         uiUpdater.resumeCandidateListener();
     }
@@ -158,13 +170,13 @@ public class DMoperationalController {
         outputString=new SimpleStringProperty();
         agentSize.valueProperty().addListener(
                 (observable, oldValue, newValue) -> sliderValueLabel.setText("value: " + newValue.intValue()));
-        resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),startButton.disabledProperty().not()));
         startButtonDisabled =new SimpleBooleanProperty(true);
         pauseButtonDisabled=new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());
-        startButtonDisabled.setValue(false);
         pauseButton.disableProperty().bind(Bindings.and(pauseButtonDisabled,startButton.disabledProperty().not()));
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
+       //resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),stopButton.disabledProperty()));
+        startButtonDisabled.setValue(false);
     }
 
     public static void closeWindowEvent(WindowEvent event) {

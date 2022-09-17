@@ -31,15 +31,15 @@
             <Insets left="2.0" right="30.0" />
          </GridPane.margin></Slider>
       <ComboBox fx:id="levelCombobox" prefHeight="31.0" prefWidth="187.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <HBox maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+      <HBox maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="336.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <children>
-            <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseBFButton" styleClass="text-label" text="Pause" />
-            <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#resumeButtonOnAction" prefHeight="31.0" prefWidth="83.0" styleClass="text-label" text="Resume" />
-            <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopBFButton" styleClass="text-label" text="Stop" />
-            <Button fx:id="startButton" mnemonicParsing="false" onAction="#startBFButton" styleClass="text-label" text="Start" />
+            <Button fx:id="pauseButton" disable="true" mnemonicParsing="false" onAction="#pauseBFButton" prefHeight="31.0" prefWidth="73.0" styleClass="text-label" text="Pause" />
+            <Button fx:id="resumeButton" disable="true" mnemonicParsing="false" onAction="#resumeButtonOnAction" prefHeight="31.0" prefWidth="83.0" styleClass="text-label" text="Resume" />
+            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stopBFButton" prefHeight="31.0" prefWidth="66.0" styleClass="text-label" text="Stop" />
+            <Button fx:id="startButton" mnemonicParsing="false" onAction="#startBFButton" prefHeight="31.0" prefWidth="77.0" styleClass="text-label" text="Start" />
          </children>
          <GridPane.margin>
-            <Insets bottom="10.0" left="55.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
          </GridPane.margin>
       </HBox>
       <Label maxWidth="1.7976931348623157E308" styleClass="text-label" text="Tasks size:">

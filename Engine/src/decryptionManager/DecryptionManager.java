@@ -210,6 +210,7 @@ public class DecryptionManager {
         messageConsumer.accept("Finish running all tasks,finishing update all possible candidate.....");
         isFinishAllTask=true;
 
+
     }
     private void createTaskImpossibleLevel() {
 
@@ -317,8 +318,10 @@ public class DecryptionManager {
                         System.out.println("resume Task creator!");
                     }
                 }
+
                // Thread.sleep(5000);//TODO: thread pool delayed
               //  System.out.println("Task creator is running!");
+
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
                 output,
                   codeCalculatorFactory,

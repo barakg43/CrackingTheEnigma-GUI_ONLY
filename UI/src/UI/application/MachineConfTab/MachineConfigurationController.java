@@ -9,6 +9,7 @@ import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
 
 public class MachineConfigurationController {
 
-   @FXML public AnchorPane MachineDetails;
+    @FXML
+    public AnchorPane MachineDetails;
     @FXML  public Label NumberOfRotors;
     @FXML  public Label numberOfReflectors;
     @FXML  public Label CipheredInputs;
@@ -56,11 +58,13 @@ public class MachineConfigurationController {
     @FXML  public ScrollPane selectedCodeConfigScrollPane;
     @FXML  public Label selectedMachineCodeLabel;
     @FXML  public Label currentMachineLabel;
-    public ScrollPane ConfPane;
     public SplitPane machineConfSplitPane;
     public AnchorPane selectedCodeAnchorePane;
-    public SplitPane currentCodeConfSplitPane;
+    public ScrollPane selectedCodeConfSplitPane;
     public HBox ButtonsPane;
+    public SplitPane ConfigurationPanel;
+    public ScrollPane currentCodeConfigScrollPane;
+    public AnchorPane currentCodeAnchorPane;
 
     private Engine mEngine;
     private MachineDataDTO machineData;
@@ -110,17 +114,18 @@ public class MachineConfigurationController {
 
     public void bindComponentsWidthToScene(ReadOnlyDoubleProperty widthProperty, ReadOnlyDoubleProperty heightProperty)
     {
-        ConfPane.prefWidthProperty().bind(widthProperty);
-        ConfPane.prefHeightProperty().bind(heightProperty);
-        MachineDetails.prefWidthProperty().bind(ConfPane.widthProperty());
-        machineConfSplitPane.prefWidthProperty().bind(ConfPane.widthProperty());
-        machineConfSplitPane.prefHeightProperty().bind(ConfPane.heightProperty());
-//        selectedCodeAnchorePane.prefWidthProperty().bind(machineConfSplitPane.widthProperty());
-//        selectedCodeConfiguration.prefWidthProperty().bind(selectedCodeAnchorePane.widthProperty());
-//        currentCodeConfSplitPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
-//        currentCodeConfSplitPane.prefHeightProperty().bind(selectedCodeConfiguration.widthProperty());
-
-        CurrentCodeConfigurationPane.prefWidthProperty().bind(currentCodeConfSplitPane.widthProperty());
+        ConfigurationPanel.prefWidthProperty().bind(widthProperty);
+        MachineDetails.prefWidthProperty().bind(ConfigurationPanel.widthProperty());
+        machineConfSplitPane.prefWidthProperty().bind(ConfigurationPanel.widthProperty());
+        selectedCodeAnchorePane.prefWidthProperty().bind(Bindings.divide(machineConfSplitPane.widthProperty(),3));
+      //  selectedCodeConfiguration.prefWidthProperty().bind(selectedCodeAnchorePane.widthProperty());
+     //   ButtonsPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
+       // CodeConfTabPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
+      //  CurrentCodeConfigurationPane.prefWidthProperty().bind(Bindings.divide(machineConfSplitPane.widthProperty(),2));
+      //  currentCodeConfigScrollPane.prefWidthProperty().bind(CurrentCodeConfigurationPane.widthProperty());
+      //  currentCodeAnchorPane.prefWidthProperty().bind(currentCodeConfigScrollPane.widthProperty());
+        //        selectedCodeConfSplitPane.prefWidthProperty().bind(selectedCodeConfiguration.widthProperty());
+//        selectedCodeConfSplitPane.prefHeightProperty().bind(selectedCodeConfiguration.widthProperty());
 
     }
     public SimpleCodeController getCurrentMachineCodeController()

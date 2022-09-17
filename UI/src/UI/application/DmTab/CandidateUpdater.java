@@ -48,7 +48,6 @@ public class CandidateUpdater extends Task<Boolean> {
 
         while(setRunning.get())
         {
-
             TaskFinishDataDTO currentTaskData=taskSupplier.get();
             uiAdapter.pauseCandidateListener();
 
