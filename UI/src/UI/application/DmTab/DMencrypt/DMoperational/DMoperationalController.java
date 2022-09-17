@@ -102,9 +102,7 @@ public class DMoperationalController {
     }
     @FXML
     void startBFButton(ActionEvent event) {
-        uiUpdater.resetData();
         String error=checkIfBFDataValid();
-
         if(error!=null)
         {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -133,12 +131,7 @@ public class DMoperationalController {
         resumeButton.setDisable(true);
         pauseButtonDisabled.set(true);
         decryptionManager.stop();
-
         uiUpdater.stopCandidateListener();
-
-        uiUpdater.resetData();
-
-
     }
     @FXML
     void pauseBFButton(ActionEvent event) {

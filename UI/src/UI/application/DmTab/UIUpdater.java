@@ -17,8 +17,7 @@ import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static decryptionManager.DecryptionManager.isDmPause;
-import static decryptionManager.DecryptionManager.pauseLock;
+
 
 public class UIUpdater {
 
@@ -69,10 +68,10 @@ public class UIUpdater {
 //
 //
 //    }
-        public SimpleBooleanProperty getIsDoneBruteForceProperty()
-        {
-            return isDoneBruteForce;
-        }
+    public SimpleBooleanProperty getIsDoneBruteForceProperty()
+    {
+        return isDoneBruteForce;
+    }
 //    public ProgressDataDTO getProgressDataDTO(){
 //        return progressDataDTO;
 //    }
@@ -87,7 +86,8 @@ public class UIUpdater {
         progressDataDTO.taskMessageProperty().bind(this.messageProperty);
         // task progress bar
         progressDataDTO.progressBarProperty().bind(this.progressProperty);
-         progressDataDTO.totalAmountTaskDoneProperty().bind(counterProperty.asString());
+        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(0));
+         progressDataDTO.totalAmountTaskDoneProperty().bind(Bindings.format("%,d", counterProperty));
         // task percent label
         progressDataDTO.progressPercentProperty().bind( Bindings.concat(
                 Bindings.format(
@@ -126,7 +126,6 @@ public class UIUpdater {
     }
     private void resetAllUIData()
     {
-
         totalTimeDuration=0L;
         counterProperty.set(0);
         updateMassage("Waiting for start Brute Force!");
@@ -143,7 +142,7 @@ public class UIUpdater {
 
     public void setupCandidateListener() {
         totalTaskAmount= decryptionManager.getTotalTasksAmount();
-        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf((int)totalTaskAmount));
+        progressDataDTO.totalNumberOfTasksProperty().set(String.format("%,.0f",totalTaskAmount));
         progressProperty.bind(Bindings.divide(counterProperty,totalTaskAmount));
         decryptionManager.setDataConsumer(messageManager,singleTaskTime);
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
@@ -222,7 +221,7 @@ public class UIUpdater {
         if (tasksDoneCounter.getValue() > 0) {
             Platform.runLater(() -> {
             progressDataDTO.getAverageTaskTimeProperty()
-                    .set(totalTimeDuration / tasksDoneCounter.getValue()+" nano seconds");
+                    .set(String.format("%,d Milliseconds",Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis()));
             progressDataDTO.totalTimeTaskAmountProperty().
                         set(convertNanoTimeToTimerDisplay(totalTimeDuration));
             });
@@ -234,14 +233,7 @@ public class UIUpdater {
  }
 
     public void resetData() {
-        messageProperty.set("");
-        counterProperty.set(0);
-        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(0));
-        tasksDoneCounter.resetCounter();
-        currentTasksTimeAmount=0;
-        startTime=0L;
-        progressDataDTO.getAverageTaskTimeProperty().set(String.valueOf(0));
-        progressDataDTO.totalTimeTaskAmountProperty().set(String.valueOf(0));
+
 
     }
 
