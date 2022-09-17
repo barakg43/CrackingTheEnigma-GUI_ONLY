@@ -11,13 +11,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class UIUpdater {
 
-    private Thread candidateListener;
+    private static Thread candidateListener=null;
     private final DecryptionManager decryptionManager;
     private final CandidatesStatusController candidatesStatusController;
     private final ProgressDataDTO progressDataDTO;
@@ -26,18 +26,19 @@ public class UIUpdater {
     private  SimpleLongProperty counterProperty;
     private double totalTaskAmount= 0L;
     private final Consumer<String> messageManager;
-    private final Consumer<Long> startTimeConsumer;
     private final Consumer<Long> singleTaskTime;
     private final SimpleBooleanProperty isDoneBruteForce;
     private final SimpleBooleanProperty isDM_DoneAllTasks;
     private final SimpleBooleanProperty isCandidateUpdaterDone;
     private final AtomicCounter tasksDoneCounter;
-    private Long startTime;
-    private long currentTasksTimeAmount;
+
+    private Long totalTimeDuration;
+
+    private final Object candidateThreadPauseLock=new Object();
+    private Boolean isCandidatePause;
     public UIUpdater(DecryptionManager decryptionManager, ProgressDataDTO progressDataDTO, CandidatesStatusController candidatesStatusController) {
         this.decryptionManager = decryptionManager;
         this.candidatesStatusController = candidatesStatusController;
-
 
         this.progressDataDTO = progressDataDTO;
         messageProperty=new SimpleStringProperty();
@@ -47,13 +48,13 @@ public class UIUpdater {
          isDoneBruteForce=new SimpleBooleanProperty();
          isDM_DoneAllTasks=new SimpleBooleanProperty();
          isCandidateUpdaterDone=new SimpleBooleanProperty();
-
+        decryptionManager.setCandidateListenerStarter(this::startCandidateListenerTread);
        // taskDoneCounter.addPropertyChangeListener(newValue->counterProperty.set((Long)newValue));
         bindUpdaterToUIComponents();
 
         messageManager = this::updateMassage;
         singleTaskTime=this::getSingleTaskTime;
-        startTimeConsumer=this::getStartTime;
+
     }
 //
 //    public void addNewCandidates(TaskFinishDataDTO histogramData) {
@@ -71,7 +72,10 @@ public class UIUpdater {
 //        return progressDataDTO;
 //    }
 
-
+    private void startCandidateListenerTread()
+    {
+        candidateListener.start();
+    }
 
     private void bindUpdaterToUIComponents() {
         // task message
@@ -91,87 +95,132 @@ public class UIUpdater {
         isDoneBruteForce.addListener(((observable, oldValue, newValue) -> {
             if(newValue)
             {
-                updateMassage("Done brute force!");
-                updateTotalTime();
+
+                updateMassage("Done brute force and update all candidates!");
+
             }
         }));
         tasksDoneCounter.addPropertyChangeListener((counter) -> {
+
             Platform.runLater(()->counterProperty.set((Long) counter.getNewValue()));
+            if(totalTaskAmount ==(Long) counter.getNewValue()) {
+                isDM_DoneAllTasks.set(true);
+                if(candidateListener.isAlive())
+                     candidateListener.interrupt();
+            }
         });
 
         decryptionManager.setTaskDoneAmount(tasksDoneCounter);
-
-       // taskDoneCounter.addPropertyChangeListener(newValue -> counterProperty.set((Long) newValue.getNewValue()));
-
-
-
-        // task cleanup upon finish
+        resetAllUIData();
 
 
     }
+    public static boolean isCandidateLinterAlive()
+    {
+        return candidateListener!=null&&candidateListener.isAlive();
+    }
+    private void resetAllUIData()
+    {
+
+        totalTimeDuration=0L;
+        counterProperty.set(0);
+        updateMassage("Waiting for start Brute Force!");
+        isDM_DoneAllTasks.set(false);
+        isCandidateUpdaterDone.set(false);
+        isCandidatePause=Boolean.FALSE;
+        progressDataDTO.getAverageTaskTimeProperty().set(String.valueOf(0));
+        progressDataDTO.totalTimeTaskAmountProperty().set(String.valueOf(0));
+        tasksDoneCounter.resetCounter();
+        candidatesStatusController.clearAllTiles();
+    }
 
 
-
-    public void startCandidateListener() {
-
+    public void setupCandidateListener() {
 
         totalTaskAmount= decryptionManager.getTotalTasksAmount();
         progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(totalTaskAmount));
         progressProperty.bind(Bindings.divide(counterProperty,totalTaskAmount));
-        decryptionManager.setDataConsumer(messageManager,startTimeConsumer,singleTaskTime);
-        currentTasksTimeAmount=0;
-        isDM_DoneAllTasks.set(false);
-        isCandidateUpdaterDone.set(false);
+        decryptionManager.setDataConsumer(messageManager,singleTaskTime);
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
-
-        counterProperty.set(0);
-        tasksDoneCounter.resetCounter();
-        candidatesStatusController.clearAllTiles();
+        isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
         candidateListener=new Thread(this::updateNewCandidate,"Candidate Updater");
-        candidateListener.start();
+        resetAllUIData();
 
     }
 
-    public void pause(){
-        candidateListener.notify();
+    public void pauseCandidateListener(){
+        isCandidatePause=true;
     }
-    private void getStartTime(Long startTime)
+    public void resumeCandidateListener(){
+        isCandidatePause=false;
+        synchronized (candidateThreadPauseLock){
+        candidateThreadPauseLock.notifyAll();
+        }
+    }
+    public void stopCandidateListener()
     {
-        this.startTime=startTime;
-        isDM_DoneAllTasks.set(true);
-
+        if(candidateListener!=null)
+            candidateListener.interrupt();
     }
+//    private void getStartTime(Long startTime)
+//    {
+//        this.startTime=startTime;
+//        isDM_DoneAllTasks.set(true);
+//
+//    }
 
-    private void updateTotalTime()
-    {
 
-        Platform.runLater(()->progressDataDTO.totalTimeTaskAmountProperty().
-                set(String.valueOf(System.nanoTime()-startTime)));
-    }
 
     private void updateNewCandidate()
     {
         Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
         TaskFinishDataDTO currentData;
         do{
-            currentData=supplier.get();
+
+            if(isCandidatePause) {
+                try {
+                    synchronized (candidateThreadPauseLock){
+                        if(isCandidatePause)
+                        {
+                            System.out.println("Candidate Thread is paused");
+                            candidateThreadPauseLock.wait();
+                        }
+                        System.out.println("Candidate Thread resuming...");
+                    }
+                } catch (InterruptedException ignored) {
+                }
+            }
+
+            currentData = supplier.get();
             if(currentData!=null)
                 candidatesStatusController.addAllCandidate(currentData);
             else
-                System.out.println("Finish Taker!");
+                System.out.println("Finish Update all candidate!");
 
         } while(currentData!=null);
         isCandidateUpdaterDone.set(true);
     }
-    public void getSingleTaskTime(long time)
+    private String convertNanoTimeToTimerDisplay(long nanoTime)
     {
-        currentTasksTimeAmount+=time;
-        if(tasksDoneCounter.getValue()>0)
-        {
-            Platform.runLater(()->  progressDataDTO.getAverageTaskTimeProperty()
-                    .set(String.valueOf(currentTasksTimeAmount/tasksDoneCounter.getValue())));}
+       return String.format("%02d:%02d:%02d.%04d",
+                Duration.ofNanos(nanoTime).toHours()%24,
+                Duration.ofNanos(nanoTime).toMinutes()%60,
+                Duration.ofNanos(nanoTime).getSeconds()%60,
+                Duration.ofNanos(nanoTime).toMillis()%10000
+        );
+    }
+    public void getSingleTaskTime(long time) {
+       // currentTasksTimeAmount += time;
+        totalTimeDuration+=time;
 
-
+        if (tasksDoneCounter.getValue() > 0) {
+            Platform.runLater(() -> {
+            progressDataDTO.getAverageTaskTimeProperty()
+                    .set(totalTimeDuration / tasksDoneCounter.getValue()+" nano");
+            progressDataDTO.totalTimeTaskAmountProperty().
+                        set(convertNanoTimeToTimerDisplay(totalTimeDuration));
+            });
+        }
     }
  public void updateMassage(String massage)
  {

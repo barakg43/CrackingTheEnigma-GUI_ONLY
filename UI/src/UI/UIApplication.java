@@ -3,11 +3,14 @@ package UI;
 
 import UI.application.AllMachineController;
 import UI.application.CommonResourcesPaths;
+import UI.application.DmTab.DMcontroller;
+import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 
@@ -26,7 +29,7 @@ public class UIApplication extends Application {
             AllMachineController machineController=fxmlLoader.getController();
             machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
-
+            primaryStage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, DMoperationalController::closeWindowEvent);
             machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
 
             primaryStage.show();

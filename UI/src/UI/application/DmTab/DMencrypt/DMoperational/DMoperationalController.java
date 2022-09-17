@@ -11,6 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.stage.WindowEvent;
+
+import java.util.Optional;
 
 
 public class DMoperationalController {
@@ -27,8 +30,8 @@ public class DMoperationalController {
     @FXML
     private ComboBox<BruteForceLevel> levelCombobox;
     private SimpleStringProperty outputString;
-    private DecryptionManager decryptionManager;
-    private UIUpdater uiUpdater;
+    private static DecryptionManager decryptionManager;
+     private static UIUpdater uiUpdater;
     @FXML
     private Button pauseButton;
 
@@ -37,7 +40,7 @@ public class DMoperationalController {
 
     @FXML
     private Button startButton;
-    private SimpleBooleanProperty startButtonDisabled;
+    static SimpleBooleanProperty startButtonDisabled;
     private SimpleBooleanProperty pauseButtonDisabled;
     public void setDecryptionManager(DecryptionManager decryptionManager) {
       //  this.decryptionManager = decryptionManager;
@@ -114,8 +117,10 @@ public class DMoperationalController {
                 (int) agentSize.getValue(),
                 getAgentAmountFromSpinner());
         // DMcontroller.addCandidates();
-        uiUpdater.startCandidateListener();
+
+        uiUpdater.setupCandidateListener();
         decryptionManager.startBruteForce(outputString.getValue());
+
 
 
     }
@@ -123,16 +128,18 @@ public class DMoperationalController {
     void stopBFButton(ActionEvent event) {
         startButtonDisabled.setValue(false);
         decryptionManager.stop();
+        uiUpdater.stopCandidateListener();
     }
     @FXML
     void pauseBFButton(ActionEvent event) {
         pauseButtonDisabled.setValue(true);
         decryptionManager.pause();
-
+        uiUpdater.pauseCandidateListener();
     }
     public void resumeButtonOnAction(ActionEvent actionEvent) {
         pauseButtonDisabled.setValue(false);
         decryptionManager.resume();
+        uiUpdater.resumeCandidateListener();
     }
 
     @FXML
@@ -160,7 +167,31 @@ public class DMoperationalController {
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
     }
 
+    public static void closeWindowEvent(WindowEvent event) {
+        System.out.println("Window close request ...");
 
+        if(UIUpdater.isCandidateLinterAlive()) {  // if the dataset has changed, alert the user with a popup
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getButtonTypes().remove(ButtonType.OK);
+            alert.getButtonTypes().add(ButtonType.CANCEL);
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.setTitle("Quit application");
+            alert.setContentText(String.format("Decryption tasks still running,do you want to close?"));
+            // alert.initOwner(primaryStage.getOwner());
+            Optional<ButtonType> res = alert.showAndWait();
+
+            if(res.isPresent()) {
+                if(res.get().equals(ButtonType.CANCEL)) {
+                    event.consume();
+                }
+                else if(res.get().equals(ButtonType.YES))
+                {
+                    decryptionManager.stop();
+                    uiUpdater.stopCandidateListener();
+                }
+            }
+        }
+    }
 
 }
 
