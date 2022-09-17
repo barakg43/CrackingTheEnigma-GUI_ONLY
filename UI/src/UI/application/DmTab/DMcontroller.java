@@ -9,6 +9,7 @@ import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Engine;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -104,5 +105,11 @@ public class DMcontroller {
 
     public TaskDataController getTaskDataComponentController() {
         return taskDataComponentController;
+    }
+
+    public void bindComponentsWidthToScene(ReadOnlyDoubleProperty sceneWidthProperty, ReadOnlyDoubleProperty sceneHeightProperty) {
+
+        encryptComponentController.bindWidthToScene(sceneWidthProperty,sceneHeightProperty);
+
     }
 }

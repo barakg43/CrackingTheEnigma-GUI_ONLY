@@ -205,7 +205,9 @@ public class DecryptionManager {
     static public void doneBruteForceTasks()
     {
         isFinishAllTask.set(true);
+
         startTimeTasks.accept(startTime);
+
     }
     private void createTaskImpossibleLevel() {
 
@@ -313,7 +315,7 @@ public class DecryptionManager {
                         System.out.println("resume Task creator!");
                     }
                 }
-                Thread.sleep(1000);
+                Thread.sleep(300);
                 System.out.println("Task creator is running!");
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
                 output,

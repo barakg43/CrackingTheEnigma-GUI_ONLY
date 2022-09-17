@@ -71,7 +71,7 @@
                   </HBox>
                   <ButtonBar buttonMinWidth="30.0">
                     <buttons>
-                      <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetCodeToInitialState" prefHeight="50.0" prefWidth="134.0" styleClass="text-label" text="Reset Code" />
+                      <Button mnemonicParsing="false" onAction="#resetCodeToInitialState" prefHeight="50.0" prefWidth="134.0" styleClass="text-label" text="Reset Code" />
                     </buttons>
                   </ButtonBar>
                   <Label id="alphabetStringLabel" prefHeight="21.0" prefWidth="98.0" styleClass="text-label" text="Alphabet:" GridPane.rowIndex="1">

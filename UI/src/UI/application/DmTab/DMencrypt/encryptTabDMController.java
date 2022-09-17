@@ -11,6 +11,8 @@ import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Engine;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -19,12 +21,10 @@ import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -39,6 +39,11 @@ public class encryptTabDMController {
     public VBox codeEncryptComponent;
 
     public AutomaticEncryptDMController codeEncryptComponentController;
+    public VBox encryptTabComponent;
+    public HBox encryptHBox;
+    public ScrollPane dictionaryScrollPane;
+    public ScrollPane encryptScrollPane;
+    public StackPane dictionaryStackPane;
 
     @FXML private GridPane operationalComponent;
     @FXML private DMoperationalController operationalComponentController;
@@ -108,9 +113,12 @@ public class encryptTabDMController {
 
                 StringBuilder builder = new StringBuilder();
 
-                for (String word : selectedItems) {
-                    builder.append(word+" ");
-                }
+                for(int i=0;i<selectedItems.size()-1;i++)
+                    builder.append(selectedItems.get(i)+" ");
+
+                builder.append(selectedItems.get(selectedItems.size()-1));
+
+                System.out.println(builder.toString());
 
                 codeEncryptComponentController.getInputString().setText(builder.toString());
 
@@ -224,5 +232,15 @@ public class encryptTabDMController {
 
     public void testCounter(ActionEvent actionEvent) {
         getDecryptionManager().testCounter();
+    }
+
+    public void bindWidthToScene(ReadOnlyDoubleProperty sceneWidthProperty, ReadOnlyDoubleProperty sceneHeightProperty) {
+
+        encryptTabComponent.prefWidthProperty().bind(sceneWidthProperty);
+        encryptHBox.prefWidthProperty().bind(encryptTabComponent.widthProperty());
+        encryptScrollPane.prefWidthProperty().bind(encryptHBox.widthProperty());
+        dictionaryScrollPane.prefWidthProperty().bind(encryptHBox.widthProperty());
+        dictionaryStackPane.prefWidthProperty().bind(Bindings.subtract(dictionaryScrollPane.widthProperty(),250));
+
     }
 }

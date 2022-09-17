@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
+import static java.lang.Thread.sleep;
+
 
 public class DMoperationalController {
 
@@ -97,6 +99,7 @@ public class DMoperationalController {
     }
     @FXML
     void startBFButton(ActionEvent event) {
+        uiUpdater.resetData();
         String error=checkIfBFDataValid();
 
         if(error!=null)
@@ -116,22 +119,33 @@ public class DMoperationalController {
         // DMcontroller.addCandidates();
         uiUpdater.startCandidateListener();
         decryptionManager.startBruteForce(outputString.getValue());
-
+        pauseButtonDisabled.set(true);
 
     }
     @FXML
     void stopBFButton(ActionEvent event) {
         startButtonDisabled.setValue(false);
+        resumeButton.setDisable(true);
+        pauseButtonDisabled.set(true);
         decryptionManager.stop();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        uiUpdater.resetData();
+
     }
     @FXML
     void pauseBFButton(ActionEvent event) {
+        resumeButton.setDisable(false);
         pauseButtonDisabled.setValue(true);
         decryptionManager.pause();
 
     }
     public void resumeButtonOnAction(ActionEvent actionEvent) {
         pauseButtonDisabled.setValue(false);
+        resumeButton.setDisable(true);
         decryptionManager.resume();
     }
 
@@ -151,13 +165,13 @@ public class DMoperationalController {
         outputString=new SimpleStringProperty();
         agentSize.valueProperty().addListener(
                 (observable, oldValue, newValue) -> sliderValueLabel.setText("value: " + newValue.intValue()));
-        resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),startButton.disabledProperty().not()));
         startButtonDisabled =new SimpleBooleanProperty(true);
         pauseButtonDisabled=new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());
-        startButtonDisabled.setValue(false);
         pauseButton.disableProperty().bind(Bindings.and(pauseButtonDisabled,startButton.disabledProperty().not()));
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
+       //resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),stopButton.disabledProperty()));
+        startButtonDisabled.setValue(false);
     }
 
 

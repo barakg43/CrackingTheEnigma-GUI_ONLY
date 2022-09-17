@@ -10,10 +10,7 @@ import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -63,6 +60,7 @@ public class AllMachineController {
 
         encryptionTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
         MachineConfComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
+        DMTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
     }
     public Label getFirstLoadFileLabel()
     {

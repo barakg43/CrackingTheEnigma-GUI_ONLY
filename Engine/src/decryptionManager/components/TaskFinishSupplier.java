@@ -26,4 +26,5 @@ public class TaskFinishSupplier implements Supplier<TaskFinishDataDTO> {
             throw new RuntimeException(e);
         }
     }
+
 }
