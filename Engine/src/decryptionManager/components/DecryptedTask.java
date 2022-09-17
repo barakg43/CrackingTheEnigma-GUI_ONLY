@@ -1,20 +1,15 @@
 package decryptionManager.components;
 
-import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import enigmaEngine.Engine;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static decryptionManager.DecryptionManager.*;
-import static decryptionManager.components.AgentsThreadPool.taskNumber;
 import static decryptionManager.components.AgentsThreadPool.totalTimeTasks;
 
 
@@ -53,18 +48,8 @@ public class DecryptedTask implements Runnable {
         CodeFormatDTO currentCode=initialCode;
 
         for (double i = 0; i < taskSize && currentCode!=null ; i++) {
-            try {
-            if(isDmPause) {
-                    synchronized (pauseLock) {
-                        System.out.println(Thread.currentThread().getName() + " is pause!");
-                        pauseLock.wait();
-                        System.out.println(Thread.currentThread().getName() + " is resume!");
-                      }
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            System.out.println(Thread.currentThread().getName() + " is running!");
+            isPauseRunningTask();
+      //     System.out.println(Thread.currentThread().getName() + " is running!");
             copyEngine.setCodeManually(currentCode);
             String processedOutput = null;
             try {
@@ -75,8 +60,8 @@ public class DecryptedTask implements Runnable {
             if(dictionary.checkIfAllLetterInDic(processedOutput))
                     {
                         possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(true),processedOutput));
-                        System.out.println(currentCode);
-                        System.out.println("********************************************\nOutput " + processedOutput);
+                     //   System.out.println(currentCode);
+                      //  System.out.println("********************************************\nOutput " + processedOutput);
 
                     }
                     currentCode= codeCalculatorFactory.getNextCode(currentCode);
@@ -86,15 +71,33 @@ public class DecryptedTask implements Runnable {
             if(possibleCandidates.size()>0)
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
         totalTimeTasks.set(totalTimeTasks.get()+totalTime);
-        Thread.sleep(1000);
+      //  Thread.sleep(1000); //TODO: thread pool delayed
             currentTaskTimeConsumer.accept(totalTime);
     } catch (InterruptedException e) {
-        throw new RuntimeException(e);}
+
+       // throw new RuntimeException(e);
+        }
 
 
     }
 
+        private void isPauseRunningTask() {
+            if (isSystemPause) {
+                synchronized (pauseLock) {
+                    if (isSystemPause) {
+                        try {
+                            System.out.println(Thread.currentThread().getName() + " is pause!");
+                            pauseLock.wait();
+                             System.out.println(Thread.currentThread().getName() + " is resume!");
+                        } catch (InterruptedException ignored) {
+                           // throw new RuntimeException(e);
+                        }
 
+                    }
+                }
 
+            }
+
+        }
 
 }

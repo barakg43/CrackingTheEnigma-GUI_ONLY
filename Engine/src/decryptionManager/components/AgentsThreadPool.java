@@ -39,7 +39,8 @@ public class AgentsThreadPool extends ThreadPoolExecutor {
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
         if (t != null) {
-            throw new RuntimeException(t);
+            return;
+            //throw new RuntimeException(t);
         }
         totalDoneCounter.increment();
         if(totalDoneCounter.getValue()==totalTaskAmount)

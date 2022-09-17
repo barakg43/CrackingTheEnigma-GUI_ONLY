@@ -14,8 +14,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.WindowEvent;
+
+import java.util.Optional;
 
 public class DMcontroller {
 
@@ -23,7 +28,7 @@ public class DMcontroller {
     @FXML public VBox taskDataComponent;
 
     @FXML private VBox dmVBox;
-    private DecryptionManager decryptionManager;
+
 
 
     @FXML private VBox encryptComponent;
@@ -105,4 +110,6 @@ public class DMcontroller {
     public TaskDataController getTaskDataComponentController() {
         return taskDataComponentController;
     }
+
+
 }

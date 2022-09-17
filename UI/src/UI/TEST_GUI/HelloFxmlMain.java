@@ -18,10 +18,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static UI.application.CommonResourcesPaths.SIMPLE_CODE_FORMAT;
 
@@ -43,15 +45,16 @@ public class HelloFxmlMain extends Application{
 //        }
 
 
-        start1(primaryStage);
+        //start1(primaryStage);
         //start1(primaryStage);
 
 //         start2(primaryStage);
 //        start3(primaryStage);
 //        start3(primaryStage);
+long time=619200000000L;
+        System.out.println("time is "+Duration.ofNanos(1000000000L));
 
-
-
+        System.out.println(TimeUnit.NANOSECONDS.toSeconds(1000000000000L));
 
 
     }

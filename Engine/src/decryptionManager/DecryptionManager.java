@@ -44,12 +44,12 @@ public class DecryptionManager {
     private Thread taskCreator;
     private double totalTaskAmount;
     private static Consumer<String> messageConsumer;
-    private static Consumer<Long> startTimeTasks;
     public static Consumer<Long> currentTaskTimeConsumer;
-    private long taskCounter;
-    private static AtomicBoolean isFinishAllTask;
-    public static boolean isDmPause;
+//    private long taskCounter;
+    private static Boolean isFinishAllTask;
+    public static volatile boolean isSystemPause;
     private boolean stopFlag;
+    private Runnable startListener;
     public static final Object pauseLock=new Object();
     public DecryptionManager(Engine engine) {
         taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
@@ -62,7 +62,7 @@ public class DecryptionManager {
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
 
-        isFinishAllTask=new AtomicBoolean();
+        isFinishAllTask= Boolean.FALSE;
 
     }
 
@@ -70,9 +70,8 @@ public class DecryptionManager {
         this.taskDoneAmount = taskDoneAmount;
     }
 
-    public void setDataConsumer(Consumer<String> messageConsumer, Consumer<Long> startTimeTasksConsumer, Consumer<Long> currentTaskTimeConsumer) {
+    public void setDataConsumer(Consumer<String> messageConsumer, Consumer<Long> currentTaskTimeConsumer) {
         DecryptionManager.messageConsumer = messageConsumer;
-        DecryptionManager.startTimeTasks =startTimeTasksConsumer;
         DecryptionManager.currentTaskTimeConsumer =currentTaskTimeConsumer;
     }
 
@@ -126,14 +125,18 @@ public class DecryptionManager {
         }
         return copyEngine;
     }
+    public void setCandidateListenerStarter(Runnable startListener)
+    {
+        this.startListener=startListener;
 
+    }
 
     public void testCounter()
     {
         taskDoneAmount.increment();
     }
     public void pause()  {
-        isDmPause=true;
+        isSystemPause =true;
 //        try {
 //            taskCreator.checkAccess();
 //        } catch (InterruptedException e) {
@@ -141,17 +144,18 @@ public class DecryptionManager {
 //        }
     }
     public void resume()  {
-        isDmPause=false;
+        isSystemPause =false;
         synchronized (pauseLock)
         {
-            System.out.println("Dm:Trying to resume");
+         //   System.out.println("Dm:Trying to resume");
             pauseLock.notifyAll();
         }
     }
     public void stop(){
         stopFlag=true;
-        agents.shutdown();
-
+        isFinishAllTask=true;
+        agents.shutdownNow();
+        System.out.println("Stopping DM!...");
     }
 
     public Supplier<TaskFinishDataDTO> getFinishQueueSupplier()
@@ -161,42 +165,40 @@ public class DecryptionManager {
     public void startBruteForce(String output)
     {
         this.output=output;
-
         agents.prestartAllCoreThreads();
-        taskCounter=0;
         totalTaskAmount=0;
-        isFinishAllTask.set(false);
-        isDmPause=false;
+        isFinishAllTask=false;
+        isSystemPause =false;
         stopFlag=false;
-        System.out.println("Total amount:"+getTotalTasksAmount());
         startTime=System.nanoTime();
+        startListener.run();
         taskCreator=new Thread(()-> {
-        agents.setTotalTaskAmount(getTotalTasksAmount());
-            try {
-                CodeFormatDTO startingCode = engine.getCodeFormat(false);
-                switch (level) {
-                    case easyLevel:
-                        messageConsumer.accept("Starting brute force easy level");
-                        createTaskEasyLevel(startingCode);
-                        break;
-                    case middleLevel:
-                        messageConsumer.accept("Starting brute force middle level");
-                        createTaskMiddleLevel(startingCode);
-                        break;
-                    case hardLevel:
-                        messageConsumer.accept("Starting brute force hard level");
-                        createTaskHardLevel(startingCode);
-                        break;
-                    case impossibleLevel:
-                        messageConsumer.accept("Starting brute force impossible level");
-                        createTaskImpossibleLevel();
-                        break;
+            agents.setTotalTaskAmount(getTotalTasksAmount());
+                try {
+                    CodeFormatDTO startingCode = engine.getCodeFormat(false);
+                    switch (level) {
+                        case easyLevel:
+                            messageConsumer.accept("Starting brute force easy level");
+                            createTaskEasyLevel(startingCode);
+                            break;
+                        case middleLevel:
+                            messageConsumer.accept("Starting brute force middle level");
+                            createTaskMiddleLevel(startingCode);
+                            break;
+                        case hardLevel:
+                            messageConsumer.accept("Starting brute force hard level");
+                            createTaskHardLevel(startingCode);
+                            break;
+                        case impossibleLevel:
+                            messageConsumer.accept("Starting brute force impossible level");
+                            createTaskImpossibleLevel();
+                            break;
+                    }
+
+                } catch (RuntimeException e) {
+                    throw new RuntimeException("Error when creating tasks: "+e);
                 }
-
-            } catch (RuntimeException e) {
-                throw new RuntimeException("Error when creating tasks: "+e);
-            }
-
+            System.out.println("Task Creator is done!");
         },"Task Creator DM Thread");
         taskCreator.start();
 
@@ -204,8 +206,10 @@ public class DecryptionManager {
 
     static public void doneBruteForceTasks()
     {
-        isFinishAllTask.set(true);
-        startTimeTasks.accept(startTime);
+
+        messageConsumer.accept("Finish running all tasks,finishing update all possible candidate.....");
+        isFinishAllTask=true;
+
     }
     private void createTaskImpossibleLevel() {
 
@@ -306,15 +310,15 @@ public class DecryptionManager {
         while(temp!=null&&!stopFlag){
             currentCode=temp;
             try {
-                if(isDmPause) {
+                if(isSystemPause) {
                     synchronized (pauseLock) {
                         System.out.println("Task creator is pause!");
                         pauseLock.wait();
                         System.out.println("resume Task creator!");
                     }
                 }
-                Thread.sleep(1000);
-                System.out.println("Task creator is running!");
+               // Thread.sleep(5000);//TODO: thread pool delayed
+              //  System.out.println("Task creator is running!");
                 taskQueue.put(new DecryptedTask(CodeFormatDTO.copyOf(currentCode),
                 output,
                   codeCalculatorFactory,

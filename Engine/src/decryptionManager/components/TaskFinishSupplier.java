@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 
 public class TaskFinishSupplier implements Supplier<TaskFinishDataDTO> {
     private final BlockingQueue<TaskFinishDataDTO> finishQueue;
-    AtomicBoolean allTaskDone;
-    public TaskFinishSupplier(BlockingQueue<TaskFinishDataDTO> queue, AtomicBoolean allTaskDone)
+    private Boolean allTaskDone;
+    public TaskFinishSupplier(BlockingQueue<TaskFinishDataDTO> queue, Boolean allTaskDone)
     {
         this.finishQueue=queue;
         this.allTaskDone=allTaskDone;
@@ -17,13 +17,15 @@ public class TaskFinishSupplier implements Supplier<TaskFinishDataDTO> {
 
     @Override
     public TaskFinishDataDTO get() {
+
         try {
-            if(!finishQueue.isEmpty()&&!allTaskDone.get())
+            if(!finishQueue.isEmpty()||!allTaskDone)
                 return finishQueue.take();
             else
                 return null;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (InterruptedException ignored) {
+           // throw new RuntimeException(e);
         }
+        return null;
     }
 }
