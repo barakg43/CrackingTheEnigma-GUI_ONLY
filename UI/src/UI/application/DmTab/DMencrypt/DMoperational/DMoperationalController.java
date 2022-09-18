@@ -74,8 +74,8 @@ public class DMoperationalController {
         agentSize.setMax(enigmaEngine.getAgentsAmount());
         agentSize.setValue(2);
         agentSize.setBlockIncrement(1);
-        agentSize.setMajorTickUnit(enigmaEngine.getAgentsAmount()/5.0);
-        agentSize.setMinorTickCount(enigmaEngine.getAgentsAmount()/10);
+        agentSize.setMajorTickUnit(Math.round(enigmaEngine.getAgentsAmount()/5f));
+        agentSize.setMinorTickCount(Math.round(enigmaEngine.getAgentsAmount()/10f));
     }
 
 
@@ -157,7 +157,7 @@ public class DMoperationalController {
     @FXML
     private void initialize() {
 
-        sliderValueLabel.setText("value: 2 ");
+        sliderValueLabel.setText("2 agents");
 
         SpinnerValueFactory.IntegerSpinnerValueFactory integerSpinnerValueFactory=new SpinnerValueFactory.IntegerSpinnerValueFactory(0,Integer.MAX_VALUE);
         integerSpinnerValueFactory.setAmountToStepBy(10);
@@ -169,7 +169,7 @@ public class DMoperationalController {
         agentSize.setSnapToTicks(true);
         outputString=new SimpleStringProperty();
         agentSize.valueProperty().addListener(
-                (observable, oldValue, newValue) -> sliderValueLabel.setText("value: " + newValue.intValue()));
+                (observable, oldValue, newValue) -> sliderValueLabel.setText( newValue.intValue()+" agents"));
         startButtonDisabled =new SimpleBooleanProperty(true);
         pauseButtonDisabled=new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());

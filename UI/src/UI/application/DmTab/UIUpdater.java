@@ -49,7 +49,6 @@ private AtomicLong threadCounter;
     public UIUpdater(DecryptionManager decryptionManager, ProgressDataDTO progressDataDTO, CandidatesStatusController candidatesStatusController) {
         this.decryptionManager = decryptionManager;
         this.candidatesStatusController = candidatesStatusController;
-
         this.progressDataDTO = progressDataDTO;
         messageProperty = new SimpleStringProperty();
         counterProperty = new SimpleLongProperty();
@@ -58,71 +57,60 @@ private AtomicLong threadCounter;
         isDoneBruteForce = new SimpleBooleanProperty();
         isDM_DoneAllTasks = new SimpleBooleanProperty();
         isCandidateUpdaterDone = new SimpleBooleanProperty();
-
         // taskDoneCounter.addPropertyChangeListener(newValue->counterProperty.set((Long)newValue));
         bindUpdaterToUIComponents();
-
         messageManager = this::updateMassage;
         singleTaskTime = this::getSingleTaskTime;
-
+        decryptionManager.setCandidateListenerStarter(this::startCandidateListenerTread);
         threadCounter=new AtomicLong(0);
     }
-//
-//    public void addNewCandidates(TaskFinishDataDTO histogramData) {
-//
-//                 introduceNewCandidates.accept(histogramData);
-//                 updateDistinct.run();
-//
-//
-//    }
+
     public SimpleBooleanProperty getIsDoneBruteForceProperty()
     {
         return isDoneBruteForce;
     }
-//    public ProgressDataDTO getProgressDataDTO(){
-//        return progressDataDTO;
-//    }
+
 
     private void startCandidateListenerTread()
     {
-        candidateListenerTask = new Task<Boolean>() {
-        @Override
-        protected Boolean call() {
-            System.out.println("Start Candidate Thread!");
-            Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
-            TaskFinishDataDTO currentData;
-            do {
-
-                if (isCandidatePause) {
-                    try {
-                        synchronized (candidateThreadPauseLock) {
-                            if (isCandidatePause) {
-                                System.out.println("Candidate Thread is paused");
-                                candidateThreadPauseLock.wait();
-                            }
-                            System.out.println("Candidate Thread resuming...");
-                        }
-                    } catch (InterruptedException ignored) {
-                        return false;
-                    }
-                }
-
-                currentData = supplier.get();
-                if (currentData != null)
-                    candidatesStatusController.addAllCandidate(currentData);
-                else
-                    System.out.println("Finish Update all candidates!");
-
-
-            } while (currentData != null);
-            isCandidateUpdaterDone.set(true);
-            return true;
-        }
-    };
-        candidateListener=new Thread(candidateListenerTask,"Candidate Updater:"+threadCounter.incrementAndGet());
         candidateListener.start();
     }
+    private void createNewCandidateTask(){
+        candidateListenerTask = new Task<Boolean>() {
+            @Override
+            protected Boolean call() {
+                System.out.println("Start Candidate Thread!");
+                Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
+                TaskFinishDataDTO currentData;
+                do {
 
+                    if (isCandidatePause) {
+                        try {
+                            synchronized (candidateThreadPauseLock) {
+                                if (isCandidatePause) {
+                                    System.out.println("Candidate Thread is paused");
+                                    candidateThreadPauseLock.wait();
+                                }
+                                System.out.println("Candidate Thread resuming...");
+                            }
+                        } catch (InterruptedException ignored) {
+                            return false;
+                        }
+                    }
+
+                    currentData = supplier.get();
+                    if (currentData != null)
+                        candidatesStatusController.addAllCandidate(currentData);
+                    else
+                        System.out.println("Finish Update all candidates!");
+
+
+                } while (currentData != null);
+                isCandidateUpdaterDone.set(true);
+                return true;
+            }
+        };
+    }
     private void bindUpdaterToUIComponents() {
         // task message
         progressDataDTO.taskMessageProperty().bind(this.messageProperty);
@@ -190,9 +178,10 @@ private AtomicLong threadCounter;
         decryptionManager.setDataConsumer(messageManager,singleTaskTime);
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
-
+        createNewCandidateTask();
+        candidateListener=new Thread(candidateListenerTask,"Candidate Updater");
         resetAllUIData();
-        decryptionManager.setCandidateListenerStarter(this::startCandidateListenerTread);
+
     }
 
 
@@ -210,45 +199,8 @@ private AtomicLong threadCounter;
         if(candidateListenerTask.isRunning())
             candidateListenerTask.cancel();
     }
-//    private void getStartTime(Long startTime)
-//    {
-//        this.startTime=startTime;
-//        isDM_DoneAllTasks.set(true);
-//
-//    }
 
 
-
-    private void updateNewCandidate()
-    {
-//        Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
-//        TaskFinishDataDTO currentData;
-//        do{
-//
-//            if(isCandidatePause) {
-//                try {
-//                    synchronized (candidateThreadPauseLock){
-//                        if(isCandidatePause)
-//                        {
-//                            System.out.println("Candidate Thread is paused");
-//                            candidateThreadPauseLock.wait();
-//                        }
-//                        System.out.println("Candidate Thread resuming...");
-//                    }
-//                } catch (InterruptedException ignored) {
-//                }
-//            }
-//
-//            currentData = supplier.get();
-//            if(currentData!=null)
-//                candidatesStatusController.addAllCandidate(currentData);
-//            else
-//                System.out.println("Finish Update all candidates!");
-//
-//
-//        } while(currentData!=null);
-//        isCandidateUpdaterDone.set(true);
-    }
     private String convertNanoTimeToTimerDisplay(long nanoTime)
     {
 
@@ -262,10 +214,10 @@ private AtomicLong threadCounter;
     public void getSingleTaskTime(long time) {
         totalTimeDuration+=time;
         if (tasksDoneCounter.getValue() > 0) {
-            float milisecTime=Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis();
+            float millisSecTime=Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis();
             Platform.runLater(() -> {
             progressDataDTO.getAverageTaskTimeProperty()
-                    .set(String.format("%,d Milliseconds",(int)milisecTime));
+                    .set(String.format("%,d Milliseconds",(int)millisSecTime));
             progressDataDTO.totalTimeTaskAmountProperty().
                         set(convertNanoTimeToTimerDisplay(totalTimeDuration));
             });

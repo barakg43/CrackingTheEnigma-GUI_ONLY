@@ -96,8 +96,8 @@ public class encryptTabDMController {
 
     public void restartAllData()
     {
-        dictionaryListView.getSelectionModel().clearSelection();
-
+        //dictionaryListView.getSelectionModel().clearSelection();
+        clearListView();
         createDictionaryList();
         simpleCodeComponentController.clearCurrentCodeView();
         searchBox.clear();
