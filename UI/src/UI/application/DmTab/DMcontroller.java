@@ -116,7 +116,7 @@ public class DMcontroller {
     public void bindComponentsWidthToScene(ReadOnlyDoubleProperty sceneWidthProperty, ReadOnlyDoubleProperty sceneHeightProperty) {
 
         encryptComponentController.bindWidthToScene(sceneWidthProperty,sceneHeightProperty);
-
+        taskDataComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
     }
 
 }

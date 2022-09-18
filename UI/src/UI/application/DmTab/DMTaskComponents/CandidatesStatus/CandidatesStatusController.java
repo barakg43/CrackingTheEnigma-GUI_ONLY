@@ -7,9 +7,11 @@ import decryptionManager.components.AtomicCounter;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.net.URL;
 
 public class CandidatesStatusController {
 
+    public ScrollPane scrollPaneCandidates;
     @FXML
     private FlowPane flowPaneCandidates;
 
@@ -28,7 +31,14 @@ public class CandidatesStatusController {
         numberOfCandidates=new AtomicCounter();
 
     }
+    public void bindComponentsWidthToScene(ReadOnlyDoubleProperty sceneWidthProperty, ReadOnlyDoubleProperty sceneHeightProperty) {
 
+        flowPaneCandidates.prefWidthProperty().bind(sceneWidthProperty);
+        flowPaneCandidates.prefHeightProperty().bind(sceneHeightProperty);
+
+        scrollPaneCandidates.prefWidthProperty().bind(sceneWidthProperty);
+        scrollPaneCandidates.prefHeightProperty().bind(sceneHeightProperty);
+    }
 
     public void addAllCandidate(TaskFinishDataDTO taskFinishDataDTO)
     {
