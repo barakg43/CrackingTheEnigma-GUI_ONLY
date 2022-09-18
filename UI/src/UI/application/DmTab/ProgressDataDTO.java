@@ -28,7 +28,6 @@ public class ProgressDataDTO<totalTimeTaskAmountProperty> {
         this.totalAmountTaskDoneProperty = totalAmountTaskDoneProperty;
         this.totalTimeTaskAmountProperty=totalTimeTaskAmountProperty;
         this.averageTaskTimeProperty=averageTaskTimeProperty;
-
     }
 
     public StringProperty getAverageTaskTimeProperty() {

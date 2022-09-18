@@ -9,7 +9,10 @@ import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 
@@ -18,6 +21,7 @@ import java.util.List;
 
 
 public class TaskDataController {
+    public Label numberOfCandidates;
     @FXML private GridPane taskProgressComponent;
     @FXML private taskProgressController taskProgressComponentController;
 
@@ -63,4 +67,15 @@ public class TaskDataController {
     public void restarAllData() {
         taskProgressComponentController.restartAllData();
     }
+
+    public StringProperty getNumberOfCandidatesProperty()
+    {
+        return numberOfCandidates.textProperty();
+    }
+
+    public Label getNumberOfCandidates()
+    {
+        return numberOfCandidates;
+    }
+
 }

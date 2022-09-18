@@ -131,7 +131,14 @@ public class DMoperationalController {
         resumeButton.setDisable(true);
         pauseButtonDisabled.set(true);
         decryptionManager.stop();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        uiUpdater.resetData();
         uiUpdater.stopCandidateListener();
+
     }
     @FXML
     void pauseBFButton(ActionEvent event) {

@@ -6,10 +6,7 @@ import decryptionManager.components.AtomicCounter;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 
 
 import java.time.Duration;
@@ -40,6 +37,7 @@ public class UIUpdater {
 
     private final Object candidateThreadPauseLock=new Object();
     private Boolean isCandidatePause;
+
     public UIUpdater(DecryptionManager decryptionManager, ProgressDataDTO progressDataDTO, CandidatesStatusController candidatesStatusController) {
         this.decryptionManager = decryptionManager;
         this.candidatesStatusController = candidatesStatusController;
@@ -233,6 +231,13 @@ public class UIUpdater {
  }
 
     public void resetData() {
+        messageProperty.set("");
+        counterProperty.set(0);
+        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(0));
+        tasksDoneCounter.resetCounter();
+        progressDataDTO.getAverageTaskTimeProperty().set(String.valueOf(0));
+        progressDataDTO.totalTimeTaskAmountProperty().set(String.valueOf(0));
+        candidatesStatusController.clearAllTiles();
 
 
     }

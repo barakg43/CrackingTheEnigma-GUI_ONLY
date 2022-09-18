@@ -2,28 +2,28 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
-<VBox prefHeight="200.0" prefWidth="537.0" stylesheets="@../../../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
+<VBox prefHeight="200.0" prefWidth="537.0" styleClass="singleCandidate-VBox" stylesheets="@../../../DMencrypt/encryptTabDM.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
    <children>
-      <Pane prefHeight="45.0" prefWidth="537.0">
+      <Pane maxWidth="1.7976931348623157E308" prefHeight="45.0">
          <children>
-            <Label layoutX="10.0" layoutY="14.0" prefHeight="17.0" prefWidth="113.0" styleClass="text-label" text="Output String:" />
-            <TextField fx:id="outputString" editable="false" layoutX="136.0" layoutY="7.0" />
+            <Label layoutX="14.0" layoutY="4.0" prefHeight="17.0" prefWidth="113.0" styleClass="text-label" text="Output String:" />
+            <TextFlow fx:id="outputString" layoutX="127.0" layoutY="5.0" maxWidth="1.7976931348623157E308" prefHeight="31.0" styleClass="text-label" />
          </children>
       </Pane>
-      <ScrollPane maxWidth="1.7976931348623157E308" prefHeight="68.0" prefWidth="537.0">
+      <ScrollPane fitToWidth="true" maxWidth="1.7976931348623157E308" prefHeight="68.0">
          <content>
             <FlowPane maxWidth="1.7976931348623157E308">
                <children>
-                  <fx:include fx:id="codeFormat" source="../../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
+                  <fx:include fx:id="codeFormat" maxWidth="1.7976931348623157E308" source="../../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
                </children></FlowPane>
          </content>
       </ScrollPane>
-      <Pane prefHeight="57.0" prefWidth="570.0">
+      <Pane maxWidth="1.7976931348623157E308" prefHeight="57.0">
          <children>
             <Label fx:id="agentID" layoutX="118.0" layoutY="16.0" prefHeight="23.0" prefWidth="151.0" styleClass="text-label" text="Label" />
             <Label layoutX="14.0" layoutY="12.0" prefHeight="31.0" prefWidth="70.0" styleClass="text-label" text="Agent ID:" />
