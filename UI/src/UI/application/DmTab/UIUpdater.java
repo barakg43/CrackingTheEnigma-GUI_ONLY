@@ -217,9 +217,10 @@ public class UIUpdater {
     public void getSingleTaskTime(long time) {
         totalTimeDuration+=time;
         if (tasksDoneCounter.getValue() > 0) {
+            float milisecTime=Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis();
             Platform.runLater(() -> {
             progressDataDTO.getAverageTaskTimeProperty()
-                    .set(String.format("%,d Milliseconds",Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis()));
+                    .set(String.format("%,d Milliseconds",(int)milisecTime));
             progressDataDTO.totalTimeTaskAmountProperty().
                         set(convertNanoTimeToTimerDisplay(totalTimeDuration));
             });
@@ -233,13 +234,11 @@ public class UIUpdater {
     public void resetData() {
         messageProperty.set("");
         counterProperty.set(0);
-        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(0));
         tasksDoneCounter.resetCounter();
+        progressDataDTO.totalNumberOfTasksProperty().set(String.valueOf(0));
         progressDataDTO.getAverageTaskTimeProperty().set(String.valueOf(0));
         progressDataDTO.totalTimeTaskAmountProperty().set(String.valueOf(0));
         candidatesStatusController.clearAllTiles();
-
-
     }
 
 

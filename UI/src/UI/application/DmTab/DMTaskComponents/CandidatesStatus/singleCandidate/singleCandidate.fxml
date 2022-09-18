@@ -19,7 +19,7 @@
          <content>
             <FlowPane maxWidth="1.7976931348623157E308">
                <children>
-                  <fx:include fx:id="codeFormat" maxWidth="1.7976931348623157E308" source="../../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
+                  <fx:include fx:id="codeFormat" source="../../../../generalComponents/SimpleCode/simpleCodeVersion.fxml" />
                </children></FlowPane>
          </content>
       </ScrollPane>
