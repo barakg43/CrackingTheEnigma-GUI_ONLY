@@ -20,14 +20,14 @@ public class UIApplication extends Application {
         public void start(Stage primaryStage) throws Exception {
             primaryStage.setTitle("Enigma Machine");
             FXMLLoader fxmlLoader=new FXMLLoader();
-            URL url=getClass().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
+            URL url=getClass().getClassLoader().getResource(CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE);
             fxmlLoader.setLocation(url);
             assert url != null;
             Parent root=fxmlLoader.load(url.openStream());
 
             Scene scene = new Scene(root,1100,980);
             AllMachineController machineController=fxmlLoader.getController();
-            machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
+         //   machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());
             primaryStage.setScene(scene);
             primaryStage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, DMoperationalController::closeWindowEvent);
             machineController.setSceneWidthHeightProperties(scene.widthProperty(),scene.heightProperty());

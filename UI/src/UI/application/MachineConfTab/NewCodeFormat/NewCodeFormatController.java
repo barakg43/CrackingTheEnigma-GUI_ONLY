@@ -8,11 +8,9 @@ import dtoObjects.RotorInfoDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -27,6 +25,8 @@ public class NewCodeFormatController {
     @FXML public HBox currCode;
     @FXML  public SimpleCodeController currCodeController;
     @FXML  public Pane currentCodePane;
+//    public ScrollPane mainScrollPane;
+    public AnchorPane mainAnchorPane;
     @FXML   private MachineConfigurationController machineConfController;
     @FXML
     private Label SelectedReflectorLabel;
@@ -52,6 +52,12 @@ public class NewCodeFormatController {
     @FXML
     public void initialize() {
 
+//        mainAnchorPane.prefWidthProperty().bind(mainScrollPane.widthProperty());
+//        mainAnchorPane.prefHeightProperty().bind(mainScrollPane.heightProperty());
+
+
+//        CurrentCodePane.prefWidthProperty().bind(mainAnchorPane.widthProperty());
+     //   CurrentCodePane.prefHeightProperty().bind(mainAnchorPane.heightProperty());
 //        if (currCodeController != null) {
 //            currCodeController.setCurrCodeController(this);
 //        }

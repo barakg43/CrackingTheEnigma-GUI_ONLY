@@ -47,7 +47,7 @@ public class AutomaticEncryptDMController {
     }
     public void doneProcessData()
     {
-        parentComponentTab.doneProcessData();
+       // parentComponentTab.doneProcessData();
         parentComponentTab.getCodeComponentController().setSelectedCode(parentComponentTab.getEnigmaEngine().getCodeFormat(false));
         parentComponentTab.getMainController().bindCurrentBFCode();
     }

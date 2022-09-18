@@ -57,7 +57,7 @@ public class EncryptTabController {
     private Engine enigmaEngine;
     private AllMachineController mainAppController;
 
-    private DecryptionManager decryptionManager;
+
     SimpleLongProperty counterProperty;
 
 
@@ -105,22 +105,11 @@ public class EncryptTabController {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
 
-        decryptionManager=new DecryptionManager(enigmaEngine);
-
-
-//        decryptionManager.addListenerTotalTaskDoneCounter(new PropertyChangeListener() {
-//            @Override
-//            public void propertyChange(PropertyChangeEvent evt) {
-//                counterProperty.set((Long) evt.getNewValue());
-//                System.out.println(evt.getNewValue());
-//            }
-//        }
-//    );
-
     }
     public void doneProcessData()
     {
         statisticsComponentController.updateCodeStatisticsView(enigmaEngine.getStatisticDataDTO());
+        mainAppController.increasedTotalCipheredData();
 
     }
     @FXML
@@ -145,30 +134,8 @@ public class EncryptTabController {
         return mainAppController;
     }
 
-    public void testButton(ActionEvent ignoredActionEvent) {
-
-        System.out.println("Starting BF!");
-
-//        decryptionManager.setSetupConfiguration(comboBoxBf.getValue(),2,Integer.parseInt(taskSizeField.getText()));
-//        decryptionManager.startBruteForce("aaaaa");
-        //counter.increment();
-
-       // counterClass.setValue();
-        decryptionManager.testCounter();
-        System.out.println(counterProperty.get());
-        //System.out.println(bindingCounter.get());
-    }
-
-    public void resumeOperation(ActionEvent ignoredActionEvent) {
-        decryptionManager.resume();
-    }
 
 
-
-
-    public void pauseOperation(ActionEvent ignoredActionEvent) {
-        decryptionManager.pause();
-    }
 
     public void bindResetButtonToCode() {
         codeComponentController.setSelectedCode(enigmaEngine.getCodeFormat(true));

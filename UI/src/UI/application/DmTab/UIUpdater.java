@@ -157,7 +157,7 @@ public class UIUpdater {
     }
     public static boolean isCandidateListenerAlive()
     {
-        return candidateListenerTask.isRunning();
+        return candidateListenerTask!=null&& candidateListenerTask.isRunning();
     }
     private void resetAllUIData()
 

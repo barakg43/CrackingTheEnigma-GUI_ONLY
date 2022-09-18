@@ -95,6 +95,7 @@ public class DecryptionManager {
     this.agentsAmount=agentAmount;
     this.taskSize=taskSize;
     totalTaskAmount=0;
+    calculateTotalTaskAmount(level);
     if(taskSize<1)
         throw new RuntimeException("task size must be positive number!(greater then 0)");
     if(agentAmount<2||agentAmount>50)
@@ -131,10 +132,6 @@ public class DecryptionManager {
 
     }
 
-    public void testCounter()
-    {
-        taskDoneAmount.increment();
-    }
     public void pause()  {
         isSystemPause =true;
 //        try {

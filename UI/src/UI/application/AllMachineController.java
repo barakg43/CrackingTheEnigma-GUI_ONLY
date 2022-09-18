@@ -8,25 +8,25 @@ import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.Single
 import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 public class AllMachineController {
 
-    @FXML private Pane FilePathComponent;
+    @FXML private Pane filePathComponent;
 
     @FXML private ScrollPane allMachineScrollPane;
-    @FXML  private ScrollPane MachineConfComponent;
+    @FXML  private SplitPane machineConfSplitPane;
     @FXML private ScrollPane DMTabComponent;
     @FXML  private Tab encryptionTab;
     @FXML private Tab machineConfTab;
     @FXML private Tab automaticEncryptionTab;
-    @FXML private FilePathController FilePathComponentController;
-    @FXML private MachineConfigurationController MachineConfComponentController;
+    @FXML private FilePathController filePathComponentController;
+    @FXML private MachineConfigurationController machineConfComponentController;
     @FXML private DMcontroller DMTabComponentController;
     @FXML private Label FirstLoadFileLabel;
     private Engine mEngine;
@@ -59,7 +59,7 @@ public class AllMachineController {
         sceneWidthProperty=widthProperty;
 
         encryptionTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
-        MachineConfComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
+        machineConfComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
         DMTabComponentController.bindComponentsWidthToScene(sceneWidthProperty,sceneHeightProperty);
     }
     public Label getFirstLoadFileLabel()
@@ -69,11 +69,11 @@ public class AllMachineController {
     @FXML
     public void initialize()
     {
-        if(FilePathComponentController!=null && MachineConfComponentController!=null && encryptionTabComponentController!=null
+        if(filePathComponentController !=null && machineConfComponentController !=null && encryptionTabComponentController!=null
          && DMTabComponentController!=null)
         {
-            FilePathComponentController.setMainAppController(this);
-            MachineConfComponentController.setMainAppController(this);
+            filePathComponentController.setMainAppController(this);
+            machineConfComponentController.setMainAppController(this);
             encryptionTabComponentController.setMainAppController(this);
             DMTabComponentController.setMainAppController(this);
         }
@@ -81,11 +81,11 @@ public class AllMachineController {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setTitle("Error");
             errorAlert.setHeaderText("Invalid file details");
-            if(FilePathComponentController==null)
+            if(filePathComponentController ==null)
             {
                 errorAlert.setContentText("FilePathComponentController");
             }
-            else if(MachineConfComponentController==null)
+            else if(machineConfComponentController ==null)
                 errorAlert.setContentText("MachineConfComponentController");
             else if(encryptionTabComponentController==null)
                 errorAlert.setContentText("DMTabComponentController");
@@ -96,20 +96,20 @@ public class AllMachineController {
 
     }
     public void setMachineDetails(){
-        MachineConfComponentController.setMachineDetails();
+        machineConfComponentController.setMachineDetails();
         DMTabComponentController.setDictionaryList();
     }
 
     public void setConfPanel() {
-        MachineConfComponentController.resetAllFields();
+        machineConfComponentController.resetAllFields();
     }
     public void setInitializeCodeConf() {
-        MachineConfComponentController.setInitializeConfiguration();
+        machineConfComponentController.setInitializeConfiguration();
     }
 
     public void setEncrypteTab() {
      //   encryptionTabComponentController.setEnigmaEngine(mEngine);
-        encryptionTabComponentController.bindTabDisable(MachineConfComponentController.getIsSelected());
+        encryptionTabComponentController.bindTabDisable(machineConfComponentController.getIsSelected());
 
     }
     public void setCurrentCode(CodeFormatDTO currentCode)
@@ -120,29 +120,34 @@ public class AllMachineController {
 
     public void bindCurrentCode()
     {
-        MachineConfComponentController.getCurrentMachineCodeController().setSelectedCode(encryptionTabComponentController.bindCodeComponentController().getCurrentCode());
-        MachineConfComponentController.updateCurrentCode();
+        machineConfComponentController.getCurrentMachineCodeController().setSelectedCode(encryptionTabComponentController.bindCodeComponentController().getCurrentCode());
+        machineConfComponentController.updateCurrentCode();
         DMTabComponentController.setSimpleCurrCode(encryptionTabComponentController.getCodeComponentController().getCurrentCode());
     }
 
 
     public void bindCurrentBFCode()
     {
-        MachineConfComponentController.getCurrentMachineCodeController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());
-        MachineConfComponentController.updateCurrentCode();
+        machineConfComponentController.getCurrentMachineCodeController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());
+        machineConfComponentController.updateCurrentCode();
+        encryptionTabComponentController.doneProcessData();
         encryptionTabComponentController.getCodeComponentController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());
 
     }
 
-
-    public void bindEncrypteCode()
+    public void increasedTotalCipheredData()
     {
-        encryptionTabComponentController.bindCodeComponentController().setSelectedCode(MachineConfComponentController.CurrentMachineCodeController.getCurrentCode());
+        Platform.runLater(()->machineConfComponentController.increasedTotalCipheredData());
     }
+
+//    public void bindEncrypteCode()
+//    {
+//        encryptionTabComponentController.bindCodeComponentController().setSelectedCode(machineConfComponentController.CurrentMachineCodeController.getCurrentCode());
+//    }
 
     public void setDMTab() {
        // DMTabComponentController.setEnigmaEngine(mEngine);
-        DMTabComponentController.bindTabDisable(MachineConfComponentController.getIsSelected());
+        DMTabComponentController.bindTabDisable(machineConfComponentController.getIsSelected());
     }
 
     public void resetAllData() {

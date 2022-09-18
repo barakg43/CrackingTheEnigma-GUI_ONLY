@@ -36,7 +36,7 @@ public class encryptTabDMController {
     public Button searchButton;
     public Button deleteButton;
     public ListView dictionaryListView;
-    public VBox codeEncryptComponent;
+    public ScrollPane codeEncryptComponent;
 
     public AutomaticEncryptDMController codeEncryptComponentController;
     public VBox encryptTabComponent;
@@ -230,9 +230,7 @@ public class encryptTabDMController {
         DmController.getMainAppController().bindCurrentBFCode();
     }
 
-    public void testCounter(ActionEvent actionEvent) {
-        getDecryptionManager().testCounter();
-    }
+
 
     public void bindWidthToScene(ReadOnlyDoubleProperty sceneWidthProperty, ReadOnlyDoubleProperty sceneHeightProperty) {
 
