@@ -1,5 +1,6 @@
 package UI.application;
 
+import UI.SkinsCSS.Skins;
 import UI.application.DmTab.DMcontroller;
 import UI.application.FIlePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
@@ -10,14 +11,19 @@ import enigmaEngine.Engine;
 import enigmaEngine.EnigmaEngine;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 public class AllMachineController {
 
-    @FXML private Pane filePathComponent;
+
+    public ComboBox selectSkinComboBox;
+    @FXML private Pane FilePathComponent;
+
 
     @FXML private ScrollPane allMachineScrollPane;
     @FXML  private SplitPane machineConfSplitPane;
@@ -35,6 +41,8 @@ public class AllMachineController {
     private CodeFormatDTO codeFormatBF;
     @FXML private BorderPane encryptionTabComponent;
     @FXML private EncryptTabController encryptionTabComponentController;
+    private Scene scene;
+
     public AllMachineController(){
 
         mEngine=new EnigmaEngine();
@@ -76,6 +84,9 @@ public class AllMachineController {
             machineConfComponentController.setMainAppController(this);
             encryptionTabComponentController.setMainAppController(this);
             DMTabComponentController.setMainAppController(this);
+
+            selectSkinComboBox.getItems().addAll(Skins.values());
+
         }
         else{
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -153,5 +164,40 @@ public class AllMachineController {
     public void resetAllData() {
         DMTabComponentController.resetAllData();
         encryptionTabComponentController.resetAllData();
+    }
+
+    public void skinChanged(ActionEvent actionEvent) {
+        int index= selectSkinComboBox.getSelectionModel().getSelectedIndex();
+        Skins selectedSkin=Skins.values()[index];
+        switch(selectedSkin)
+        {
+            case Regular:
+            {
+               allMachineScrollPane.getStylesheets().clear();
+               allMachineScrollPane.getStylesheets().add("UI/application/AllMachineCSS.css");
+               break;
+            }
+            case DarkMode:{
+                allMachineScrollPane.getStylesheets().clear();
+                allMachineScrollPane.getStylesheets().add("UI/SkinsCSS/DarkModeSkin.css");
+                break;
+            }
+            case Basketball:
+            {
+              allMachineScrollPane.getStylesheets().clear();
+                allMachineScrollPane.getStylesheets().add("UI/SkinsCSS/basketballSkin.css");
+                break;
+            }
+            case LovelyPink:{
+                allMachineScrollPane.getStylesheets().clear();
+                allMachineScrollPane.getStylesheets().add("UI/SkinsCSS/LovelyMode.css");
+                break;
+            }
+
+        }
+    }
+
+    public void setScene(Scene scene) {
+        this.scene=scene;
     }
 }

@@ -1,4 +1,9 @@
+.label{
+    -fx-font-weight: BOLD;
+}
+
+
 #First-Load-File-Label{
     -fx-background-color: Yellow;
-
 }
+

@@ -12,6 +12,7 @@ public class taskProgressController {
     public Label totalDecryptTime;
     @FXML
     public Label averageTaskTime;
+    public Label numberOfCandidatesLabel;
     @FXML
     private Label totalNumberOfTasks;
     @FXML

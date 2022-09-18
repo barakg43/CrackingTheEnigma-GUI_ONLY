@@ -33,7 +33,7 @@ public class DMoperationalController {
     private ComboBox<BruteForceLevel> levelCombobox;
     private SimpleStringProperty outputString;
     private static DecryptionManager decryptionManager;
-     private static UIUpdater uiUpdater;
+    private static UIUpdater uiUpdater;
     @FXML
     private Button pauseButton;
 
@@ -45,7 +45,7 @@ public class DMoperationalController {
     static SimpleBooleanProperty startButtonDisabled;
     private SimpleBooleanProperty pauseButtonDisabled;
     public void setDecryptionManager(DecryptionManager decryptionManager) {
-      //  this.decryptionManager = decryptionManager;
+        //  this.decryptionManager = decryptionManager;
     }
     private Engine enigmaEngine;
 
@@ -84,8 +84,8 @@ public class DMoperationalController {
         {
             return "Please select difficulty level";
         }
-       if(getAgentAmountFromSpinner()<=0)
-           return "Please select task size bigger then zero";
+        if(getAgentAmountFromSpinner()<=0)
+            return "Please select task size bigger then zero";
 
 
         return null;
@@ -121,7 +121,7 @@ public class DMoperationalController {
 
         uiUpdater.setupCandidateListener();
         decryptionManager.startBruteForce(outputString.getValue());
-        pauseButtonDisabled.set(true);
+       // pauseButtonDisabled.set(true);
 
 
     }
@@ -131,7 +131,14 @@ public class DMoperationalController {
         resumeButton.setDisable(true);
         pauseButtonDisabled.set(true);
         decryptionManager.stop();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        uiUpdater.resetData();
         uiUpdater.stopCandidateListener();
+
     }
     @FXML
     void pauseBFButton(ActionEvent event) {
@@ -166,9 +173,9 @@ public class DMoperationalController {
         startButtonDisabled =new SimpleBooleanProperty(true);
         pauseButtonDisabled=new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());
-        pauseButton.disableProperty().bind(Bindings.and(pauseButtonDisabled,startButton.disabledProperty().not()));
+        pauseButton.disableProperty().bind(startButton.disabledProperty().not());
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
-       //resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),stopButton.disabledProperty()));
+        //resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),stopButton.disabledProperty()));
         startButtonDisabled.setValue(false);
     }
 
@@ -199,4 +206,3 @@ public class DMoperationalController {
     }
 
 }
-

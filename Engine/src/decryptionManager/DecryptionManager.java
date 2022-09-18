@@ -207,8 +207,13 @@ public class DecryptionManager {
         messageConsumer.accept("Finish running all tasks,finishing update all possible candidate.....");
         isFinishAllTask=true;
 
-
     }
+
+    public boolean getIsFinishAllTask()
+    {
+        return isFinishAllTask;
+    }
+
     private void createTaskImpossibleLevel() {
 
         int rotorNumberInSystem=machineData.getNumberOfRotorInSystem();
