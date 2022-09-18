@@ -11,7 +11,7 @@
       <Pane maxHeight="120.0" minHeight="120.0" minWidth="1017.0">
          <children>
             <Label id="First-Load-File-Label" fx:id="FirstLoadFileLabel" layoutX="14.0" layoutY="70.0" stylesheets="@AllMachineCSS.css" text="You need first load the machine from file" />
-            <fx:include fx:id="filePathComponent" source="FIlePathComponent/filePathFX.fxml" />
+            <fx:include fx:id="filePathComponent" source="FilePathComponent/filePathFX.fxml" />
          </children>
       </Pane>
       <TabPane minHeight="825.0" minWidth="1017.0" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="1.7976093134862315E308">

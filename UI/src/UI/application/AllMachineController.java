@@ -2,7 +2,7 @@ package UI.application;
 
 import UI.SkinsCSS.Skins;
 import UI.application.DmTab.DMcontroller;
-import UI.application.FIlePathComponent.FilePathController;
+import UI.application.FilePathComponent.FilePathController;
 import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.statisticsComponent.singleCodeStatistics.SingleCodeStatisticsViewController;
@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane;
 public class AllMachineController {
 
 
-    public ComboBox selectSkinComboBox;
+    public ComboBox<Skins> selectSkinComboBox;
     @FXML private Pane FilePathComponent;
 
 
@@ -167,8 +167,8 @@ public class AllMachineController {
     }
 
     public void skinChanged(ActionEvent actionEvent) {
-        int index= selectSkinComboBox.getSelectionModel().getSelectedIndex();
-        Skins selectedSkin=Skins.values()[index];
+        Skins selectedSkin= selectSkinComboBox.getSelectionModel().getSelectedItem();
+     //   Skins selectedSkin=Skins.values()[index];
         switch(selectedSkin)
         {
             case Regular:

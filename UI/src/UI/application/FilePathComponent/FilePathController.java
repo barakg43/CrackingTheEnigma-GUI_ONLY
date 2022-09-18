@@ -1,4 +1,4 @@
-package UI.application.FIlePathComponent;
+package UI.application.FilePathComponent;
 
 import UI.application.AllMachineController;
 import enigmaEngine.Engine;

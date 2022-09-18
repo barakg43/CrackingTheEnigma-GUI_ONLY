@@ -11,20 +11,19 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 public class SingleCandidateController {
-   @FXML
-   private TextFlow outputString;
+    @FXML
+    private TextFlow outputString;
     @FXML
     private Label agentID;
     @FXML private HBox codeFormat;
     @FXML private SimpleCodeController codeFormatController;
 
     public void setData(CandidateDTO candidateDataDTO,String agentID){
-            this.agentID.setText(agentID);
-
-            outputString.setText(candidateDataDTO.getOutput());
-            codeFormatController.loadSmallFontStyle();
-
-            codeFormatController.setSelectedCode(candidateDataDTO.getCodeConf());
+        this.agentID.setText(agentID);
+        Text output=new Text(candidateDataDTO.getOutput());
+        outputString.getChildren().add(output);
+        codeFormatController.loadSmallFontStyle();
+        codeFormatController.setSelectedCode(candidateDataDTO.getCodeConf());
     }
 
 }
