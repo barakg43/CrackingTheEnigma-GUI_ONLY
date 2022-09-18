@@ -5,7 +5,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class ProgressDataDTO<totalTimeTaskAmountProperty> {
+public class ProgressDataDTO {
 
     private final StringProperty taskMessageProperty;
     private final StringProperty progressPercentProperty;

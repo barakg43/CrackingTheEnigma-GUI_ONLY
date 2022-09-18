@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
 
 
 import java.time.Duration;
@@ -22,6 +23,7 @@ import java.util.function.Supplier;
 public class UIUpdater {
 
     private static Thread candidateListener=null;
+    private static Task<Boolean> candidateListenerTask=null;
     private final DecryptionManager decryptionManager;
     private final CandidatesStatusController candidatesStatusController;
     private final ProgressDataDTO progressDataDTO;
@@ -45,19 +47,52 @@ public class UIUpdater {
         this.candidatesStatusController = candidatesStatusController;
 
         this.progressDataDTO = progressDataDTO;
-        messageProperty=new SimpleStringProperty();
-        counterProperty=new SimpleLongProperty();
-        progressProperty=new SimpleDoubleProperty(0);
-        tasksDoneCounter=new AtomicCounter();
-         isDoneBruteForce=new SimpleBooleanProperty();
-         isDM_DoneAllTasks=new SimpleBooleanProperty();
-         isCandidateUpdaterDone=new SimpleBooleanProperty();
+        messageProperty = new SimpleStringProperty();
+        counterProperty = new SimpleLongProperty();
+        progressProperty = new SimpleDoubleProperty(0);
+        tasksDoneCounter = new AtomicCounter();
+        isDoneBruteForce = new SimpleBooleanProperty();
+        isDM_DoneAllTasks = new SimpleBooleanProperty();
+        isCandidateUpdaterDone = new SimpleBooleanProperty();
         decryptionManager.setCandidateListenerStarter(this::startCandidateListenerTread);
-       // taskDoneCounter.addPropertyChangeListener(newValue->counterProperty.set((Long)newValue));
+        // taskDoneCounter.addPropertyChangeListener(newValue->counterProperty.set((Long)newValue));
         bindUpdaterToUIComponents();
 
         messageManager = this::updateMassage;
-        singleTaskTime=this::getSingleTaskTime;
+        singleTaskTime = this::getSingleTaskTime;
+        candidateListenerTask = new Task<Boolean>() {
+            @Override
+            protected Boolean call() {
+                Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
+                TaskFinishDataDTO currentData;
+                do {
+
+                    if (isCandidatePause) {
+                        try {
+                            synchronized (candidateThreadPauseLock) {
+                                if (isCandidatePause) {
+                                    System.out.println("Candidate Thread is paused");
+                                    candidateThreadPauseLock.wait();
+                                }
+                                System.out.println("Candidate Thread resuming...");
+                            }
+                        } catch (InterruptedException ignored) {
+                            return false;
+                        }
+                    }
+
+                    currentData = supplier.get();
+                    if (currentData != null)
+                        candidatesStatusController.addAllCandidate(currentData);
+                    else
+                        System.out.println("Finish Update all candidates!");
+
+
+                } while (currentData != null);
+                isCandidateUpdaterDone.set(true);
+                return true;
+            }
+        };
 
     }
 //
@@ -120,11 +155,12 @@ public class UIUpdater {
 
 
     }
-    public static boolean isCandidateLinterAlive()
+    public static boolean isCandidateListenerAlive()
     {
-        return candidateListener!=null&&candidateListener.isAlive();
+        return candidateListenerTask.isRunning();
     }
     private void resetAllUIData()
+
     {
         totalTimeDuration=0L;
         counterProperty.set(0);
@@ -147,7 +183,7 @@ public class UIUpdater {
         decryptionManager.setDataConsumer(messageManager,singleTaskTime);
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
         isDoneBruteForce.bind(Bindings.and(isDM_DoneAllTasks,isCandidateUpdaterDone));
-        candidateListener=new Thread(this::updateNewCandidate,"Candidate Updater");
+        candidateListener=new Thread(candidateListenerTask,"Candidate Updater");
         resetAllUIData();
 
     }
@@ -164,8 +200,8 @@ public class UIUpdater {
     }
     public void stopCandidateListener()
     {
-        if(candidateListener!=null)
-            candidateListener.interrupt();
+        if(candidateListenerTask.isRunning())
+            candidateListenerTask.cancel();
     }
 //    private void getStartTime(Long startTime)
 //    {
@@ -178,33 +214,33 @@ public class UIUpdater {
 
     private void updateNewCandidate()
     {
-        Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
-        TaskFinishDataDTO currentData;
-        do{
-
-            if(isCandidatePause) {
-                try {
-                    synchronized (candidateThreadPauseLock){
-                        if(isCandidatePause)
-                        {
-                            System.out.println("Candidate Thread is paused");
-                            candidateThreadPauseLock.wait();
-                        }
-                        System.out.println("Candidate Thread resuming...");
-                    }
-                } catch (InterruptedException ignored) {
-                }
-            }
-
-            currentData = supplier.get();
-            if(currentData!=null)
-                candidatesStatusController.addAllCandidate(currentData);
-            else
-                System.out.println("Finish Update all candidates!");
-
-
-        } while(currentData!=null);
-        isCandidateUpdaterDone.set(true);
+//        Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
+//        TaskFinishDataDTO currentData;
+//        do{
+//
+//            if(isCandidatePause) {
+//                try {
+//                    synchronized (candidateThreadPauseLock){
+//                        if(isCandidatePause)
+//                        {
+//                            System.out.println("Candidate Thread is paused");
+//                            candidateThreadPauseLock.wait();
+//                        }
+//                        System.out.println("Candidate Thread resuming...");
+//                    }
+//                } catch (InterruptedException ignored) {
+//                }
+//            }
+//
+//            currentData = supplier.get();
+//            if(currentData!=null)
+//                candidatesStatusController.addAllCandidate(currentData);
+//            else
+//                System.out.println("Finish Update all candidates!");
+//
+//
+//        } while(currentData!=null);
+//        isCandidateUpdaterDone.set(true);
     }
     private String convertNanoTimeToTimerDisplay(long nanoTime)
     {

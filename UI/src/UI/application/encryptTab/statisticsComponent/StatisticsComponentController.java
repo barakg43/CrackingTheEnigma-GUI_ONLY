@@ -67,9 +67,10 @@ public class StatisticsComponentController {
            // System.out.println(Thread.currentThread().getName()+ ": before load component");
             for (CodeFormatDTO code : statisticsDataHistory.keySet()) {
 //
-                GridPane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
-
-                flowPaneCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);
+                if(statisticsDataHistory.get(code).size()>0)
+                {
+                    GridPane statisticsCodeRecordsNode = codeStatisticsFactory.createNewCodeStatisticsNode(code, statisticsDataHistory.get(code));
+                    flowPaneCodeStaticsNode.getChildren().add(statisticsCodeRecordsNode);}
             }
             Platform.runLater(//update UI without blocking JAT
                     () -> {

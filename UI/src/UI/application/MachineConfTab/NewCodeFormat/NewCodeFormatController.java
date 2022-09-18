@@ -52,9 +52,9 @@ public class NewCodeFormatController {
     @FXML
     public void initialize() {
 
-        if (currCodeController != null) {
-            currCodeController.setCurrCodeController(this);
-        }
+//        if (currCodeController != null) {
+//            currCodeController.setCurrCodeController(this);
+//        }
 
     }
 

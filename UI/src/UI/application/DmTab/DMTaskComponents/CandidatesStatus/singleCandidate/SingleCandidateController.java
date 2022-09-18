@@ -19,6 +19,7 @@ public class SingleCandidateController {
     public void setData(CandidateDTO candidateDataDTO,String agentID){
             this.agentID.setText(agentID);
             outputString.setText(candidateDataDTO.getOutput());
+            codeFormatController.loadSmallFontStyle();
             codeFormatController.setSelectedCode(candidateDataDTO.getCodeConf());
     }
 

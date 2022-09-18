@@ -91,8 +91,8 @@ public class MachineConfigurationController {
 
         if (CurrentCodeComponentController != null && CurrentMachineCodeController!=null && SelectedMachineCodeController!=null) {
             CurrentCodeComponentController.SetMachineConfController(this);
-            SelectedMachineCodeController.SetMachineConfController(this);
-            CurrentMachineCodeController.SetMachineConfController(this);
+//            SelectedMachineCodeController.SetMachineConfController(this);
+//            CurrentMachineCodeController.SetMachineConfController(this);
 
         }
 

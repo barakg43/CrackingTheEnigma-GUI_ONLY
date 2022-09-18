@@ -22,5 +22,11 @@
     -fx-fill: #ff9900;
     -fx-font-size: 20;
     -fx-font-weight: BOLD;
+
+}
+.Label-Style{
+
+    -fx-font-size: 13;
+
 }
 

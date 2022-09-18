@@ -175,7 +175,7 @@ public class DMoperationalController {
     public static void closeWindowEvent(WindowEvent event) {
         System.out.println("Window close request ...");
 
-        if(UIUpdater.isCandidateLinterAlive()) {  // if the dataset has changed, alert the user with a popup
+        if(UIUpdater.isCandidateListenerAlive()) {  // if the dataset has changed, alert the user with a popup
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.getButtonTypes().remove(ButtonType.OK);
             alert.getButtonTypes().add(ButtonType.CANCEL);
