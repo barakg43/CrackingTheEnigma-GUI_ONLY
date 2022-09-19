@@ -1,6 +1,7 @@
 package UI.TEST_GUI;
 
 
+import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
@@ -46,7 +47,7 @@ public class HelloFxmlMain2 extends Application{
 
         FXMLLoader fxmlLoader = new FXMLLoader();
 
-        URL url = getClass().getClassLoader().getResource("UI/application/MachineConfTab/hboxRotorPosition.fxml");
+        URL url = getClass().getClassLoader().getResource("UI/application/DmTab/DMencrypt/DMoperational/DMoperational.fxml");
         System.out.println("before 1");
         fxmlLoader.setLocation(url);
         System.out.println("before 2");
@@ -54,7 +55,7 @@ public class HelloFxmlMain2 extends Application{
         System.out.println("before 2.5:"+url);
         Parent load = fxmlLoader.load(url.openStream());
         System.out.println("before 3");
-//        TableStatisticRecordController controller= fxmlLoader.getController();
+        DMoperationalController  controller= fxmlLoader.getController();
 //        CodeConfigurationRotorPositionController controller= fxmlLoader.getController();
         System.out.println("before 4");
 //        List<StatisticRecordDTO> statisticRecordDTOList=new ArrayList<>();

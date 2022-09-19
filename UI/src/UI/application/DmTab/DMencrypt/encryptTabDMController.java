@@ -99,6 +99,7 @@ public class encryptTabDMController {
         //dictionaryListView.getSelectionModel().clearSelection();
         clearListView();
         createDictionaryList();
+        operationalComponentController.stopBFButton(new ActionEvent());
         simpleCodeComponentController.clearCurrentCodeView();
         searchBox.clear();
         codeEncryptComponentController.resetAllData();

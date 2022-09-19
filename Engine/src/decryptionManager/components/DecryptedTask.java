@@ -73,7 +73,7 @@ public class DecryptedTask implements Runnable {
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
         totalTimeTasks.set(totalTimeTasks.get()+totalTime);
 
-      //  Thread.sleep(1000); //TODO: thread pool delayed
+        Thread.sleep(10);//to
             currentTaskTimeConsumer.accept(totalTime);
     } catch (InterruptedException ignored) {
 

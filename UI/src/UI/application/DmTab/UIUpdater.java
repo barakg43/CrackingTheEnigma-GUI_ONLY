@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 
 public class UIUpdater {
-
+    private final long SLEEP_TIME = 10;
     private Thread candidateListener=null;
     private static Task<Boolean> candidateListenerTask=null;
     private final DecryptionManager decryptionManager;
@@ -100,7 +100,10 @@ private AtomicLong threadCounter;
 
                     currentData = supplier.get();
                     if (currentData != null)
+                    {
+                        sleepForAWhile(SLEEP_TIME);
                         candidatesStatusController.addAllCandidate(currentData);
+                    }
                     else
                         System.out.println("Finish Update all candidates!");
 
@@ -169,7 +172,15 @@ private AtomicLong threadCounter;
         candidatesStatusController.clearAllTiles();
     }
 
+    public static void sleepForAWhile(long sleepTime) {
+        if (sleepTime != 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ignored) {
 
+            }
+        }
+    }
 
     public void setupCandidateListener() {
         totalTaskAmount= decryptionManager.getTotalTasksAmount();
@@ -215,6 +226,7 @@ private AtomicLong threadCounter;
         totalTimeDuration+=time;
         if (tasksDoneCounter.getValue() > 0) {
             float millisSecTime=Duration.ofNanos(totalTimeDuration / tasksDoneCounter.getValue()).toMillis();
+            sleepForAWhile(SLEEP_TIME);
             Platform.runLater(() -> {
             progressDataDTO.getAverageTaskTimeProperty()
                     .set(String.format("%,d Milliseconds",(int)millisSecTime));

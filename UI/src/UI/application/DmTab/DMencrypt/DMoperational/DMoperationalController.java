@@ -42,8 +42,8 @@ public class DMoperationalController {
 
     @FXML
     private Button startButton;
-    static SimpleBooleanProperty startButtonDisabled;
-    private SimpleBooleanProperty pauseButtonDisabled;
+    private SimpleBooleanProperty startButtonDisabled;
+
     public void setDecryptionManager(DecryptionManager decryptionManager) {
         //  this.decryptionManager = decryptionManager;
     }
@@ -114,41 +114,38 @@ public class DMoperationalController {
         }
 
         startButtonDisabled.setValue(true);
-        decryptionManager.setSetupConfiguration(levelCombobox.getValue(),
+     decryptionManager.setSetupConfiguration(levelCombobox.getValue(),
                 (int) agentSize.getValue(),
                 getAgentAmountFromSpinner());
-        // DMcontroller.addCandidates();
+
 
         uiUpdater.setupCandidateListener();
         decryptionManager.startBruteForce(outputString.getValue());
-       // pauseButtonDisabled.set(true);
+        pauseButton.setDisable(false);
+
 
 
     }
     @FXML
-    void stopBFButton(ActionEvent event) {
+    public void stopBFButton(ActionEvent event) {
         startButtonDisabled.setValue(false);
+        pauseButton.setDisable(true);
         resumeButton.setDisable(true);
-        pauseButtonDisabled.set(true);
-        decryptionManager.stop();
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        if(decryptionManager!=null)
+        {  decryptionManager.stop();
         uiUpdater.resetData();
-        uiUpdater.stopCandidateListener();
+        uiUpdater.stopCandidateListener();}
 
     }
     @FXML
-    void pauseBFButton(ActionEvent event) {
+    public void pauseBFButton(ActionEvent event) {
+        pauseButton.setDisable(true);
         resumeButton.setDisable(false);
-        pauseButtonDisabled.setValue(true);
         decryptionManager.pause();
         uiUpdater.pauseCandidateListener();
     }
     public void resumeButtonOnAction(ActionEvent actionEvent) {
-        pauseButtonDisabled.setValue(false);
+        pauseButton.setDisable(false);
         resumeButton.setDisable(true);
         decryptionManager.resume();
         uiUpdater.resumeCandidateListener();
@@ -171,12 +168,19 @@ public class DMoperationalController {
         agentSize.valueProperty().addListener(
                 (observable, oldValue, newValue) -> sliderValueLabel.setText( newValue.intValue()+" agents"));
         startButtonDisabled =new SimpleBooleanProperty(true);
-        pauseButtonDisabled=new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());
-        pauseButton.disableProperty().bind(startButton.disabledProperty().not());
+        pauseButton.setDisable(true);
+        resumeButton.setDisable(true);
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
-        //resumeButton.disableProperty().bind(Bindings.and(pauseButton.disabledProperty().not(),stopButton.disabledProperty()));
+        sliderValueLabel.disableProperty().bind(startButton.disabledProperty());
+        agentSize.disableProperty().bind(startButton.disabledProperty());
+        taskSizeTextSpinner.disableProperty().bind(startButton.disabledProperty());
         startButtonDisabled.setValue(false);
+
+
+
+
+        startButton.disableProperty().bind(startButtonDisabled);
     }
 
     public static void closeWindowEvent(WindowEvent event) {
