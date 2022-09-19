@@ -18,7 +18,7 @@
                   <Label id="First-Load-File-Label" fx:id="FirstLoadFileLabel" layoutX="14.0" layoutY="98.0" text="You need first load the machine from file" />
                   <fx:include fx:id="FilePathComponent" source="FIlePathComponent/filePathFX.fxml" />
                   <Label layoutX="676.0" layoutY="88.0" text="Select Skin:" />
-                  <ComboBox fx:id="selectSkinComboBox" layoutX="770.0" layoutY="83.0" onAction="#skinChanged" prefHeight="24.0" prefWidth="150.0" />
+                  <ComboBox fx:id="selectSkinComboBox" layoutX="774.0" layoutY="83.0" onAction="#skinChanged" prefHeight="24.0" prefWidth="150.0" />
                </children>
             </Pane>
             <TabPane minHeight="825.0" minWidth="1017.0" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="1.7976093134862315E308">
