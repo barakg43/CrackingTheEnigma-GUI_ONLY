@@ -58,7 +58,7 @@ public class DecryptionManager {
         dictionary=engine.getDictionary();
         machineData=engine.getMachineData();
         totalTaskAmount=0;
-        saveEngineCopy();
+
         codeCalculatorFactory =new CodeCalculatorFactory(engine.getMachineData().getAlphabetString(),
                 machineData.getNumberOfRotorsInUse());
 
@@ -75,7 +75,7 @@ public class DecryptionManager {
         DecryptionManager.currentTaskTimeConsumer =currentTaskTimeConsumer;
     }
 
-    private void saveEngineCopy()
+    public void saveEngineCopy()
     {
 
         try {

@@ -3,8 +3,9 @@ package UI.application.encryptTab.encryptComponent;
 import UI.application.encryptTab.EncryptTabController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import UI.application.encryptTab.encryptComponent.manualEncrypt.ManualEncryptController;
-import enigmaEngine.Encryptor;
+import UI.application.encryptTab.keyboardComponent.KeyboardAnimationController;
 import enigmaEngine.Engine;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,6 +44,7 @@ public class EncryptComponentController {
         encryptor.resetCodePosition();
         automaticComponentController.clearTextFieldInput(actionEvent);
         parentComponentTab.bindResetButtonToCode();
+
     }
 
     public void setParentComponentTab(EncryptTabController parentComponentTab) {
@@ -54,6 +56,16 @@ public class EncryptComponentController {
         this.encryptor = encryptor;
         automaticComponentController.setEncryptor(encryptor);
         manualComponentController.setEncryptor(encryptor);
+
+    }
+
+    public BooleanProperty getManualSelectedProperty() {
+        return manualToggle.selectedProperty();
+    }
+    public void setKeyboardAnimationControllerInManualComponent(KeyboardAnimationController keyboardAnimationController,
+                                                                BooleanProperty isKeyboardAnimationEnable)
+    {
+    manualComponentController.setKeyboardAnimation(keyboardAnimationController,isKeyboardAnimationEnable);
 
     }
     public void doneProcessData()

@@ -50,6 +50,7 @@ public class AutomaticEncryptDMController {
        // parentComponentTab.doneProcessData();
         parentComponentTab.getCodeComponentController().setSelectedCode(parentComponentTab.getEnigmaEngine().getCodeFormat(false));
         parentComponentTab.getMainController().bindCurrentBFCode();
+        parentComponentTab.getDecryptionManager().saveEngineCopy();
     }
     @FXML
     private void initialize() {
