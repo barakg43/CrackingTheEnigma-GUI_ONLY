@@ -1,3 +1,13 @@
+#singleCandidate-VBox{
+    -fx-padding: 5px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+    -fx-border-width: 10px;
+    -fx-border-color: #b77526;
+}
+
+
+
 .button{
     -fx-text-fill: rgb(255, 255, 255);
     -fx-font-weight: BOLD;
