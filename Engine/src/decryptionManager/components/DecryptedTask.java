@@ -1,5 +1,6 @@
 package decryptionManager.components;
 
+import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
@@ -60,9 +61,9 @@ public class DecryptedTask implements Runnable {
             if(dictionary.checkIfAllLetterInDic(processedOutput))
                     {
                         possibleCandidates.add(new CandidateDTO(copyEngine.getCodeFormat(true),processedOutput));
-                        System.out.println(currentCode);
-
-                        System.out.println("Output: "+ processedOutput+"\n********************************************" );
+//                        System.out.println(currentCode);
+//
+//                        System.out.println("Output: "+ processedOutput+"\n********************************************" );
 
                     }
                     currentCode= codeCalculatorFactory.getNextCode(currentCode);
@@ -73,7 +74,7 @@ public class DecryptedTask implements Runnable {
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
         totalTimeTasks.set(totalTimeTasks.get()+totalTime);
 
-        Thread.sleep(10);//to
+       // Thread.sleep(DecryptionManager.UI_SLEEP_TIME);//to
             currentTaskTimeConsumer.accept(totalTime);
     } catch (InterruptedException ignored) {
 

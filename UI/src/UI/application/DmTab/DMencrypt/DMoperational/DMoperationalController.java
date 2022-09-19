@@ -172,7 +172,7 @@ public class DMoperationalController {
         pauseButton.setDisable(true);
         resumeButton.setDisable(true);
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
-        sliderValueLabel.disableProperty().bind(startButton.disabledProperty());
+        levelCombobox.disableProperty().bind(startButton.disabledProperty());
         agentSize.disableProperty().bind(startButton.disabledProperty());
         taskSizeTextSpinner.disableProperty().bind(startButton.disabledProperty());
         startButtonDisabled.setValue(false);
