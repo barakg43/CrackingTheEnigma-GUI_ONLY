@@ -143,6 +143,7 @@ public class encryptTabDMController {
     {
         simpleCodeComponentController.setSelectedCode(DmController.getEnigmaEngine().getCodeFormat(false));
         DmController.getMainAppController().bindCurrentBFCode();
+
     }
 
 

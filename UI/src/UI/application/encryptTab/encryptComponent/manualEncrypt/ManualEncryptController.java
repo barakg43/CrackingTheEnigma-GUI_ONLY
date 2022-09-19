@@ -1,7 +1,9 @@
 package UI.application.encryptTab.encryptComponent.manualEncrypt;
 
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.encryptTab.keyboardComponent.KeyboardAnimationController;
 import enigmaEngine.Encryptor;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +21,15 @@ public class ManualEncryptController {
         private StringProperty inputProperty;
         private Encryptor encryptor;
         private EncryptComponentController encryptComponentController;
-        public void setEncryptComponentController(EncryptComponentController encryptComponentController) {
+        KeyboardAnimationController keyboardAnimation;
+        BooleanProperty isKeyboardAnimationEnable;
+    public void setKeyboardAnimation(KeyboardAnimationController keyboardAnimation, BooleanProperty isKeyboardAnimationEnable) {
+        this.keyboardAnimation = keyboardAnimation;
+        this.isKeyboardAnimationEnable=isKeyboardAnimationEnable;
+        keyboardAnimation.setManualEncryptController(this);
+    }
+
+    public void setEncryptComponentController(EncryptComponentController encryptComponentController) {
                 this.encryptComponentController = encryptComponentController;
         }
         @FXML
@@ -42,13 +52,18 @@ public class ManualEncryptController {
         textInputField.clear();
 
     }
+
         @FXML
-        private void processSingleCharacter(KeyEvent event) {
+        public void processSingleCharacter(KeyEvent event) {
              //  System.out.println("pressed key:"+event.getCharacter()+" length: "+ event.getCharacter().length());
+                if(isKeyboardAnimationEnable.getValue())
+                    keyboardAnimation.playAnimationOnKeyboard(Character.toUpperCase(event.getCharacter().charAt(0)),true);
              try {
                      char outputProcessChar=encryptor.processDataInput(event.getCharacter().charAt(0));
                      inputProperty.setValue(inputProperty.getValue()+event.getCharacter().toUpperCase());
                      outputProperty.setValue(outputProperty.getValue()+outputProcessChar);
+                 if(isKeyboardAnimationEnable.getValue())
+                    keyboardAnimation.playAnimationOnKeyboard(Character.toUpperCase(outputProcessChar),false);
                  }
              catch (Exception ex)
              {

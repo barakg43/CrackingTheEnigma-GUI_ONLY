@@ -2,21 +2,19 @@ package UI.application.encryptTab;
 
 import UI.application.AllMachineController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
+import UI.application.encryptTab.keyboardComponent.KeyboardAnimationController;
 import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
-import decryptionManager.DecryptionManager;
-import decryptionManager.components.AtomicCounter;
 import dtoObjects.CodeFormatDTO;
-import dtoObjects.DmDTO.BruteForceLevel;
-import dtoObjects.DmDTO.CandidateDTO;
 import enigmaEngine.Engine;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.transformation.FilteredList;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -25,21 +23,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.concurrent.atomic.AtomicLong;
-
-
 public class EncryptTabController {
 
     @FXML public BorderPane mainPaneTab;
     public SplitPane encryptSplitPane;
     public ScrollPane currentCodeScrollPane;
+    public CheckBox isActiveKeyboardAnimationCheckbox;
 
     //Current Machine Configuration
     @FXML
     private HBox codeComponent;
-
+    @FXML
+    private SplitPane keyboardComponent;
+    @FXML
+    private KeyboardAnimationController keyboardComponentController;
     @FXML
     private SimpleCodeController codeComponentController;
     //Statistics Component
@@ -56,7 +53,7 @@ public class EncryptTabController {
 
     private Engine enigmaEngine;
     private AllMachineController mainAppController;
-
+    private BooleanProperty isKeyboardAnimationEnable;
 
     SimpleLongProperty counterProperty;
 
@@ -104,6 +101,7 @@ public class EncryptTabController {
     public void setEnigmaEngine(Engine enigmaEngine) {
         this.enigmaEngine = enigmaEngine;
         encryptComponentController.setEncryptor(enigmaEngine);
+        keyboardComponentController.createInputOutputKeyboard(enigmaEngine.getMachineData().getAlphabetString());
 
     }
     public void doneProcessData()
@@ -114,9 +112,18 @@ public class EncryptTabController {
     }
     @FXML
     private void initialize() {
-
+        isKeyboardAnimationEnable=new SimpleBooleanProperty(false);
         encryptComponentController.setParentComponentTab(this);
         counterProperty=new SimpleLongProperty(0);
+        isActiveKeyboardAnimationCheckbox.disableProperty().bind(encryptComponentController.getManualSelectedProperty().not());
+        isKeyboardAnimationEnable.bind(Bindings.and(isActiveKeyboardAnimationCheckbox.selectedProperty()
+                ,encryptComponentController.getManualSelectedProperty()));
+
+
+        isKeyboardAnimationEnable.addListener((observable, oldValue, newValue) -> System.out.println(newValue));
+        keyboardComponentController.bindComponentToCheckbox(isKeyboardAnimationEnable);
+        encryptComponentController.setKeyboardAnimationControllerInManualComponent(keyboardComponentController,isKeyboardAnimationEnable);
+
     }
 
     public SimpleCodeController bindCodeComponentController()
