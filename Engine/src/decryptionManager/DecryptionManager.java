@@ -32,7 +32,7 @@ public class DecryptionManager {
     private  int agentsAmount;
     private final CodeCalculatorFactory codeCalculatorFactory;
     private final MachineDataDTO machineData;
-    private final BlockingQueue<Runnable> taskQueue;
+    private BlockingQueue<Runnable> taskQueue;
     private BlockingQueue<TaskFinishDataDTO> successfulDecryption;
      private AgentsThreadPool agents;
     private byte[] engineCopyBytes;
@@ -52,7 +52,7 @@ public class DecryptionManager {
     private Runnable startListener;
     public static final Object pauseLock=new Object();
     public DecryptionManager(Engine engine) {
-        taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+
 
         this.engine = engine;
         dictionary=engine.getDictionary();
@@ -103,6 +103,7 @@ public class DecryptionManager {
     if(level==null)
         throw new RuntimeException("Brute force level must be selected");
     successfulDecryption =new LinkedBlockingDeque<>();
+    taskQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
     agents=new AgentsThreadPool(agentAmount,agentAmount,20, TimeUnit.SECONDS,
             taskQueue,new AgentThreadFactory(),taskDoneAmount);
     }
