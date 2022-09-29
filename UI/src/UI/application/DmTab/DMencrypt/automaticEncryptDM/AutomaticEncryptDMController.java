@@ -38,6 +38,8 @@ public class AutomaticEncryptDMController {
     public void setEncryptor(Encryptor encryptor) {
         this.encryptor = encryptor;
         encryptDataController.setEncryptor(encryptor);
+        alphabetString.setText(parentComponentTab.getEnigmaEngine().getMachineData().getAlphabetString());
+
 
     }
     public void clearOutputInputLabels(){
@@ -66,6 +68,7 @@ public class AutomaticEncryptDMController {
 
     public void setParentComponentTab(encryptTabDMController parentComponentTab) {
         this.parentComponentTab = parentComponentTab;
+
     }
 
     public void resetCodeToInitialState(ActionEvent actionEvent) {

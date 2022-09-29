@@ -30,9 +30,9 @@ public class TableStatisticRecordController {
     StatisticRecordDTO lastInputRecord;
 
     public void addRecordsToStatisticTable(List<StatisticRecordDTO> statisticRecordList) {
-        System.out.println(Thread.currentThread().getName()+ ": addRecordsToStatisticTable");
+        //System.out.println(Thread.currentThread().getName()+ ": addRecordsToStatisticTable");
         if (statisticRecordList == null) {
-            System.out.println("statisticRecordList is empty!");
+            //System.out.println("statisticRecordList is empty!");
             return;
         }
         statisticRecordListObs.setAll(statisticRecordList);

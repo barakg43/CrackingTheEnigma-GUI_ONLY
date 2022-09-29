@@ -79,7 +79,6 @@ private AtomicLong threadCounter;
         candidateListenerTask = new Task<Boolean>() {
             @Override
             protected Boolean call() {
-                System.out.println("Start Candidate Thread!");
                 Supplier<TaskFinishDataDTO> supplier = decryptionManager.getFinishQueueSupplier();
                 TaskFinishDataDTO currentData;
                 do {
@@ -88,10 +87,8 @@ private AtomicLong threadCounter;
                         try {
                             synchronized (candidateThreadPauseLock) {
                                 if (isCandidatePause) {
-                                    System.out.println("Candidate Thread is paused");
                                     candidateThreadPauseLock.wait();
                                 }
-                                System.out.println("Candidate Thread resuming...");
                             }
                         } catch (InterruptedException ignored) {
                             return false;
@@ -104,8 +101,6 @@ private AtomicLong threadCounter;
                         sleepForAWhile(SLEEP_TIME);
                         candidatesStatusController.addAllCandidate(currentData);
                     }
-                    else
-                        System.out.println("Finish Update all candidates!");
 
 
                 } while (currentData != null);

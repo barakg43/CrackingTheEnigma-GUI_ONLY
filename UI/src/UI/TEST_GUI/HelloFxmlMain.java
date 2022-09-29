@@ -54,8 +54,7 @@ public class HelloFxmlMain extends Application{
 long time=619200000000L;
         System.out.println("time is "+Duration.ofNanos(1000000000L));
 
-        System.out.println(TimeUnit.NANOSECONDS.toSeconds(1000000000000L));
-
+      //  System.out.println(TimeUnit.NANOSECONDS.toSeconds(1000000000000L));
 
     }
 

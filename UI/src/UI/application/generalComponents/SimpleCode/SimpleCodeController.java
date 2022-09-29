@@ -2,6 +2,7 @@ package UI.application.generalComponents.SimpleCode;
 
 
 
+import UI.application.MachineConfTab.MachineConfigurationController;
 import UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;
@@ -74,7 +75,7 @@ public class SimpleCodeController {
     private String isSmallFont;
     private NewCodeFormatController currentCodeController;
     private List<Label> labelList;
-//    private MachineConfigurationController machineCodeController;
+
     public void setCurrCodeController(NewCodeFormatController currCodeController)
     {
         currentCodeController=currCodeController;
@@ -197,12 +198,6 @@ public class SimpleCodeController {
    {
        return currentCode;
    }
-
-//    public void SetMachineConfController(MachineConfigurationController machineController)
-//    {
-//        machineCodeController=machineController;
-//    }
-
 
 
     public void clearCurrentCodeView()

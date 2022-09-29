@@ -131,7 +131,7 @@ public class AllMachineController {
 
     public void bindCurrentCode()
     {
-        machineConfComponentController.getCurrentMachineCodeController().setSelectedCode(encryptionTabComponentController.bindCodeComponentController().getCurrentCode());
+        machineConfComponentController.getMachineDetailsController().getCurrentMachineCodeController().setSelectedCode(encryptionTabComponentController.bindCodeComponentController().getCurrentCode());
         machineConfComponentController.updateCurrentCode();
         DMTabComponentController.setSimpleCurrCode(encryptionTabComponentController.getCodeComponentController().getCurrentCode());
     }
@@ -139,7 +139,7 @@ public class AllMachineController {
 
     public void bindCurrentBFCode()
     {
-        machineConfComponentController.getCurrentMachineCodeController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());
+        machineConfComponentController.getMachineDetailsController().getCurrentMachineCodeController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());
         machineConfComponentController.updateCurrentCode();
         encryptionTabComponentController.doneProcessData();
         encryptionTabComponentController.getCodeComponentController().setSelectedCode(DMTabComponentController.bindCodeComponentController().getCurrentCode());

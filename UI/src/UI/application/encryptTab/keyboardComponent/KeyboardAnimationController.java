@@ -35,8 +35,8 @@ public class KeyboardAnimationController {
     private Map<Character, StackPane> inputKeyboardMap;
     private Map<Character, StackPane> outputKeyboardMap;
     ManualEncryptController manualEncryptController;
-    final String inputColor="green";
-    final String outputColor="blue";
+    final String inputColor="#7eb97e";
+    final String outputColor="#9595ef";
     public void createInputOutputKeyboard(String alphabet) {
         resetKeyboard();
         inputKeyboardMap = new HashMap<>(alphabet.length());

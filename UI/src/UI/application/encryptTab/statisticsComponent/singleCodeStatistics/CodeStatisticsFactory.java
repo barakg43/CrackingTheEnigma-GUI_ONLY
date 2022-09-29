@@ -22,7 +22,6 @@ public class CodeStatisticsFactory {
     }
 
     public GridPane createNewCodeStatisticsNode(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList) {
-        System.out.println(Thread.currentThread().getName()+ ": loading StatisticRecord FXML");
         GridPane loadedStatisticsNode;
         FXMLLoader fxmlLoader  = new FXMLLoader();
         try {

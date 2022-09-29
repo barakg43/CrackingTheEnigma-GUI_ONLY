@@ -61,8 +61,6 @@ public class FilePathController {
                 mainAppController.getFirstLoadFileLabel().setText("File loaded successfully.");
                 mainAppController.setEncrypteTab();
 
-                System.out.println("after set5");
-
                 mainAppController.setDMTab();
 
 

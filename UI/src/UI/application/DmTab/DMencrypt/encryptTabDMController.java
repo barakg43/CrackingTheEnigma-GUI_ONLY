@@ -119,7 +119,7 @@ public class encryptTabDMController {
 
                 builder.append(selectedItems.get(selectedItems.size()-1));
 
-                System.out.println(builder.toString());
+            //    System.out.println(builder.toString());
 
                 codeEncryptComponentController.getInputString().setText(builder.toString());
 

@@ -24,7 +24,6 @@ public class SingleCodeStatisticsViewController {
 
     public void createCodeStatisticsView(CodeFormatDTO codeFormatDTO, List<StatisticRecordDTO> statisticRecordDTOList)
     {
-        System.out.println(Thread.currentThread().getName()+ ": createCodeStatisticsView");
         codeLayoutController.loadSmallFontStyle();
         codeLayoutController.setSelectedCode(codeFormatDTO);
         tableRecordLayoutController.addRecordsToStatisticTable(statisticRecordDTOList);
