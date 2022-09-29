@@ -1,6 +1,7 @@
 package UI.application.DmTab.DMencrypt.automaticEncryptDM;
 
 import UI.application.DmTab.DMencrypt.encryptTabDMController;
+import UI.application.Uboat.ContestTab.EncryptController;
 import UI.application.encryptTab.encryptComponent.automaticEncrypt.AutomaticEncryptController;
 import decryptionManager.components.Dictionary;
 import enigmaEngine.Encryptor;
@@ -25,6 +26,8 @@ public class AutomaticEncryptDMController {
     private Encryptor encryptor;
     @FXML private AutomaticEncryptController encryptDataController;
     private encryptTabDMController parentComponentTab;
+
+    private EncryptController encryptController;
 
     public void bindParentToOutputString(SimpleStringProperty outputProperty)
     {
@@ -60,12 +63,15 @@ public class AutomaticEncryptDMController {
         {
             encryptDataController.setAutomaticEncrypteDMController(this);
             encryptDataController.bindInputOutputPropertyFromParent(inputString.textProperty(),outputString.textProperty());
-
         }
 
 
     }
 
+    public void setParentComponentTab(EncryptController parentComponentTab) {
+        this.encryptController = parentComponentTab;
+
+    }
     public void setParentComponentTab(encryptTabDMController parentComponentTab) {
         this.parentComponentTab = parentComponentTab;
 

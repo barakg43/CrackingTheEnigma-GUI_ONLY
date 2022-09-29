@@ -26,8 +26,8 @@ public class DMoperationalController {
     public Spinner<Integer> taskSizeTextSpinner;
     public Button resumeButton;
 
-    @FXML
-    private Slider agentSize;
+   // @FXML
+   // private Slider agentSize;
 
     @FXML
     private ComboBox<BruteForceLevel> levelCombobox;
@@ -70,12 +70,12 @@ public class DMoperationalController {
         this.enigmaEngine = enigmaEngine;
         decryptionManager=new DecryptionManager(enigmaEngine);
 
-        agentSize.setMin(2);
-        agentSize.setMax(enigmaEngine.getAgentsAmount());
-        agentSize.setValue(2);
-        agentSize.setBlockIncrement(1);
-        agentSize.setMajorTickUnit(Math.round(enigmaEngine.getAgentsAmount()/5f));
-        agentSize.setMinorTickCount(Math.round(enigmaEngine.getAgentsAmount()/10f));
+//        agentSize.setMin(2);
+//        agentSize.setMax(enigmaEngine.getAgentsAmount());
+//        agentSize.setValue(2);
+//        agentSize.setBlockIncrement(1);
+//        agentSize.setMajorTickUnit(Math.round(enigmaEngine.getAgentsAmount()/5f));
+//        agentSize.setMinorTickCount(Math.round(enigmaEngine.getAgentsAmount()/10f));
     }
 
 
@@ -115,7 +115,7 @@ public class DMoperationalController {
 
         startButtonDisabled.setValue(true);
      decryptionManager.setSetupConfiguration(levelCombobox.getValue(),
-                (int) agentSize.getValue(),
+                3,  // TODO
                 getAgentAmountFromSpinner());
 
 
@@ -162,18 +162,18 @@ public class DMoperationalController {
         taskSizeTextSpinner.setValueFactory(integerSpinnerValueFactory);
         taskSizeTextSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
         taskSizeTextSpinner.editorProperty().get().setAlignment(Pos.CENTER);
-        agentSize.setShowTickLabels(true);
-        agentSize.setSnapToTicks(true);
+//        agentSize.setShowTickLabels(true);
+//        agentSize.setSnapToTicks(true);
         outputString=new SimpleStringProperty();
-        agentSize.valueProperty().addListener(
-                (observable, oldValue, newValue) -> sliderValueLabel.setText( newValue.intValue()+" agents"));
+//        agentSize.valueProperty().addListener(
+//                (observable, oldValue, newValue) -> sliderValueLabel.setText( newValue.intValue()+" agents"));
         startButtonDisabled =new SimpleBooleanProperty(true);
         levelCombobox.getItems().addAll(BruteForceLevel.values());
         pauseButton.setDisable(true);
         resumeButton.setDisable(true);
         stopButton.disableProperty().bind(startButton.disabledProperty().not());
         levelCombobox.disableProperty().bind(startButton.disabledProperty());
-        agentSize.disableProperty().bind(startButton.disabledProperty());
+        //agentSize.disableProperty().bind(startButton.disabledProperty());
         taskSizeTextSpinner.disableProperty().bind(startButton.disabledProperty());
         startButtonDisabled.setValue(false);
 

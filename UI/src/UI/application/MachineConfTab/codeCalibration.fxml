@@ -13,9 +13,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="selectedCodeConfiguration" fitToHeight="true" fitToWidth="true" maxHeight="540.0" minWidth="600.0" prefHeight="518.0" prefWidth="506.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.MachineConfTab.CodeCalibrationController">
-   <content>
-      <VBox>
+
+<AnchorPane prefHeight="535.0" prefWidth="507.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.MachineConfTab.CodeCalibrationController">
+   <children>
+      <VBox prefHeight="560.0" prefWidth="476.0">
          <padding>
             <Insets top="10.0" />
          </padding>
@@ -27,7 +28,7 @@
                   <Button mnemonicParsing="false" onAction="#ResetAllFieldsButtonActionListener" prefHeight="35.0" prefWidth="150.0" styleClass="text-button" text="Reset configuration" />
                </children>
             </HBox>
-            <TabPane fx:id="codeConfTabPane" maxWidth="1.7976931348623157E308" minWidth="600.0" prefHeight="500.0" prefWidth="502.0">
+            <TabPane fx:id="codeConfTabPane" maxWidth="1.7976931348623157E308" minWidth="550.0">
                <tabs>
                   <Tab closable="false" text="Select rotors and positions">
                      <content>
@@ -96,5 +97,5 @@
             </TabPane>
          </children>
       </VBox>
-   </content>
-</ScrollPane>
+   </children>
+</AnchorPane>

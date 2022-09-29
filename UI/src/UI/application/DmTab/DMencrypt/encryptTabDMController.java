@@ -33,7 +33,6 @@ public class encryptTabDMController {
 
     public TextField searchBox;
 
-    public Button searchButton;
     public Button deleteButton;
     public ListView dictionaryListView;
     public ScrollPane codeEncryptComponent;
@@ -56,7 +55,7 @@ public class encryptTabDMController {
 //    private Encryptor encryptor;
    private DMcontroller DmController;
     private UIUpdater uiUpdater;
-    private final ObservableList<String> dictionaryWords = FXCollections.observableArrayList();
+
     private Engine enigmaEngine;
     private SimpleStringProperty outputString;
     public DecryptionManager getDecryptionManager() {
