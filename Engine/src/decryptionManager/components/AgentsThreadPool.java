@@ -9,22 +9,19 @@ import java.util.concurrent.atomic.AtomicLong;
 import static decryptionManager.DecryptionManager.doneBruteForceTasks;
 
 public class AgentsThreadPool extends ThreadPoolExecutor {
-    public static AtomicLong taskNumber;
+
     AtomicCounter totalDoneCounter;
-    public static AtomicLong totalTimeTasks;
     private double totalTaskAmount;
     public AgentsThreadPool(int corePoolSize, int maximumPoolSize,
                             long keepAliveTime, TimeUnit unit,
                             BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,AtomicCounter totalDoneCounter) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,threadFactory);
-        taskNumber=new AtomicLong(0);
+
         this.totalDoneCounter=totalDoneCounter;
-        totalTimeTasks=new AtomicLong(0);
+
     }
 
-    public long getTotalTimeTasks() {
-        return totalTimeTasks.get();
-    }
+
     public void setTotalTaskAmount(double taskAmount)
     {
         totalTaskAmount=taskAmount;

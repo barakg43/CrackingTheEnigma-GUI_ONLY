@@ -1,6 +1,5 @@
 package decryptionManager.components;
 
-import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.DmDTO.CandidateDTO;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import static decryptionManager.DecryptionManager.*;
-import static decryptionManager.components.AgentsThreadPool.totalTimeTasks;
 
 
 public class DecryptedTask implements Runnable {
@@ -21,10 +19,10 @@ public class DecryptedTask implements Runnable {
 
     private final Engine copyEngine;
     private final double taskSize;
-    private Dictionary dictionary;
-    private List<CandidateDTO> possibleCandidates;
+    private final Dictionary dictionary;
+    private final List<CandidateDTO> possibleCandidates;
     private final String cipheredString;
-    private CodeCalculatorFactory codeCalculatorFactory;
+    private final CodeCalculatorFactory codeCalculatorFactory;
     BlockingQueue<TaskFinishDataDTO> successfulDecryption;
     public DecryptedTask(CodeFormatDTO initialCode, String cipheredString,CodeCalculatorFactory codeCalculatorFactory,
                          Engine copyEngine, double taskSize, BlockingQueue<TaskFinishDataDTO> successfulDecryption,
@@ -37,8 +35,6 @@ public class DecryptedTask implements Runnable {
         this.successfulDecryption=successfulDecryption;
         this.codeCalculatorFactory=codeCalculatorFactory;
         possibleCandidates=new ArrayList<>();
-
-        codeCalculatorFactory=new CodeCalculatorFactory(copyEngine.getMachineData().getAlphabetString(),copyEngine.getMachineData().getNumberOfRotorsInUse());
 
     }
 
@@ -72,7 +68,7 @@ public class DecryptedTask implements Runnable {
         try {
             if(possibleCandidates.size()>0)
                  successfulDecryption.put(new TaskFinishDataDTO(possibleCandidates,Thread.currentThread().getName(),totalTime));
-        totalTimeTasks.set(totalTimeTasks.get()+totalTime);
+
 
        // Thread.sleep(DecryptionManager.UI_SLEEP_TIME);//to
             currentTaskTimeConsumer.accept(totalTime);

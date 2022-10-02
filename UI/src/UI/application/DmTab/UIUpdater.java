@@ -6,17 +6,13 @@ import decryptionManager.components.AtomicCounter;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 
-
-
 import java.time.Duration;
-
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

@@ -3,10 +3,8 @@ package UI.application.DmTab;
 import UI.application.AllMachineController;
 import UI.application.DmTab.DMTaskComponents.TaskDataController;
 import UI.application.DmTab.DMencrypt.encryptTabDMController;
-import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
 import UI.application.DmTab.Trie.Trie;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
-import decryptionManager.DecryptionManager;
 import dtoObjects.CodeFormatDTO;
 import enigmaEngine.Engine;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -15,13 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.WindowEvent;
-
-import java.util.Optional;
 
 public class DMcontroller {
 

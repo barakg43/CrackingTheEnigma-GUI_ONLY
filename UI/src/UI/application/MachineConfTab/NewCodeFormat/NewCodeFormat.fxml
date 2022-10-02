@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
-
 <AnchorPane fx:id="mainAnchorPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.MachineConfTab.NewCodeFormat.NewCodeFormatController">
    <children>
       <Label fx:id="SelectedReflectorLabel" layoutX="23.0" layoutY="388.0" prefHeight="34.0" prefWidth="155.0" styleClass="currentReflector-button" text="Selected Reflector:" />

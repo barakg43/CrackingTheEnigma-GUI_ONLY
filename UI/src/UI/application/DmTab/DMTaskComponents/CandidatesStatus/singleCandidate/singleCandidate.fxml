@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
-
 <VBox id="singleCandidate-VBox" prefHeight="185.0" prefWidth="386.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.application.DmTab.DMTaskComponents.CandidatesStatus.singleCandidate.SingleCandidateController">
    <children>
       <Pane maxWidth="1.7976931348623157E308" prefHeight="45.0">

@@ -1,12 +1,10 @@
 package enigmaEngine;
 
 import decryptionManager.components.Dictionary;
-
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.MachineDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.StatisticsDataDTO;
-
 
 import java.util.List;
 

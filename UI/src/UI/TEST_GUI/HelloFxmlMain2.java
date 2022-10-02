@@ -4,7 +4,6 @@ package UI.TEST_GUI;
 import UI.application.DmTab.DMencrypt.DMoperational.DMoperationalController;
 import UI.application.encryptTab.encryptComponent.EncryptComponentController;
 import UI.application.encryptTab.keyboardComponent.KeyboardAnimationController;
-import UI.application.encryptTab.statisticsComponent.StatisticsComponentController;
 import UI.application.generalComponents.SimpleCode.SimpleCodeController;
 import dtoObjects.CodeFormatDTO;
 import dtoObjects.PlugboardPairDTO;

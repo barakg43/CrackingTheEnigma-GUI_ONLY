@@ -1,12 +1,12 @@
 package decryptionManager.components;
 
 public class Permuter {
-        private int[] perms;
-        private int[] indexPerms;
-        private int[] directions;
-        private int[] iSwap;
-        private int N; //permute 0..N-1
-        private int movingPerm=N;
+        private final int[] perms;
+        private final int[] indexPerms;
+        private final int[] directions;
+        private final int[] iSwap;
+        private final int N; //permute 0..N-1
+        private int movingPerm;
 
         static int FORWARD=+1;
         static int BACKWARD=-1;

@@ -3,12 +3,11 @@ package decryptionManager.components;
 import dtoObjects.DmDTO.TaskFinishDataDTO;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class TaskFinishSupplier implements Supplier<TaskFinishDataDTO> {
     private final BlockingQueue<TaskFinishDataDTO> finishQueue;
-    private Boolean allTaskDone;
+    private final Boolean allTaskDone;
     public TaskFinishSupplier(BlockingQueue<TaskFinishDataDTO> queue, Boolean allTaskDone)
     {
         this.finishQueue=queue;

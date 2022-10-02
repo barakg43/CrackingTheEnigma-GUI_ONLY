@@ -10,7 +10,6 @@ import dtoObjects.DmDTO.TaskFinishDataDTO;
 import dtoObjects.PlugboardPairDTO;
 import dtoObjects.RotorInfoDTO;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

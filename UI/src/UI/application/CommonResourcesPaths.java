@@ -1,6 +1,5 @@
 package UI.application;
 
-import javax.annotation.Resource;
 import java.net.URL;
 
 public class CommonResourcesPaths {

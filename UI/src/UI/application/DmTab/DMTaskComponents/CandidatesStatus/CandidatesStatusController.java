@@ -15,7 +15,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class CandidatesStatusController {
 

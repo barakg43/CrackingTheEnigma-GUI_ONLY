@@ -12,7 +12,7 @@ public class CodeCalculatorFactory implements Serializable {
     private Map<Character,Integer> letter2Index =null;
     private char[] index2letter =null;
     private int letterSize;
-    private int numberOfPositions;
+    private final int numberOfPositions;
     final double MAX_VALUE_OFFSET;
     public CodeCalculatorFactory(String alphabet,int numberOfPositions) {
         addLettersToCal(alphabet);
